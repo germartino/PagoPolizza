@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/register.dart';
-import 'package:pago_polizza/s.dart';
+
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class Login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Splash()),
+                              builder: (context) => MyApp()),
                         );
                       },
                       icon: Icon(
