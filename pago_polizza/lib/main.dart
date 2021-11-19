@@ -17,8 +17,7 @@ class MyApp extends StatelessWidget {
   static final String title = 'QR Code Scanner';
 
   @override
-  Widget build(BuildContext context) =>
-      MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: title,
         theme: ThemeData(
@@ -80,26 +79,28 @@ class _MainPageState extends State<MainPage> {
                     child: Text('Scan QR Code'),
                   ),
                 ),
-                SizedBox(height: 20),
-                SizedBox(
-                  height: 55,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      textStyle: TextStyle(fontSize: 20),
-                      primary: Colors.tealAccent[700],
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Login()),
-                      );
-                    },
-                    child: Text('Login'),
-                  ),
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()),
+                          );
+                        },
+                        child: Text(
+                          "SKIP",
+                          style: TextStyle(
+                            color: Colors.tealAccent[700],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        )),
+                  ],
                 ),
-                SizedBox(height: 20),
               ],
             ),
           ),
