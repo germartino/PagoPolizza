@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/main.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -10,16 +11,11 @@ class NavDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(
-              'Side menu',
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
-            decoration: BoxDecoration(
-                color: Colors.tealAccent[700],
-                image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage('assets/images/cover.jpg'))),
-          ),
+              child: Text(
+                'PagoPolizza',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              decoration: BoxDecoration(color: Colors.tealAccent[700])),
           ListTile(
             leading: Icon(Icons.input),
             title: Text('Welcome'),
@@ -41,10 +37,12 @@ class NavDrawer extends StatelessWidget {
             onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
-            onTap: () => exit(0),
-          ),
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Logout'),
+              onTap: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyApp()),
+                  )),
         ],
       ),
     );

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/login.dart';
+import 'package:pago_polizza/home.dart';
 import 'package:pago_polizza/scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:pago_polizza/register.dart';
+import 'package:pago_polizza/navdrawer.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +27,14 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.tealAccent[700],
           scaffoldBackgroundColor: Colors.white,
         ),
-        home: MainPage(title: title),
+        home: Scaffold(
+          body: DoubleBackToCloseApp(
+              child: MainPage(title: title),
+              snackBar: const SnackBar(
+                content: Text('Premi di nuovo per uscire'),
+                backgroundColor: Colors.red,
+              )),
+        ),
       );
 }
 
@@ -49,18 +59,86 @@ class _MainPageState extends State<MainPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 40),
-                Icon(Icons.person_outline, color: Colors.grey[300], size: 140),
+                SizedBox(height: 20),
+                Icon(Icons.person_outline, color: Colors.grey[300], size: 100),
                 SizedBox(height: 13),
                 Text(
-                  MyApp.title,
+                  "PagoPolizza",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.tealAccent[700],
                   ),
                 ),
+                Text(
+                  "sign in to continue",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[400],
+                  ),
+                ),
                 SizedBox(height: 30),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.tealAccent[700],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.mail,
+                          color: Colors.tealAccent[700], size: 30),
+                      labelText: "Email",
+                      labelStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: TextFormField(
+                    obscureText: true,
+                    style: TextStyle(
+                      color: Colors.tealAccent[700],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.lock,
+                          color: Colors.tealAccent[700], size: 30),
+                      labelText: "Password",
+                      labelStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Forgot Password",
+                          style: TextStyle(
+                            color: Colors.tealAccent[700],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ))
+                  ],
+                ),
+                SizedBox(height: 10),
                 SizedBox(
                   height: 55,
                   width: double.infinity,
@@ -69,36 +147,53 @@ class _MainPageState extends State<MainPage> {
                       textStyle: TextStyle(fontSize: 20),
                       primary: Colors.tealAccent[700],
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Scanner()),
-                      );
-                    },
-                    child: Text('Scan QR Code'),
+                    onPressed: () {},
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()),
+                        );
+                      },
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                     TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()),
-                          );
-                        },
-                        child: Text(
-                          "SKIP",
-                          style: TextStyle(
-                            color: Colors.tealAccent[700],
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        )),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Register()),
+                        );
+                      },
+                      child: Text(
+                        "Sign up",
+                        style: TextStyle(
+                          color: Colors.tealAccent[700],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
