@@ -9,31 +9,16 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Login"),
+        backgroundColor: Colors.tealAccent[700],
+      ),
       body: Padding(
         padding: EdgeInsets.all(25),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyApp()),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        size: 30,
-                        color: Colors.tealAccent[700],
-                      ),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 20),
                 Icon(Icons.person_outline, color: Colors.grey[300], size: 100),
                 SizedBox(height: 13),

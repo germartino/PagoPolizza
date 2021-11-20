@@ -7,27 +7,16 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Sign Up"),
+        backgroundColor: Colors.tealAccent[700],
+      ),
       body: Padding(
         padding: EdgeInsets.all(25),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        size: 30,
-                        color: Colors.tealAccent[700],
-                      ),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 20),
                 Text(
                   "PagoPolizza",
