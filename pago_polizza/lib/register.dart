@@ -199,7 +199,7 @@ class Register extends StatelessWidget {
           ),
           snackBar: const SnackBar(
             content: Text('Premi di nuovo per uscire'),
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.tealAccent,
           )),
     );
   }
