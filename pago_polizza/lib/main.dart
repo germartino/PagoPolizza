@@ -14,7 +14,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static final String title = 'QR Code Scanner';
+  static final String title = 'PagoPolizza';
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -53,7 +53,7 @@ class _MainPageState extends State<MainPage> {
                 Icon(Icons.person_outline, color: Colors.grey[300], size: 140),
                 SizedBox(height: 13),
                 Text(
-                  "PagoPolizza",
+                  MyApp.title,
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,

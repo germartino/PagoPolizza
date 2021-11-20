@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/login.dart';
+import 'package:pago_polizza/main.dart';
 
 class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);
@@ -91,7 +92,7 @@ class Register extends StatelessWidget {
                       border: InputBorder.none,
                       prefixIcon: Icon(Icons.phone,
                           color: Colors.tealAccent[700], size: 30),
-                      labelText: "Phone Number",
+                      labelText: "Cognome/Regione Sociale",
                       labelStyle: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[400],

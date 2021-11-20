@@ -18,7 +18,7 @@ class _ScannerState extends State<Scanner> {
   Widget build(BuildContext context) =>
       Scaffold(
         appBar: AppBar(
-          title: Text(MyApp.title),
+          title: Text("QR Scanner"),
           backgroundColor: Colors.tealAccent[700],
         ),
         body: Center(

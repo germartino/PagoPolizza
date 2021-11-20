@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/main.dart';
+import 'package:pago_polizza/navdrawer.dart';
 import 'package:pago_polizza/register.dart';
 
 
@@ -9,6 +10,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text("Login"),
         backgroundColor: Colors.tealAccent[700],
