@@ -152,8 +152,7 @@ class _MainPageState extends State<MainPage> {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const Login()),
+                          MaterialPageRoute(builder: (context) => const Home()),
                         );
                       },
                       child: Text(

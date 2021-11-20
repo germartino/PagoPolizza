@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/home.dart';
 import 'package:pago_polizza/main.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -18,8 +19,13 @@ class NavDrawer extends StatelessWidget {
               decoration: BoxDecoration(color: Colors.tealAccent[700])),
           ListTile(
             leading: Icon(Icons.input),
-            title: Text('Welcome'),
-            onTap: () => {},
+            title: Text('Home'),
+            onTap: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              )
+            },
           ),
           ListTile(
             leading: Icon(Icons.verified_user),

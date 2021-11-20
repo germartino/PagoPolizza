@@ -5,8 +5,8 @@ import 'package:pago_polizza/register.dart';
 import 'package:pago_polizza/scanner.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
-class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
