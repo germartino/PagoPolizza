@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/login.dart';
-import 'package:pago_polizza/main.dart';
+import 'package:pago_polizza/navdrawer.dart';
 
 class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);
@@ -8,6 +8,7 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text("Sign Up"),
         backgroundColor: Colors.tealAccent[700],
