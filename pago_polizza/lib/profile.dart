@@ -9,9 +9,14 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavDrawer(),
+      appBar: AppBar(
+        title: Text("Profilo"),
+        backgroundColor: Colors.tealAccent[700],
+      ),
       body: DoubleBackToCloseApp(
           child: Padding(
             padding: EdgeInsets.all(25),
@@ -61,7 +66,7 @@ class Profile extends StatelessWidget {
                     ),
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
                         style: TextStyle(
                           color: Colors.tealAccent[700],
@@ -128,7 +133,6 @@ class Profile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
                     SizedBox(height: 5),
                     SizedBox(
                       height: 55,
@@ -139,9 +143,10 @@ class Profile extends StatelessWidget {
                           primary: Colors.tealAccent[700],
                         ),
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const UpdateP()),
+                            MaterialPageRoute(
+                                builder: (context) => const UpdateP()),
                           );
                         },
                         child: Text(
@@ -154,7 +159,6 @@ class Profile extends StatelessWidget {
                         ),
                       ),
                     ),
-                   
                   ],
                 ),
               ),

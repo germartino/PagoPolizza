@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/home.dart';
 import 'package:pago_polizza/main.dart';
+import 'package:pago_polizza/storico.dart';
 import 'package:pago_polizza/support.dart';
 import 'package:pago_polizza/profile.dart';
 
@@ -18,7 +19,7 @@ class NavDrawer extends StatelessWidget {
               ),
               decoration: BoxDecoration(color: Colors.tealAccent[700])),
           ListTile(
-            leading: Icon(Icons.input),
+            leading: Icon(Icons.home),
             title: Text('Home'),
             onTap: () => {
               Navigator.pushReplacement(
@@ -28,7 +29,7 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.verified_user),
+            leading: Icon(Icons.person),
             title: Text('Profile'),
             onTap: () => {
               Navigator.pushReplacement(
@@ -38,17 +39,17 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Area '),
+            leading: Icon(Icons.list_alt_rounded),
+            title: Text('Storico'),
             onTap: () => {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => Storico()),
               )
             },
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
+            leading: Icon(Icons.support_agent),
             title: Text('Help'),
             onTap: () => {
               Navigator.pushReplacement(

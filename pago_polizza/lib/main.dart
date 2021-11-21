@@ -151,14 +151,14 @@ class _MainPageState extends State<MainPage> {
                         MaterialPageRoute(builder: (context) => const Home()),
                       );
                     },
-                      child: Text(
-                        'Login',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
