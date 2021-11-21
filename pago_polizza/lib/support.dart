@@ -107,26 +107,29 @@ class Support extends StatelessWidget {
                     Container(
                       padding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: TextFormField(
+                      child: TextField(
+                        controller: null,
+                        cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
+                        maxLength: 500,
                         decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.assistant_photo,
-                              color: Colors.tealAccent[700], size: 30),
-                          labelText: "Message",
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xff00bfa5), width: 2.0),),
+                          labelText: "Message*",
                           labelStyle: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w800,
                           ),
                         ),
+                        minLines: 4,
+                        maxLines: 4,
                         keyboardType: TextInputType.multiline,
-                        minLines: 1,//Normal textInputField will be displayed
-                        maxLines: 5,// when user presses enter it will adapt to it
+                        textInputAction: TextInputAction.next,
                       ),
                     ),
                     SizedBox(height: 20),
