@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/navdrawer.dart';
 import 'package:pago_polizza/pagamento.dart';
-import 'package:pago_polizza/scanner.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 int press = 0;
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => HomeState();
+}
+
+class HomeState extends State<Home> {
+  String qrCode = 'Unknown';
 
   @override
   Widget build(BuildContext context) {
@@ -156,13 +163,7 @@ class Home extends StatelessWidget {
                           textStyle: TextStyle(fontSize: 20),
                           primary: Colors.tealAccent[700],
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Scanner()),
-                          );
-                        },
+                        onPressed: () => scanQRCode(),
                         child: Text('Scan QR Code'),
                       ),
                     ),
@@ -196,5 +197,24 @@ class Home extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> scanQRCode() async {
+    try {
+      final qrCode = await FlutterBarcodeScanner.scanBarcode(
+        '#008080',
+        'Cancel',
+        true,
+        ScanMode.QR,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        this.qrCode = qrCode;
+      });
+    } on PlatformException {
+      qrCode = 'Failed to get platform version.';
+    }
   }
 }

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/navdrawer.dart';
-import 'package:pago_polizza/scanner.dart';
-import 'package:pago_polizza/home.dart';
 import 'package:pago_polizza/update_profile.dart';
 
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';

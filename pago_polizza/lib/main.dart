@@ -69,7 +69,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ),
                 Text(
-                  "sign in to continue",
+                  "Esegui il login per continuare",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -127,7 +127,7 @@ class _MainPageState extends State<MainPage> {
                     TextButton(
                         onPressed: () {},
                         child: Text(
-                          "Forgot Password",
+                          "Password dimenticata?",
                           style: TextStyle(
                             color: Colors.tealAccent[700],
                             fontWeight: FontWeight.bold,
@@ -166,7 +166,7 @@ class _MainPageState extends State<MainPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
+                      "Non hai un account? ",
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -180,7 +180,7 @@ class _MainPageState extends State<MainPage> {
                         );
                       },
                       child: Text(
-                        "Sign up",
+                        "Registrati",
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,
