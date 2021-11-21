@@ -42,14 +42,25 @@ class _ScannerState extends State<Scanner> {
             ),
           ),
           SizedBox(height: 72),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(fontSize: 20),
-              primary: Colors.tealAccent[700],
-            ),
-            onPressed: () => scanQRCode(),
-            child: Text('Start QR scan'),
-          ),
+          SizedBox(
+                height: 55,
+                width: 200,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 20),
+                    primary: Colors.tealAccent[700],
+                  ),
+                  onPressed: () => scanQRCode(),
+                  child: Text(
+                    'Start QR scan',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
         ],
       ),
   ),

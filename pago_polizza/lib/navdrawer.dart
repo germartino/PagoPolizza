@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/home.dart';
 import 'package:pago_polizza/main.dart';
+import 'package:pago_polizza/support.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -37,8 +38,13 @@ class NavDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.border_color),
-            title: Text('Feedback'),
-            onTap: () => {Navigator.of(context).pop()},
+            title: Text('Help'),
+            onTap: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Support()),
+              )
+            },
           ),
           ListTile(
               leading: Icon(Icons.exit_to_app),

@@ -145,14 +145,12 @@ class _MainPageState extends State<MainPage> {
                       textStyle: TextStyle(fontSize: 20),
                       primary: Colors.tealAccent[700],
                     ),
-                    onPressed: () {},
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const Home()),
-                        );
-                      },
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Home()),
+                      );
+                    },
                       child: Text(
                         'Login',
                         style: TextStyle(
@@ -161,7 +159,6 @@ class _MainPageState extends State<MainPage> {
                           fontSize: 16,
                         ),
                       ),
-                    ),
                   ),
                 ),
                 SizedBox(height: 20),
