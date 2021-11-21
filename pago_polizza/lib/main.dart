@@ -32,7 +32,8 @@ class MyApp extends StatelessWidget {
               child: MainPage(title: title),
               snackBar: const SnackBar(
                 content: Text('Premi di nuovo per uscire'),
-                backgroundColor: Colors.tealAccent,
+                backgroundColor: Color(0xff00bfa5),
+                //backgroundColor: Colors.tealAccent[700],
               )),
         ),
       );
