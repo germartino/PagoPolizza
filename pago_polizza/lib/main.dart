@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/home.dart';
-import 'package:pago_polizza/scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:pago_polizza/register.dart';
-import 'package:pago_polizza/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 void main() {
@@ -33,7 +31,6 @@ class MyApp extends StatelessWidget {
               snackBar: const SnackBar(
                 content: Text('Premi di nuovo per uscire'),
                 backgroundColor: Color(0xff00bfa5),
-                //backgroundColor: Colors.tealAccent[700],
               )),
         ),
       );

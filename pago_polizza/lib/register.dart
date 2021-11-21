@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/home.dart';
 import 'package:pago_polizza/main.dart';
-import 'package:pago_polizza/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class Register extends StatelessWidget {
@@ -94,7 +92,7 @@ class Register extends StatelessWidget {
                           border: InputBorder.none,
                           prefixIcon: Icon(Icons.phone,
                               color: Colors.tealAccent[700], size: 30),
-                          labelText: "Cognome/Regione Sociale",
+                          labelText: "Cognome/Ragione Sociale",
                           labelStyle: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[400],
@@ -199,7 +197,7 @@ class Register extends StatelessWidget {
           ),
           snackBar: const SnackBar(
             content: Text('Premi di nuovo per uscire'),
-            backgroundColor: Colors.tealAccent,
+            backgroundColor: Color(0xff00bfa5),
           )),
     );
   }
