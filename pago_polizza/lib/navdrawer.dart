@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pago_polizza/home.dart';
 import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/support.dart';
+import 'package:pago_polizza/profile.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -29,12 +30,22 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Profile()),
+              )
+            },
           ),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Area '),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              )
+            },
           ),
           ListTile(
             leading: Icon(Icons.border_color),
