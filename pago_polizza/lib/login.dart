@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/login.dart';
 import 'package:pago_polizza/main.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:pago_polizza/navdrawer.dart';
+import 'package:pago_polizza/pagamento.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:pago_polizza/register.dart';
 
-class Register extends StatelessWidget {
-  const Register({Key? key}) : super(key: key);
+int press = 0;
+
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => HomeState();
+}
+
+class HomeState extends State<Home> {
+  final controller = TextEditingController();
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +33,8 @@ class Register extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 20),
+                Icon(Icons.person_outline, color: Colors.grey[300], size: 100),
+                SizedBox(height: 13),
                 Text(
                   "PagoPolizza",
                   style: TextStyle(
@@ -26,17 +44,18 @@ class Register extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Create a new account",
+                  "Esegui il login per continuare",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: Colors.grey[400],
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 30),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: TextFormField(
+                    controller: controller,
                     cursorColor: Colors.tealAccent[700],
                     style: TextStyle(
                       color: Colors.tealAccent[700],
@@ -45,52 +64,7 @@ class Register extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.person_outline,
-                          color: Colors.tealAccent[700], size: 30),
-                      labelText: "Name",
-                      labelStyle: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: TextFormField(
-                    cursorColor: Colors.tealAccent[700],
-                    style: TextStyle(
-                      color: Colors.tealAccent[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.person,
-                          color: Colors.tealAccent[700], size: 30),
-                      labelText: "Cognome/Ragione Sociale",
-                      labelStyle: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 1),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: TextFormField(
-                    cursorColor: Colors.tealAccent[700],
-                    style: TextStyle(
-                      color: Colors.tealAccent[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.mail_outline,
+                      prefixIcon: Icon(Icons.mail,
                           color: Colors.tealAccent[700], size: 30),
                       labelText: "Email",
                       labelStyle: TextStyle(
@@ -101,7 +75,7 @@ class Register extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 1),
+                SizedBox(height: 10),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: TextFormField(
@@ -125,31 +99,22 @@ class Register extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 1),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: TextFormField(
-                    cursorColor: Colors.tealAccent[700],
-                    obscureText: true,
-                    style: TextStyle(
-                      color: Colors.tealAccent[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.lock_outline,
-                          color: Colors.tealAccent[700], size: 30),
-                      labelText: "Confirm Password",
-                      labelStyle: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Password dimenticata?",
+                          style: TextStyle(
+                            color: Colors.tealAccent[700],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ))
+                  ],
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 10),
                 SizedBox(
                   height: 55,
                   width: double.infinity,
@@ -159,13 +124,19 @@ class Register extends StatelessWidget {
                       primary: Colors.tealAccent[700],
                     ),
                     onPressed: () {
+                      String testo = controller.text;
+                      if (testo == 'admin') MyApp.userType = 'admin';
+                      if (testo == 'agency') MyApp.userType = 'agency';
+                      if (testo == 'client' || testo == '')
+                        MyApp.userType = 'client';
+                      MyApp.logged = true;
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const Home()),
+                        MaterialPageRoute(builder: (context) => MyApp()),
                       );
                     },
                     child: Text(
-                      'Create Account',
+                      'Login',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -179,7 +150,7 @@ class Register extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account?",
+                      "Non hai un account? ",
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -188,11 +159,12 @@ class Register extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => Home()),
+                          MaterialPageRoute(
+                              builder: (context) => const Register()),
                         );
                       },
                       child: Text(
-                        "Login",
+                        "Registrati",
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,

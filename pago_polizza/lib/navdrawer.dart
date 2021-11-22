@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/agency_list.dart';
-import 'package:pago_polizza/home.dart';
+import 'package:pago_polizza/login.dart';
 import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/storico.dart';
 import 'package:pago_polizza/support.dart';
@@ -34,7 +34,7 @@ class NavDrawer extends StatelessWidget {
             onTap: () => {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const Home()),
+                  MaterialPageRoute(builder: (context) => MyApp()),
                   (route) => false)
             },
           ),
@@ -124,10 +124,13 @@ class NavDrawer extends StatelessWidget {
                     color: Colors.grey[400],
                     fontWeight: FontWeight.w800,
                   )),
-              onTap: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyApp()),
-                  (route) => false)),
+              onTap: () => {
+                    MyApp.logged = false,
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyApp()),
+                        (route) => false)
+                  })
         ],
       ),
     );
