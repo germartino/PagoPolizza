@@ -10,6 +10,7 @@ int press = 0;
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => HomeState();
 }
@@ -95,6 +96,7 @@ class HomeState extends State<Home> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
+                        cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,
@@ -118,6 +120,8 @@ class HomeState extends State<Home> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
+                        cursorColor: Colors.tealAccent[700],
+                        obscureText: true,
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,
@@ -153,7 +157,14 @@ class HomeState extends State<Home> {
                                 builder: (context) => const Home()),
                           );
                         },
-                        child: Text('Login'),
+                        child: Text(
+                            'Login',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
                   if (press == 0 && MyApp.userType == 'client')
@@ -181,7 +192,14 @@ class HomeState extends State<Home> {
                           primary: Colors.tealAccent[700],
                         ),
                         onPressed: () => scanQRCode(),
-                        child: Text('Scan QR Code'),
+                        child: Text(
+                            'Scan QR Code',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
                   if (press == 1 && MyApp.userType == 'client')
@@ -200,7 +218,14 @@ class HomeState extends State<Home> {
                                 builder: (context) => const Pagamento()),
                           );
                         },
-                        child: Text('Paga ora'),
+                        child: Text(
+                          'Paga ora',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
                 ],

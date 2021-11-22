@@ -21,8 +21,16 @@ class NavDrawer extends StatelessWidget {
               ),
               decoration: BoxDecoration(color: Colors.tealAccent[700])),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading: Icon(Icons.home_outlined,
+                color: Colors.tealAccent[700], size: 30),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             onTap: () => {
               Navigator.pushAndRemoveUntil(
                   context,
@@ -53,8 +61,16 @@ class NavDrawer extends StatelessWidget {
               },
             ),
           ListTile(
-            leading: Icon(Icons.list_alt_rounded),
-            title: Text('Storico'),
+            leading: Icon(Icons.list_alt_rounded,
+                color: Colors.tealAccent[700], size: 30),
+            title: Text(
+              'Storico',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             onTap: () => {
               (MyApp.userType == 'client' || MyApp.userType == 'agency')
                   ? Navigator.pushAndRemoveUntil(

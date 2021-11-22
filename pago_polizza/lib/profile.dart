@@ -44,6 +44,7 @@ class Profile extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
+                        cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,
@@ -66,6 +67,7 @@ class Profile extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
+                        cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,
@@ -91,6 +93,7 @@ class Profile extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
+                        cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
                           color: Colors.tealAccent[700],
                           fontWeight: FontWeight.bold,
@@ -119,6 +122,7 @@ class Profile extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
+                        cursorColor: Colors.tealAccent[700],
                         obscureText: true,
                         style: TextStyle(
                           color: Colors.tealAccent[700],
