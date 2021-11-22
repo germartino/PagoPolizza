@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/home.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static String userType = 'client';
   static final String title = 'PagoPolizza';
 
   @override
@@ -48,6 +50,12 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final controller = TextEditingController();
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +88,7 @@ class _MainPageState extends State<MainPage> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: TextFormField(
+                    controller: controller,
                     style: TextStyle(
                       color: Colors.tealAccent[700],
                       fontWeight: FontWeight.bold,
@@ -146,6 +155,11 @@ class _MainPageState extends State<MainPage> {
                       primary: Colors.tealAccent[700],
                     ),
                     onPressed: () {
+                      String testo = controller.text;
+                      if (testo == 'admin') MyApp.userType = 'admin';
+                      if (testo == 'agency') MyApp.userType = 'agency';
+                      if (testo == 'client' || testo == '')
+                        MyApp.userType = 'client';
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => const Home()),

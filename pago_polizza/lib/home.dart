@@ -36,7 +36,8 @@ class HomeState extends State<Home> {
                   Icon(Icons.person_outline,
                       color: Colors.grey[300], size: 140),
                   SizedBox(height: 13),
-                  if (press == 0)
+                  if ((press == 0 && MyApp.userType == 'client') ||
+                      MyApp.userType == 'admin')
                     Text(
                       MyApp.title,
                       style: TextStyle(
@@ -45,7 +46,8 @@ class HomeState extends State<Home> {
                         color: Colors.tealAccent[700],
                       ),
                     ),
-                  if (press == 1)
+                  if ((press == 1 && MyApp.userType == 'client') ||
+                      MyApp.userType == 'agency')
                     Text(
                       'Nome agenzia',
                       style: TextStyle(
@@ -54,8 +56,18 @@ class HomeState extends State<Home> {
                         color: Colors.tealAccent[700],
                       ),
                     ),
-                  if (press == 1) SizedBox(height: 10),
-                  if (press == 1)
+                  if (MyApp.userType == 'admin')
+                    Text(
+                      'Admin',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.tealAccent[700],
+                      ),
+                    ),
+                  SizedBox(height: 10),
+                  if ((press == 1 && MyApp.userType == 'client') ||
+                      MyApp.userType == 'agency')
                     Text(
                       'Codice RUI',
                       style: TextStyle(
@@ -64,8 +76,11 @@ class HomeState extends State<Home> {
                         color: Colors.tealAccent[700],
                       ),
                     ),
-                  if (press == 1) SizedBox(height: 10),
-                  if (press == 1)
+                  if ((press == 1 && MyApp.userType == 'client') ||
+                      MyApp.userType == 'agency')
+                    SizedBox(height: 10),
+                  if ((press == 1 && MyApp.userType == 'client') ||
+                      MyApp.userType == 'agency')
                     Text(
                       'Località',
                       style: TextStyle(
@@ -75,7 +90,7 @@ class HomeState extends State<Home> {
                       ),
                     ),
                   SizedBox(height: 30),
-                  if (press == 0)
+                  if (press == 0 && MyApp.userType == 'client')
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -98,7 +113,7 @@ class HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                  if (press == 0)
+                  if (press == 0 && MyApp.userType == 'client')
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -121,7 +136,7 @@ class HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                  if (press == 0)
+                  if (press == 0 && MyApp.userType == 'client')
                     SizedBox(
                       height: 55,
                       width: double.infinity,
@@ -141,8 +156,9 @@ class HomeState extends State<Home> {
                         child: Text('Login'),
                       ),
                     ),
-                  if (press == 0) SizedBox(height: 10),
-                  if (press == 0)
+                  if (press == 0 && MyApp.userType == 'client')
+                    SizedBox(height: 10),
+                  if (press == 0 && MyApp.userType == 'client')
                     Text(
                       'or',
                       textAlign: TextAlign.center,
@@ -153,8 +169,9 @@ class HomeState extends State<Home> {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                  if (press == 0) SizedBox(height: 10),
-                  if (press == 0)
+                  if (press == 0 && MyApp.userType == 'client')
+                    SizedBox(height: 10),
+                  if (press == 0 && MyApp.userType == 'client')
                     SizedBox(
                       height: 55,
                       width: double.infinity,
@@ -167,7 +184,7 @@ class HomeState extends State<Home> {
                         child: Text('Scan QR Code'),
                       ),
                     ),
-                  if (press == 1)
+                  if (press == 1 && MyApp.userType == 'client')
                     SizedBox(
                       height: 55,
                       width: double.infinity,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/navdrawer.dart';
 import 'package:pago_polizza/update_profile.dart';
 
@@ -74,7 +75,9 @@ class Profile extends StatelessWidget {
                           border: InputBorder.none,
                           prefixIcon: Icon(Icons.person,
                               color: Colors.tealAccent[700], size: 30),
-                          labelText: "Cognome/Ragione Sociale",
+                          labelText: (MyApp.userType == 'client')
+                              ? "Cognome/Ragione Sociale"
+                              : 'Codice Agenzia',
                           labelStyle: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[400],
@@ -95,9 +98,14 @@ class Profile extends StatelessWidget {
                         ),
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          prefixIcon: Icon(Icons.mail_outline,
-                              color: Colors.tealAccent[700], size: 30),
-                          labelText: "Email",
+                          prefixIcon: (MyApp.userType == 'client')
+                              ? Icon(Icons.mail_outline,
+                                  color: Colors.tealAccent[700], size: 30)
+                              : Icon(Icons.map,
+                                  color: Colors.tealAccent[700], size: 30),
+                          labelText: (MyApp.userType == 'client')
+                              ? "Email"
+                              : "Località",
                           labelStyle: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[400],
