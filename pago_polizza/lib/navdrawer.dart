@@ -40,8 +40,16 @@ class NavDrawer extends StatelessWidget {
           ),
           if (MyApp.userType == 'client' || MyApp.userType == 'agency')
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Profilo'),
+              leading:
+                  Icon(Icons.person, color: Colors.tealAccent[700], size: 30),
+              title: Text(
+                'Profilo',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[400],
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
               onTap: () => {
                 Navigator.pushAndRemoveUntil(
                     context,
@@ -51,8 +59,14 @@ class NavDrawer extends StatelessWidget {
             ),
           if (MyApp.userType == 'admin')
             ListTile(
-              leading: Icon(Icons.vpn_key),
-              title: Text('Modifica password'),
+              leading:
+                  Icon(Icons.vpn_key, color: Colors.tealAccent[700], size: 30),
+              title: Text('Modifica password',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w800,
+                  )),
               onTap: () => {
                 Navigator.pushAndRemoveUntil(
                     context,
@@ -86,8 +100,14 @@ class NavDrawer extends StatelessWidget {
           ),
           if (MyApp.userType == 'client' || MyApp.userType == 'agency')
             ListTile(
-              leading: Icon(Icons.support_agent),
-              title: Text('Help'),
+              leading: Icon(Icons.support_agent,
+                  color: Colors.tealAccent[700], size: 30),
+              title: Text('Help',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w800,
+                  )),
               onTap: () => {
                 Navigator.pushAndRemoveUntil(
                     context,
@@ -96,8 +116,14 @@ class NavDrawer extends StatelessWidget {
               },
             ),
           ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Logout'),
+              leading: Icon(Icons.exit_to_app,
+                  color: Colors.tealAccent[700], size: 30),
+              title: Text('Logout',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w800,
+                  )),
               onTap: () => Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => MyApp()),
