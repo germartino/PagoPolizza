@@ -6,6 +6,7 @@ import 'package:pago_polizza/support.dart';
 import 'package:pago_polizza/profile.dart';
 
 class NavDrawer extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -19,8 +20,15 @@ class NavDrawer extends StatelessWidget {
               ),
               decoration: BoxDecoration(color: Colors.tealAccent[700])),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading: Icon(Icons.home_outlined, color: Colors.tealAccent[700], size: 30),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             onTap: () => {
               Navigator.pushReplacement(
                 context,
@@ -29,8 +37,15 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Profile'),
+            leading: Icon(Icons.person_outline, color: Colors.tealAccent[700], size: 30),
+            title: Text(
+              'Profile',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             onTap: () => {
               Navigator.pushReplacement(
                 context,
@@ -39,8 +54,15 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.list_alt_rounded),
-            title: Text('Storico'),
+            leading: Icon(Icons.list_alt_rounded, color: Colors.tealAccent[700], size: 30),
+            title: Text(
+              'Storico',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             onTap: () => {
               Navigator.pushReplacement(
                 context,
@@ -49,8 +71,15 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.support_agent),
-            title: Text('Help'),
+            leading: Icon(Icons.support_agent, color: Colors.tealAccent[700], size: 30),
+            title: Text(
+              'Help',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             onTap: () => {
               Navigator.pushReplacement(
                 context,
@@ -59,8 +88,15 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Logout'),
+              leading: Icon(Icons.exit_to_app, color: Colors.tealAccent[700], size: 30),
+              title: Text(
+                'Logout',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[400],
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
               onTap: () => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => MyApp()),

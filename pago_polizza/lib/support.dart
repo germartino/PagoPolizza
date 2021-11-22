@@ -40,7 +40,7 @@ class Support extends StatelessWidget {
                     SizedBox(height: 20),
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
                         cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
@@ -63,7 +63,7 @@ class Support extends StatelessWidget {
                     ),
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
                         cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
@@ -86,7 +86,7 @@ class Support extends StatelessWidget {
                     ),
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextFormField(
                         cursorColor: Colors.tealAccent[700],
                         style: TextStyle(
@@ -109,7 +109,7 @@ class Support extends StatelessWidget {
                     ),
                     Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: TextField(
                         controller: null,
                         cursorColor: Colors.tealAccent[700],
@@ -121,7 +121,9 @@ class Support extends StatelessWidget {
                         maxLength: 500,
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xff00bfa5), width: 2.0),),
+                            borderSide: BorderSide(
+                                color: Color(0xff00bfa5), width: 2.0),
+                          ),
                           labelText: "Message*",
                           labelStyle: TextStyle(
                             fontSize: 16,
@@ -145,7 +147,14 @@ class Support extends StatelessWidget {
                           primary: Colors.tealAccent[700],
                         ),
                         onPressed: () {},
-                        child: Text('Submit'),
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),

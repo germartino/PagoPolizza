@@ -50,7 +50,7 @@ class Storico extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.italic,
-                          color: Colors.black),
+                          color: Color(0xff00bfa5)),
                     )),
                     DataColumn(
                         label: Text(
@@ -59,7 +59,7 @@ class Storico extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.italic,
-                          color: Colors.black),
+                          color: Color(0xff00bfa5)),
                     )),
                     DataColumn(
                         label: Text(
@@ -68,7 +68,7 @@ class Storico extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.italic,
-                          color: Colors.black),
+                          color: Color(0xff00bfa5)),
                     )),
                   ],
                   rows: const <DataRow>[
