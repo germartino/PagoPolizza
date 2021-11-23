@@ -4,9 +4,14 @@ import 'package:pago_polizza/main.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:pago_polizza/navdrawer.dart';
 
-class Register extends StatelessWidget {
-  const Register({Key? key}) : super(key: key);
+bool agree = false;
 
+class Register extends StatefulWidget {
+  const Register({Key? key}) : super(key: key);
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,6 +153,34 @@ class Register extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
+                SizedBox(height: 5),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Row(children: [
+                    Checkbox(
+                      activeColor: Colors.tealAccent[700],
+                      value: agree,
+                      onChanged: (value) {
+                        setState(() {
+                          if (agree) {
+                            agree = false;
+                          } else {
+                            agree = true;
+                          }
+                        });
+                      },
+                    ),
+                    Flexible(
+                        child: Text(
+                      'Confermo di aver preso visione della Privacy Policy & Termini e condizioni',
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                          color: Colors.grey[400],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    )),
+                  ]),
                 ),
                 SizedBox(height: 5),
                 SizedBox(
