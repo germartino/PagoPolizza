@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/login.dart';
 import 'package:flutter/services.dart';
@@ -79,7 +81,7 @@ class LoginState extends State<Login> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.65,
+              height: MediaQuery.of(context).size.height * 0.75,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -87,14 +89,28 @@ class LoginState extends State<Login> {
                 ),
                 color: Colors.white,
               ),
-              child: Column(children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: MediaQuery.of(context).size.height * 0.1,
-                      horizontal: MediaQuery.of(context).size.width * 0.1),
-                  child: SizedBox(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.07,
+                    horizontal: MediaQuery.of(context).size.width * 0.1),
+                child: Column(children: [
+                  Container(
+                    alignment: Alignment.topLeft,
                     child: Text(
-                      'Inserisci Codice RUI e Password per visualizzare la tua Agenzia.',
+                      'Login',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 23.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Inserisci le tue credenziali per continuare.',
                       style: GoogleFonts.ptSans(
                         fontSize: 15.0,
                         color: Colors.black,
@@ -102,18 +118,17 @@ class LoginState extends State<Login> {
                       textAlign: TextAlign.start,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.1),
-                  child: Form(
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                  ),
+                  Form(
                     key: _formkey,
                     child: Column(
                       children: [
                         TextFormField(
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Perfavore inserisci il Codice RUI';
+                              return 'Perfavore inserisci l\'email';
                             }
                             return null;
                           },
@@ -125,9 +140,9 @@ class LoginState extends State<Login> {
                           decoration: InputDecoration(
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
-                            suffixIcon: Icon(Ionicons.key_outline,
+                            suffixIcon: Icon(Ionicons.mail_outline,
                                 color: Color(0xff9e9e9e), size: 25),
-                            labelText: "Codice RUI",
+                            labelText: "Email",
                             labelStyle: GoogleFonts.ptSans(
                               fontSize: 15.0,
                               color: Color(0xff707070),
@@ -173,7 +188,24 @@ class LoginState extends State<Login> {
                           ),
                         ),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                            height: MediaQuery.of(context).size.height * 0.01),
+                        Container(
+                          alignment: Alignment.topRight,
+                          child: RichText(
+                            text: TextSpan(
+                                text: 'Password dimenticata?',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0,
+                                    color: Color(0xffDF752C),
+                                    decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    print('password dimenticata');
+                                  }),
+                          ),
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.07),
                         ElevatedButton(
                           onPressed: () {
                             if (_formkey.currentState!.validate()) {
@@ -184,7 +216,7 @@ class LoginState extends State<Login> {
                             }
                           },
                           child: Text(
-                            'Conferma',
+                            'Accedi',
                             style: GoogleFonts.montserrat(
                               fontSize: 15.0,
                               color: Colors.white,
@@ -199,14 +231,39 @@ class LoginState extends State<Login> {
                               primary: Color(0xffdf752c),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(23))),
-                        )
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.03),
+                        Container(
+                          alignment: Alignment.topCenter,
+                          child: RichText(
+                              text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                              text: 'Non hai ancora un account? ',
+                              style: GoogleFonts.lato(
+                                fontSize: 14.0,
+                                color: Color(0xff000000),
+                              ),
+                            ),
+                            TextSpan(
+                                text: 'Registrati!',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0,
+                                    color: Color(0xffDF752C),
+                                    decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    print('password dimenticata');
+                                  }),
+                          ])),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
             ),
-          ),
+          )
         ]),
       ),
     );
