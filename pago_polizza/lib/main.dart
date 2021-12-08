@@ -1,12 +1,16 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/choice_agency.dart';
 import 'package:pago_polizza/login.dart';
 import 'package:flutter/services.dart';
 import 'package:pago_polizza/pagamento.dart';
 import 'package:pago_polizza/register.dart';
 import 'package:pago_polizza/navdrawer.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:pago_polizza/scan_qr_code.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,17 +32,16 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: title,
         theme: ThemeData(
-          primaryColor: Colors.tealAccent[700],
+          primaryColor: Color(0xffDF752C),
           scaffoldBackgroundColor: Colors.white,
         ),
         home: Scaffold(
-          body: DoubleBackToCloseApp(
-              child: MainPage(title: title),
-              snackBar: const SnackBar(
-                content: Text('Premi di nuovo per uscire'),
-                backgroundColor: Color(0xff00bfa5),
-              )),
-        ),
+            body: DoubleBackToCloseApp(
+          child: MainPage(title: title),
+          snackBar: const SnackBar(
+              content: Text('Premi di nuovo per uscire'),
+              backgroundColor: Colors.black),
+        )),
       );
 }
 
@@ -55,273 +58,154 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   String qrCode = 'Unknown';
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: (MyApp.logged) ? NavDrawer() : null,
-      appBar: (MyApp.logged)
-          ? AppBar(
-              title: Text("Home"),
-              backgroundColor: Colors.tealAccent[700],
-            )
-          : null,
+      drawer: null,
+      appBar: null,
       body: DoubleBackToCloseApp(
-        child: Padding(
-          padding: EdgeInsets.all(25),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 30),
-                  Icon(Icons.person_outline,
-                      color: Colors.grey[300], size: 140),
-                  SizedBox(height: 13),
-                  if ((press == 0 && MyApp.userType == 'client') ||
-                      MyApp.userType == 'admin')
-                    Text(
-                      MyApp.title,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.tealAccent[700],
-                      ),
-                    ),
-                  if ((press == 1 && MyApp.userType == 'client') ||
-                      MyApp.userType == 'agency')
-                    Text(
-                      'Nome agenzia',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.tealAccent[700],
-                      ),
-                    ),
-                  if (MyApp.userType == 'admin')
-                    Text(
-                      'Admin',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.tealAccent[700],
-                      ),
-                    ),
-                  SizedBox(height: 10),
-                  if ((press == 1 && MyApp.userType == 'client') ||
-                      MyApp.userType == 'agency')
-                    Text(
-                      'Codice RUI',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.tealAccent[700],
-                      ),
-                    ),
-                  if ((press == 1 && MyApp.userType == 'client') ||
-                      MyApp.userType == 'agency')
-                    SizedBox(height: 10),
-                  if ((press == 1 && MyApp.userType == 'client') ||
-                      MyApp.userType == 'agency')
-                    Text(
-                      'Località',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.tealAccent[700],
-                      ),
-                    ),
-                  SizedBox(height: 30),
-                  if (press == 0 && MyApp.userType == 'client')
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Stack(children: [
+            Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.15,
+                    left: MediaQuery.of(context).size.height * 0.05),
+                child: Stack(
+                  children: [
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: TextFormField(
-                        cursorColor: Colors.tealAccent[700],
-                        style: TextStyle(
-                          color: Colors.tealAccent[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.vpn_key,
-                              color: Colors.tealAccent[700], size: 30),
-                          labelText: "Codice RUI",
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w800,
-                          ),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          alignment: Alignment.topLeft,
+                          image: AssetImage('assets/logo_Arancio.png'),
+                          fit: BoxFit.scaleDown,
                         ),
                       ),
                     ),
-                  if (press == 0 && MyApp.userType == 'client')
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: TextFormField(
-                        cursorColor: Colors.tealAccent[700],
-                        obscureText: true,
-                        style: TextStyle(
-                          color: Colors.tealAccent[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.password,
-                              color: Colors.tealAccent[700], size: 30),
-                          labelText: "Password",
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.05,
                       ),
-                    ),
-                  if (press == 0 && MyApp.userType == 'client')
-                    SizedBox(
-                      height: 55,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          textStyle: TextStyle(fontSize: 20),
-                          primary: Colors.tealAccent[700],
-                        ),
-                        onPressed: () {
-                          press = 1;
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => MyApp()),
-                          );
-                        },
+                      child: SizedBox(
                         child: Text(
-                          'Scegli agenzia',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                          'Lorem ipsum dolor sit amet.',
+                          style: GoogleFonts.lato(
+                            fontSize: 16.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                       ),
                     ),
-                  if (press == 0 && MyApp.userType == 'client')
-                    SizedBox(height: 10),
-                  if (press == 0 && MyApp.userType == 'client')
-                    Text(
-                      'or',
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  if (press == 0 && MyApp.userType == 'client')
-                    SizedBox(height: 10),
-                  if (press == 0 && MyApp.userType == 'client')
-                    SizedBox(
-                      height: 55,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          textStyle: TextStyle(fontSize: 20),
-                          primary: Colors.tealAccent[700],
-                        ),
-                        onPressed: () => scanQRCode(),
-                        child: Text(
-                          'Scan QR Code',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (press == 1 && MyApp.userType == 'client' && MyApp.logged)
-                    SizedBox(
-                      height: 55,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          textStyle: TextStyle(fontSize: 20),
-                          primary: Colors.tealAccent[700],
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Pagamento()),
-                          );
-                        },
-                        child: Text(
-                          'Paga ora',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (press == 1 && !MyApp.logged)
-                    SizedBox(
-                      height: 55,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          textStyle: TextStyle(fontSize: 20),
-                          primary: Colors.tealAccent[700],
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Home()),
-                          );
-                        },
-                        child: Text(
-                          'Esegui il login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+                  ],
+                )),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20.0),
+                  ),
+                  color: Color(0xffDF752C),
+                ),
+                child: Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.1),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton.icon(
+                                icon: Icon(
+                                  Icons.work,
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.width * 0.8,
+                                      MediaQuery.of(context).size.height *
+                                          0.06),
+                                  alignment: Alignment.center,
+                                  primary: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        curve: Curves.easeInOut,
+                                        type: PageTransitionType.bottomToTop,
+                                        child: ChoiceAgency(),
+                                      ));
+                                },
+                                label: Text(
+                                  'Scegli Agenzia',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 15.0,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(height: 30),
+                              ElevatedButton.icon(
+                                icon: Icon(
+                                  Ionicons.qr_code_outline,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.width * 0.8,
+                                      MediaQuery.of(context).size.height *
+                                          0.06),
+                                  alignment: Alignment.center,
+                                  primary: Color(0xff000000),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        curve: Curves.easeInOut,
+                                        type: PageTransitionType.bottomToTop,
+                                        child: ScanQRCode(),
+                                      ));
+                                },
+                                label: Text(
+                                  'Scan QR Code',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ])),
+                  ],
+                ),
               ),
             ),
-          ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                alignment: Alignment.center,
+                width: 300,
+                height: 300,
+                color: const Color(0xFFF9F9F9),
+              ),
+            ),
+          ]),
         ),
         snackBar: const SnackBar(
           content: Text('Premi di nuovo per uscire'),
-          backgroundColor: Color(0xff00bfa5),
+          backgroundColor: Colors.black,
         ),
       ),
     );
-  }
-
-  Future<void> scanQRCode() async {
-    try {
-      final qrCode = await FlutterBarcodeScanner.scanBarcode(
-        '#008080',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-
-      if (!mounted) return;
-
-      setState(() {
-        this.qrCode = qrCode;
-      });
-    } on PlatformException {
-      qrCode = 'Failed to get platform version.';
-    }
   }
 }

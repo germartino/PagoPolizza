@@ -12,16 +12,21 @@ import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/home.dart';
 import 'package:page_transition/page_transition.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class ChoiceAgency extends StatefulWidget {
+  const ChoiceAgency({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => LoginState();
+  State<StatefulWidget> createState() => ChoiceAgencyState();
 }
 
-class LoginState extends State<Login> {
+class ChoiceAgencyState extends State<ChoiceAgency> {
   bool _passwordVisible = false;
   final _formkey = GlobalKey<FormState>();
+  final controller = TextEditingController();
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(

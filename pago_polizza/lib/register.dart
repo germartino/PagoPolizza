@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/login.dart';
-import 'package:pago_polizza/main.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:pago_polizza/navdrawer.dart';
+import 'package:pago_polizza/home.dart';
 
 bool agree = false;
 
