@@ -136,13 +136,10 @@ class ScanQRCodeState extends State<ScanQRCode> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
       //do something with scanData.code
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
           context,
-          PageTransition(
-            curve: Curves.easeInOut,
-            type: PageTransitionType.fade,
-            child: Home(),
-          ));
+          PageTransition(child: Home(), type: PageTransitionType.fade),
+          (route) => false);
     });
   }
 }

@@ -182,10 +182,12 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formkey.currentState!.validate()) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Home()),
-                              );
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  PageTransition(
+                                      child: Home(),
+                                      type: PageTransitionType.fade),
+                                  (route) => false);
                             }
                           },
                           child: Text(
