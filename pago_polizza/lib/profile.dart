@@ -1,182 +1,255 @@
+import 'dart:developer';
+import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/main.dart';
+import 'package:pago_polizza/login.dart';
+import 'package:flutter/services.dart';
+import 'package:pago_polizza/pagamento.dart';
+import 'package:pago_polizza/register.dart';
 import 'package:pago_polizza/navdrawer.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:pago_polizza/main.dart';
+import 'package:pago_polizza/home.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:pago_polizza/update_profile.dart';
 
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
-
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
+
   @override
+  State<StatefulWidget> createState() => ProfileState();
+}
+
+class ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
-      appBar: AppBar(
-        title: Text("Profilo"),
-        backgroundColor: Colors.tealAccent[700],
-      ),
-      body: DoubleBackToCloseApp(
-          child: Padding(
-            padding: EdgeInsets.all(25),
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Text(
-                      "PagoPolizza",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.tealAccent[700],
+        drawer: null,
+        appBar: null,
+        body: SafeArea(
+            child: DoubleBackToCloseApp(
+                child: Column(children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(26.0),
                       ),
+                      color: Color(0xffdf752c),
                     ),
-                    Text(
-                      "View Profile",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: TextFormField(
-                        cursorColor: Colors.tealAccent[700],
-                        style: TextStyle(
-                          color: Colors.tealAccent[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.person_outline,
-                              color: Colors.tealAccent[700], size: 30),
-                          labelText: "Name",
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w800,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.1),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            alignment: Alignment.centerLeft,
+                            image: AssetImage('assets/logo_Bianco.png'),
+                            fit: BoxFit.scaleDown,
                           ),
                         ),
                       ),
                     ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: TextFormField(
-                        cursorColor: Colors.tealAccent[700],
-                        style: TextStyle(
-                          color: Colors.tealAccent[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.person,
-                              color: Colors.tealAccent[700], size: 30),
-                          labelText: (MyApp.userType == 'client')
-                              ? "Cognome/Ragione Sociale"
-                              : 'Codice Agenzia',
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w800,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xffffffff),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.height * 0.04,
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.1),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Il mio profilo',
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 23.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 0,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top:
+                                            MediaQuery.of(context).size.height *
+                                                0.01,
+                                        right:
+                                            MediaQuery.of(context).size.width *
+                                                0.01,
+                                      ),
+                                      child: InkWell(
+                                          onTap: () => {
+                                                Navigator.push(
+                                                    context,
+                                                    PageTransition(
+                                                      curve: Curves.easeInOut,
+                                                      type: PageTransitionType
+                                                          .rightToLeftWithFade,
+                                                      child: UpdateProfile(),
+                                                    ))
+                                              },
+                                          child: Container(
+                                              alignment: Alignment.topRight,
+                                              height: 35,
+                                              width: 35,
+                                              decoration: ShapeDecoration(
+                                                color: Colors.white,
+                                                shadows: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.4),
+                                                    spreadRadius: 2,
+                                                    blurRadius: 10,
+                                                    offset: Offset(0, 5),
+                                                  ),
+                                                ],
+                                                shape: StadiumBorder(
+                                                  side: BorderSide(
+                                                      color: Colors.white,
+                                                      width: 2),
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.edit_outlined,
+                                                  color: Colors.black,
+                                                  size: 20,
+                                                ),
+                                              ))),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.07,
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'NOME',
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 12.0,
+                                      color: Color(0xff545454),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.01),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Mario',
+                                  style: GoogleFonts.ptSans(
+                                    fontSize: 14.0,
+                                    color: Color(0xff545454),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.05),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'COGNOME',
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 12.0,
+                                      color: Color(0xff545454),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.01),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Rossi',
+                                  style: GoogleFonts.ptSans(
+                                    fontSize: 14.0,
+                                    color: Color(0xff545454),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.05),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'EMAIL',
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 12.0,
+                                      color: Color(0xff545454),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.01),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'mario.rossi@pagopolizza.com',
+                                  style: GoogleFonts.ptSans(
+                                    fontSize: 14.0,
+                                    color: Color(0xff545454),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.05),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'PASSWORD',
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 12.0,
+                                      color: Color(0xff545454),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.01),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  '*********',
+                                  style: GoogleFonts.ptSans(
+                                    fontSize: 14.0,
+                                    color: Color(0xff545454),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 1),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: TextFormField(
-                        cursorColor: Colors.tealAccent[700],
-                        style: TextStyle(
-                          color: Colors.tealAccent[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: (MyApp.userType == 'client')
-                              ? Icon(Icons.mail_outline,
-                                  color: Colors.tealAccent[700], size: 30)
-                              : Icon(Icons.map,
-                                  color: Colors.tealAccent[700], size: 30),
-                          labelText: (MyApp.userType == 'client')
-                              ? "Email"
-                              : "Località",
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 1),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: TextFormField(
-                        cursorColor: Colors.tealAccent[700],
-                        obscureText: true,
-                        style: TextStyle(
-                          color: Colors.tealAccent[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.lock,
-                              color: Colors.tealAccent[700], size: 30),
-                          labelText: "Password",
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    SizedBox(
-                      height: 55,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          textStyle: TextStyle(fontSize: 20),
-                          primary: Colors.tealAccent[700],
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UpdateP()),
-                          );
-                        },
-                        child: Text(
-                          'Update Profile',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          snackBar: const SnackBar(
-            content: Text('Premi di nuovo per uscire'),
-            backgroundColor: Color(0xff00bfa5),
-          )),
-    );
+                  )
+                ]),
+                snackBar: const SnackBar(
+                  content: Text('Premi di nuovo per uscire'),
+                  backgroundColor: Colors.black,
+                ))));
   }
 }

@@ -1,231 +1,384 @@
+import 'dart:developer';
+import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/login.dart';
+import 'package:flutter/services.dart';
+import 'package:pago_polizza/pagamento.dart';
+import 'package:pago_polizza/register.dart';
 import 'package:pago_polizza/navdrawer.dart';
-import 'package:pago_polizza/main.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/home.dart';
+import 'package:page_transition/page_transition.dart';
 
-class UpdateP extends StatelessWidget {
-  const UpdateP({Key? key}) : super(key: key);
+class UpdateProfile extends StatefulWidget {
+  const UpdateProfile({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: NavDrawer(),
-        appBar: AppBar(
-          title: Text("Profilo"),
-          backgroundColor: Colors.tealAccent[700],
-        ),
-        body: (MyApp.userType == 'admin')
-            ? DoubleBackToCloseApp(
-                snackBar: const SnackBar(
-                  content: Text('Premi di nuovo per uscire'),
-                  backgroundColor: Color(0xff00bfa5),
-                ),
-                child: getPage(context),
-              )
-            : getPage(context));
-  }
+  State<StatefulWidget> createState() => UpdateProfileState();
 }
 
-Padding getPage(context) {
-  return Padding(
-    padding: EdgeInsets.all(25),
-    child: Center(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Text(
-              "PagoPolizza",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.tealAccent[700],
+class UpdateProfileState extends State<UpdateProfile> {
+  final _formkey = GlobalKey<FormState>();
+  bool _passwordVisible = false;
+  bool _passwordVisible1 = false;
+  bool _passwordVisible2 = false;
+  TextEditingController password = TextEditingController(text: 'nuovapassword');
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+        drawer: null,
+        appBar: null,
+        body: SafeArea(
+            child: Column(children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.08,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(26.0),
               ),
+              color: Color(0xffdf752c),
             ),
-            Text(
-              (MyApp.userType == 'admin')
-                  ? "Update password"
-                  : "Update Profile",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[400],
-              ),
-            ),
-            SizedBox(height: 20),
-            if (MyApp.userType != 'admin')
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: TextFormField(
-                  style: TextStyle(
-                    color: Colors.tealAccent[700],
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 0,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.002,
+                      left: MediaQuery.of(context).size.width * 0.05,
+                      right: MediaQuery.of(context).size.width * 0.07,
+                    ),
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Ionicons.chevron_back_outline,
+                            color: Color(0xffffffff), size: 25)),
                   ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.person_outline,
-                        color: Colors.tealAccent[700], size: 30),
-                    labelText: "New Name",
-                    labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[400],
-                      fontWeight: FontWeight.w800,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        alignment: Alignment.centerLeft,
+                        image: AssetImage('assets/logo_Bianco.png'),
+                        fit: BoxFit.scaleDown,
+                      ),
                     ),
                   ),
-                ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xffffffff),
               ),
-            if (MyApp.userType != 'admin')
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: TextFormField(
-                  style: TextStyle(
-                    color: Colors.tealAccent[700],
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.person,
-                        color: Colors.tealAccent[700], size: 30),
-                    labelText: (MyApp.userType == 'client')
-                        ? "New Cognome/Ragione Sociale"
-                        : "New Codice Agenzia",
-                    labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[400],
-                      fontWeight: FontWeight.w800,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.02,
+                    horizontal: MediaQuery.of(context).size.width * 0.1),
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Il mio profilo',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 23.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            if (MyApp.userType != 'admin') SizedBox(height: 1),
-            if (MyApp.userType != 'admin')
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: TextFormField(
-                  style: TextStyle(
-                    color: Colors.tealAccent[700],
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: (MyApp.userType == 'client')
-                        ? Icon(Icons.mail_outline,
-                            color: Colors.tealAccent[700], size: 30)
-                        : Icon(Icons.map,
-                            color: Colors.tealAccent[700], size: 30),
-                    labelText: (MyApp.userType == 'client')
-                        ? "New Email"
-                        : "New Località",
-                    labelStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[400],
-                      fontWeight: FontWeight.w800,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.03,
                     ),
-                  ),
-                ),
-              ),
-            if (MyApp.userType != 'admin') SizedBox(height: 1),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: TextFormField(
-                obscureText: true,
-                style: TextStyle(
-                  color: Colors.tealAccent[700],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon:
-                      Icon(Icons.lock, color: Colors.tealAccent[700], size: 30),
-                  labelText: "Old Password",
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[400],
-                    fontWeight: FontWeight.w800,
-                  ),
+                    Form(
+                      key: _formkey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            initialValue: 'Mario',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci il nome';
+                              }
+                              return null;
+                            },
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              labelText: "Nome",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          TextFormField(
+                            initialValue: 'Rossi',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci il cognome o la ragione sociale';
+                              }
+                              return null;
+                            },
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              labelText: "Cognome o Ragione sociale",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          TextFormField(
+                            initialValue: 'mario.rossi@pagopolizza.com',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci l\'email';
+                              }
+                              return null;
+                            },
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: Icon(Ionicons.mail_outline,
+                                  color: Color(0xff9e9e9e), size: 25),
+                              labelText: "Email",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          TextFormField(
+                            initialValue: 'password',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci la vecchia password';
+                              }
+                              return null;
+                            },
+                            obscureText: !_passwordVisible,
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                    _passwordVisible
+                                        ? Ionicons.eye_outline
+                                        : Ionicons.eye_off_outline,
+                                    color: Color(0xff9e9e9e),
+                                    size: 25),
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                              ),
+                              labelText: "Vecchia password",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          TextFormField(
+                            controller: password,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci la nuova password';
+                              }
+                              return null;
+                            },
+                            obscureText: !_passwordVisible1,
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                    _passwordVisible1
+                                        ? Ionicons.eye_outline
+                                        : Ionicons.eye_off_outline,
+                                    color: Color(0xff9e9e9e),
+                                    size: 25),
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible1 = !_passwordVisible1;
+                                  });
+                                },
+                              ),
+                              labelText: "Nuova Password",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                          TextFormField(
+                            initialValue: 'nuovapassword',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore reinserisci la nuova password';
+                              } else if (password.text != value) {
+                                return 'La password inserita non corrisponde';
+                              }
+                              return null;
+                            },
+                            obscureText: !_passwordVisible2,
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                    _passwordVisible2
+                                        ? Ionicons.eye_outline
+                                        : Ionicons.eye_off_outline,
+                                    color: Color(0xff9e9e9e),
+                                    size: 25),
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible2 = !_passwordVisible2;
+                                  });
+                                },
+                              ),
+                              labelText: "Conferma Password",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 0,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'Annulla',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 15.0,
+                                        color: Color(0xffdf752c),
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(
+                                            MediaQuery.of(context).size.width *
+                                                0.35,
+                                            MediaQuery.of(context).size.height *
+                                                0.06),
+                                        alignment: Alignment.center,
+                                        primary: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(23),
+                                            side: BorderSide(
+                                                color: Color(0xffdf752c)))),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                                Expanded(
+                                  flex: 0,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      //update profile
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'Salva',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 15.0,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(
+                                            MediaQuery.of(context).size.width *
+                                                0.35,
+                                            MediaQuery.of(context).size.height *
+                                                0.06),
+                                        alignment: Alignment.center,
+                                        primary: Color(0xffdf752c),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(23))),
+                                  ),
+                                )
+                              ])
+                        ],
+                      ),
+                    ),
+                  ]),
                 ),
               ),
             ),
-            SizedBox(height: 1),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: TextFormField(
-                obscureText: true,
-                style: TextStyle(
-                  color: Colors.tealAccent[700],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon: Icon(Icons.lock_outline,
-                      color: Colors.tealAccent[700], size: 30),
-                  labelText: "New Password",
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[400],
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 1),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: TextFormField(
-                obscureText: true,
-                style: TextStyle(
-                  color: Colors.tealAccent[700],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon: Icon(Icons.lock_outline,
-                      color: Colors.tealAccent[700], size: 30),
-                  labelText: "Confirm New Password",
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[400],
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 5),
-            SizedBox(
-              height: 55,
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  textStyle: TextStyle(fontSize: 20),
-                  primary: Colors.tealAccent[700],
-                ),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Home()),
-                  );
-                },
-                child: Text(
-                  'Confirm Update',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
+          )
+        ])));
+  }
 }

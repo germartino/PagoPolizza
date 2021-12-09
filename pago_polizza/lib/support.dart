@@ -22,7 +22,6 @@ class Support extends StatefulWidget {
 }
 
 class SupportState extends State<Support> {
-  bool _passwordVisible = false;
   final _formkey = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
