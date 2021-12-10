@@ -156,7 +156,9 @@ class ProfileState extends State<Profile> {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'Mario',
+                                  (HomeState.userType == 'client')
+                                      ? 'Mario'
+                                      : 'Allianz Bank Financial Advisors S.p.A.',
                                   style: GoogleFonts.ptSans(
                                     fontSize: 14.0,
                                     color: Color(0xff545454),
@@ -169,7 +171,9 @@ class ProfileState extends State<Profile> {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'COGNOME',
+                                  (HomeState.userType == 'client')
+                                      ? 'COGNOME / RAGIONE SOCIALE'
+                                      : 'CODICE RUI',
                                   style: GoogleFonts.montserrat(
                                       fontSize: 12.0,
                                       color: Color(0xff545454),
@@ -182,13 +186,45 @@ class ProfileState extends State<Profile> {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'Rossi',
+                                  (HomeState.userType == 'client')
+                                      ? 'Rossi'
+                                      : 'A000076887',
                                   style: GoogleFonts.ptSans(
                                     fontSize: 14.0,
                                     color: Color(0xff545454),
                                   ),
                                 ),
                               ),
+                              if (HomeState.userType == 'agency')
+                                SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05),
+                              if (HomeState.userType == 'agency')
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'INDIRIZZO SEDE',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 12.0,
+                                        color: Color(0xff545454),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              if (HomeState.userType == 'agency')
+                                SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.01),
+                              if (HomeState.userType == 'agency')
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'Via delle vie, 3, Roma',
+                                    style: GoogleFonts.ptSans(
+                                      fontSize: 14.0,
+                                      color: Color(0xff545454),
+                                    ),
+                                  ),
+                                ),
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
                                       0.05),
@@ -208,7 +244,9 @@ class ProfileState extends State<Profile> {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'mario.rossi@pagopolizza.com',
+                                  (HomeState.userType == 'client')
+                                      ? 'client@pagopolizza.com'
+                                      : 'agency@pagopolizza.com',
                                   style: GoogleFonts.ptSans(
                                     fontSize: 14.0,
                                     color: Color(0xff545454),

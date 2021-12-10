@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pago_polizza/pages/home.dart';
 import 'package:pago_polizza/pages/storico.dart';
 import 'package:pago_polizza/model/custom_expansion_tile.dart';
 
@@ -16,9 +17,13 @@ class Transaction {
   final String compagnia;
   final String note;
   bool expanded = false;
+  String intestatario = '';
 
   Transaction(this.success, this.data, this.importo, this.nPolizza,
       this.compagnia, this.note);
+
+  Transaction.agencyConstructor(this.success, this.data, this.importo,
+      this.nPolizza, this.compagnia, this.note, this.intestatario);
 
   Widget getElementCollapsed(BuildContext context) {
     return Padding(
@@ -32,10 +37,14 @@ class Transaction {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  success ? 'EFFETTUATO CON SUCCESSO' : "NON EFFETTUATO",
+                  (HomeState.userType == 'client')
+                      ? (success ? 'EFFETTUATO CON SUCCESSO' : "NON EFFETTUATO")
+                      : intestatario.toUpperCase(),
                   style: GoogleFonts.montserrat(
                     fontSize: 12.0,
-                    color: success ? Color(0xff00701A) : Color(0xffA30000),
+                    color: (HomeState.userType == 'client')
+                        ? (success ? Color(0xff00701A) : Color(0xffA30000))
+                        : Color(0xffdf752c),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -210,7 +219,9 @@ class Transaction {
             0.03,
             0.03
           ], colors: [
-            success ? Color(0xff00701A) : Color(0xffA30000),
+            (HomeState.userType == 'client')
+                ? (success ? Color(0xff00701A) : Color(0xffA30000))
+                : Color(0xffdf752c),
             Colors.white
           ]),
           borderRadius: BorderRadius.circular(10.0),
@@ -224,7 +235,9 @@ class Transaction {
           ],
         ),
         child: CustomExpansionTile(
-          borderColor: success ? Color(0xff00701A) : Color(0xffA30000),
+          borderColor: (HomeState.userType == 'client')
+              ? (success ? Color(0xff00701A) : Color(0xffA30000))
+              : Color(0xffdf752c),
           tilePadding: EdgeInsets.zero,
           childrenPadding: EdgeInsets.zero,
           backgroundColor: Colors.white,

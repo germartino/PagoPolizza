@@ -82,9 +82,10 @@ class UpdateProfileState extends State<UpdateProfile> {
                 color: Color(0xffffffff),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.02,
-                    horizontal: MediaQuery.of(context).size.width * 0.1),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02,
+                    left: MediaQuery.of(context).size.width * 0.1,
+                    right: MediaQuery.of(context).size.width * 0.1),
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Column(children: [
@@ -106,7 +107,9 @@ class UpdateProfileState extends State<UpdateProfile> {
                       child: Column(
                         children: [
                           TextFormField(
-                            initialValue: 'Mario',
+                            initialValue: (HomeState.userType == 'client')
+                                ? 'Mario'
+                                : 'Allianz Bank Financial Advisors S.p.A.',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Perfavore inserisci il nome';
@@ -132,7 +135,9 @@ class UpdateProfileState extends State<UpdateProfile> {
                               height:
                                   MediaQuery.of(context).size.height * 0.02),
                           TextFormField(
-                            initialValue: 'Rossi',
+                            initialValue: (HomeState.userType == 'client')
+                                ? 'Rossi'
+                                : 'A000076887',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Perfavore inserisci il cognome o la ragione sociale';
@@ -147,13 +152,44 @@ class UpdateProfileState extends State<UpdateProfile> {
                             decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black)),
-                              labelText: "Cognome o Ragione sociale",
+                              labelText: (HomeState.userType == 'client')
+                                  ? 'Cognome o Ragione Sociale'
+                                  : 'Codice RUI',
                               labelStyle: GoogleFonts.ptSans(
                                 fontSize: 15.0,
                                 color: Color(0xff707070),
                               ),
                             ),
                           ),
+                          if (HomeState.userType == 'agency')
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
+                          if (HomeState.userType == 'agency')
+                            TextFormField(
+                              initialValue: 'Via delle vie, 3, Roma',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Perfavore inserisci l\'indirizzo della sede';
+                                }
+                                return null;
+                              },
+                              cursorColor: Colors.black,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                              ),
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                labelText: 'Indirizzo Sede',
+                                labelStyle: GoogleFonts.ptSans(
+                                  fontSize: 15.0,
+                                  color: Color(0xff707070),
+                                ),
+                              ),
+                            ),
                           SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.02),

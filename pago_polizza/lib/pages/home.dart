@@ -21,6 +21,7 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   static bool logged = false;
+  static String userType = 'client'; //can be 'client' or 'agency' or 'admin'
   var iconaPopup = Ionicons.menu_outline;
   final GlobalKey _menuKey = GlobalKey();
 
@@ -82,6 +83,7 @@ class HomeState extends State<Home> {
                                     else
                                       {
                                         HomeState.logged = false,
+                                        HomeState.userType = 'client',
                                         Navigator.pushReplacement(
                                             context,
                                             PageTransition(
@@ -235,7 +237,7 @@ class HomeState extends State<Home> {
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            'AD94698',
+                            'A000076887',
                             style: GoogleFonts.lato(
                               fontSize: 14.0,
                               color: Colors.black,
@@ -271,45 +273,46 @@ class HomeState extends State<Home> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.1,
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (logged) {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    curve: Curves.easeInOut,
-                                    type:
-                                        PageTransitionType.rightToLeftWithFade,
-                                    child: Pagamento(),
-                                  ));
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    curve: Curves.easeInOut,
-                                    type:
-                                        PageTransitionType.rightToLeftWithFade,
-                                    child: Login(),
-                                  ));
-                            }
-                          },
-                          child: Text(
-                            logged ? 'Paga ora' : 'Accedi',
-                            style: GoogleFonts.montserrat(
-                              fontSize: 15.0,
-                              color: Colors.white,
+                        if (HomeState.userType == 'client')
+                          ElevatedButton(
+                            onPressed: () {
+                              if (logged) {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      curve: Curves.easeInOut,
+                                      type: PageTransitionType
+                                          .rightToLeftWithFade,
+                                      child: Pagamento(),
+                                    ));
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      curve: Curves.easeInOut,
+                                      type: PageTransitionType
+                                          .rightToLeftWithFade,
+                                      child: Login(),
+                                    ));
+                              }
+                            },
+                            child: Text(
+                              logged ? 'Paga ora' : 'Accedi',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15.0,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.45,
-                                  MediaQuery.of(context).size.height * 0.06),
-                              alignment: Alignment.center,
-                              primary: Color(0xffdf752c),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(23))),
-                        )
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.45,
+                                    MediaQuery.of(context).size.height * 0.06),
+                                alignment: Alignment.center,
+                                primary: Color(0xffdf752c),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(23))),
+                          )
                       ])),
                 ]),
               ),

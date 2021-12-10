@@ -15,40 +15,83 @@ import 'package:pago_polizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pago_polizza/model/transaction.dart';
 
-List<Transaction> transactions = [
-  Transaction(
-    true,
-    '07/12/2021',
-    '150.50',
-    '23987598',
-    'Allianz Bank Financial Advisors S.p.A.',
-    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-  ),
-  Transaction(
-    false,
-    '05/12/2021',
-    '70.35',
-    '23987598',
-    'Allianz Bank Financial Advisors S.p.A.',
-    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-  ),
-  Transaction(
-    false,
-    '30/11/2021',
-    '70.35',
-    '23987598',
-    'Allianz Bank Financial Advisors S.p.A.',
-    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-  ),
-  Transaction(
-    true,
-    '15/09/2021',
-    '750',
-    '23987598',
-    'Allianz Bank Financial Advisors S.p.A.',
-    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-  )
-];
+List<Transaction> getList() {
+  List<Transaction> temp = [];
+  if (HomeState.userType == 'client') {
+    temp.add(Transaction(
+      true,
+      '07/12/2021',
+      '150.50',
+      '23987598',
+      'Allianz Bank Financial Advisors S.p.A.',
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+    ));
+    temp.add(
+      Transaction(
+        false,
+        '05/12/2021',
+        '70.35',
+        '23987598',
+        'Allianz Bank Financial Advisors S.p.A.',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+      ),
+    );
+    temp.add(
+      Transaction(
+        false,
+        '30/11/2021',
+        '70.35',
+        '23987598',
+        'Allianz Bank Financial Advisors S.p.A.',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+      ),
+    );
+    temp.add(Transaction(
+      true,
+      '15/09/2021',
+      '750',
+      '23987598',
+      'Allianz Bank Financial Advisors S.p.A.',
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+    ));
+  } else {
+    temp.add(Transaction.agencyConstructor(
+        true,
+        '07/12/2021',
+        '150.50',
+        '23987598',
+        'Allianz Bank Financial Advisors S.p.A.',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+        'Alessio Ambruoso'));
+    temp.add(Transaction.agencyConstructor(
+        false,
+        '05/12/2021',
+        '70.35',
+        '23987598',
+        'Allianz Bank Financial Advisors S.p.A.',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+        'Marco Borrelli'));
+    temp.add(Transaction.agencyConstructor(
+        false,
+        '30/11/2021',
+        '70.35',
+        '23987598',
+        'Allianz Bank Financial Advisors S.p.A.',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+        'Roberto Veneruso'));
+    temp.add(Transaction.agencyConstructor(
+        true,
+        '15/09/2021',
+        '750',
+        '23987598',
+        'Allianz Bank Financial Advisors S.p.A.',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
+        'Gerardo Martino'));
+  }
+  return temp;
+}
+
+List<Transaction> transactions = getList();
 
 class Storico extends StatefulWidget {
   const Storico({Key? key}) : super(key: key);
@@ -117,7 +160,7 @@ class StoricoState extends State<Storico> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Visualizza storico dei tuoi pagamenti',
+                        'Visualizza lo storico dei pagamenti',
                         style: GoogleFonts.ptSans(
                           fontSize: 15.0,
                           color: Colors.black,

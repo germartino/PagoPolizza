@@ -24,6 +24,7 @@ class Login extends StatefulWidget {
 class LoginState extends State<Login> {
   bool _passwordVisible = false;
   final _formkey = GlobalKey<FormState>();
+  TextEditingController email = new TextEditingController();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,9 +130,15 @@ class LoginState extends State<Login> {
                             child: Column(
                               children: [
                                 TextFormField(
+                                  controller: email,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Perfavore inserisci l\'email';
+                                    } else if (value !=
+                                            'client@pagopolizza.com' &&
+                                        value != 'admin@pagopolizza.com' &&
+                                        value != 'agency@pagopolizza.com') {
+                                      return 'email errata';
                                     }
                                     return null;
                                   },
@@ -219,6 +226,8 @@ class LoginState extends State<Login> {
                                   onPressed: () {
                                     if (_formkey.currentState!.validate()) {
                                       HomeState.logged = true;
+                                      HomeState.userType = email.text.substring(
+                                          0, email.text.indexOf('@'));
                                       Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(
