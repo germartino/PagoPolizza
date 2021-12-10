@@ -97,9 +97,10 @@ class ScanQRCodeState extends State<ScanQRCode> {
                   ),
                   child: Column(children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.05,
-                          horizontal: MediaQuery.of(context).size.width * 0.1),
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.05,
+                          left: MediaQuery.of(context).size.width * 0.1,
+                          right: MediaQuery.of(context).size.width * 0.1),
                       child: SizedBox(
                         width: double.infinity,
                         child: Text(

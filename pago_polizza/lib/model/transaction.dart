@@ -16,7 +16,6 @@ class Transaction {
   final String nPolizza;
   final String compagnia;
   final String note;
-  bool expanded = false;
   String intestatario = '';
 
   Transaction(this.success, this.data, this.importo, this.nPolizza,
@@ -29,7 +28,6 @@ class Transaction {
     return Padding(
       padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
       child: SizedBox(
-        height: 95,
         child: Column(
           children: <Widget>[
             Padding(
@@ -51,54 +49,57 @@ class Transaction {
               ),
             ),
             SizedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(
-                    child: Text.rich(
-                      TextSpan(
-                        style: GoogleFonts.ptSans(
-                          fontSize: 13.0,
-                          color: Color(0xff707070),
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'in data: ',
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SizedBox(
+                      child: Text.rich(
+                        TextSpan(
+                          style: GoogleFonts.ptSans(
+                            fontSize: 13.0,
+                            color: Color(0xff707070),
                           ),
-                          TextSpan(
-                            text: data,
-                            style: GoogleFonts.ptSans(
-                              fontSize: 14.0,
-                              color: Colors.black,
+                          children: [
+                            TextSpan(
+                              text: 'in data: ',
                             ),
-                          ),
-                        ],
+                            TextSpan(
+                              text: data,
+                              style: GoogleFonts.ptSans(
+                                fontSize: 14.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    child: Text.rich(
-                      TextSpan(
-                        style: GoogleFonts.ptSans(
-                          fontSize: 13.0,
-                          color: Color(0xff707070),
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'importo: ',
+                    SizedBox(
+                      child: Text.rich(
+                        TextSpan(
+                          style: GoogleFonts.ptSans(
+                            fontSize: 13.0,
+                            color: Color(0xff707070),
                           ),
-                          TextSpan(
-                            text: importo + '€',
-                            style: GoogleFonts.ptSans(
-                              fontSize: 14.0,
-                              color: Colors.black,
+                          children: [
+                            TextSpan(
+                              text: 'importo: ',
                             ),
-                          ),
-                        ],
+                            TextSpan(
+                              text: importo + '€',
+                              style: GoogleFonts.ptSans(
+                                fontSize: 14.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

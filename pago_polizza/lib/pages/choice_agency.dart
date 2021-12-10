@@ -95,9 +95,10 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                   ),
                   child: Column(children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.1,
-                          horizontal: MediaQuery.of(context).size.width * 0.1),
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.1,
+                          left: MediaQuery.of(context).size.width * 0.1,
+                          right: MediaQuery.of(context).size.width * 0.1),
                       child: SizedBox(
                         child: Text(
                           'Inserisci Codice RUI e Password per visualizzare la tua Agenzia.',

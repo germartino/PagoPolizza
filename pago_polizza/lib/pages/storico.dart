@@ -101,7 +101,6 @@ class Storico extends StatefulWidget {
 }
 
 class StoricoState extends State<Storico> {
-  static bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,19 +117,52 @@ class StoricoState extends State<Storico> {
               ),
               color: Color(0xffdf752c),
             ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.1),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    alignment: Alignment.centerLeft,
-                    image: AssetImage('assets/logo_Bianco.png'),
-                    fit: BoxFit.scaleDown,
+            child: (HomeState.userType == 'admin')
+                ? Row(
+                    children: [
+                      Expanded(
+                        flex: 0,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.002,
+                            left: MediaQuery.of(context).size.width * 0.05,
+                            right: MediaQuery.of(context).size.width * 0.07,
+                          ),
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Icon(Ionicons.chevron_back_outline,
+                                  color: Color(0xffffffff), size: 25)),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              alignment: Alignment.centerLeft,
+                              image: AssetImage('assets/logo_Bianco.png'),
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.1),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          alignment: Alignment.centerLeft,
+                          image: AssetImage('assets/logo_Bianco.png'),
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
           Expanded(
             child: Container(
@@ -138,9 +170,10 @@ class StoricoState extends State<Storico> {
                 color: Color(0xffffffff),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.04,
-                    horizontal: MediaQuery.of(context).size.width * 0.1),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.04,
+                    left: MediaQuery.of(context).size.width * 0.1,
+                    right: MediaQuery.of(context).size.width * 0.1),
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Column(children: [

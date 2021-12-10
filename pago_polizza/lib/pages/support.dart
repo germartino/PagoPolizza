@@ -78,9 +78,10 @@ class SupportState extends State<Support> {
                 color: Color(0xffffffff),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.04,
-                    horizontal: MediaQuery.of(context).size.width * 0.1),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.04,
+                    left: MediaQuery.of(context).size.width * 0.1,
+                    right: MediaQuery.of(context).size.width * 0.1),
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Column(children: [

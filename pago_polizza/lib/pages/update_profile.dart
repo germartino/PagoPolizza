@@ -45,30 +45,38 @@ class UpdateProfileState extends State<UpdateProfile> {
             ),
             child: Row(
               children: [
-                Expanded(
-                  flex: 0,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.002,
-                      left: MediaQuery.of(context).size.width * 0.05,
-                      right: MediaQuery.of(context).size.width * 0.07,
+                if (HomeState.userType != 'admin')
+                  Expanded(
+                    flex: 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.002,
+                        left: MediaQuery.of(context).size.width * 0.05,
+                        right: MediaQuery.of(context).size.width * 0.07,
+                      ),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Ionicons.chevron_back_outline,
+                              color: Color(0xffffffff), size: 25)),
                     ),
-                    child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Ionicons.chevron_back_outline,
-                            color: Color(0xffffffff), size: 25)),
                   ),
-                ),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        alignment: Alignment.centerLeft,
-                        image: AssetImage('assets/logo_Bianco.png'),
-                        fit: BoxFit.scaleDown,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: (HomeState.userType == 'admin')
+                          ? MediaQuery.of(context).size.width * 0.1
+                          : 0,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          alignment: Alignment.centerLeft,
+                          image: AssetImage('assets/logo_Bianco.png'),
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                     ),
                   ),
@@ -106,61 +114,66 @@ class UpdateProfileState extends State<UpdateProfile> {
                       key: _formkey,
                       child: Column(
                         children: [
-                          TextFormField(
-                            initialValue: (HomeState.userType == 'client')
-                                ? 'Mario'
-                                : 'Allianz Bank Financial Advisors S.p.A.',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci il nome';
-                              }
-                              return null;
-                            },
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelText: "Nome",
-                              labelStyle: GoogleFonts.ptSans(
-                                fontSize: 15.0,
-                                color: Color(0xff707070),
+                          if (HomeState.userType != 'admin')
+                            TextFormField(
+                              initialValue: (HomeState.userType == 'client')
+                                  ? 'Mario'
+                                  : 'Allianz Bank Financial Advisors S.p.A.',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Perfavore inserisci il nome';
+                                }
+                                return null;
+                              },
+                              cursorColor: Colors.black,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                              ),
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                labelText: "Nome",
+                                labelStyle: GoogleFonts.ptSans(
+                                  fontSize: 15.0,
+                                  color: Color(0xff707070),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
-                          TextFormField(
-                            initialValue: (HomeState.userType == 'client')
-                                ? 'Rossi'
-                                : 'A000076887',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci il cognome o la ragione sociale';
-                              }
-                              return null;
-                            },
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelText: (HomeState.userType == 'client')
-                                  ? 'Cognome o Ragione Sociale'
-                                  : 'Codice RUI',
-                              labelStyle: GoogleFonts.ptSans(
-                                fontSize: 15.0,
-                                color: Color(0xff707070),
+                          if (HomeState.userType != 'admin')
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
+                          if (HomeState.userType != 'admin')
+                            TextFormField(
+                              initialValue: (HomeState.userType == 'client')
+                                  ? 'Rossi'
+                                  : 'A000076887',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Perfavore inserisci il cognome o la ragione sociale';
+                                }
+                                return null;
+                              },
+                              cursorColor: Colors.black,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                              ),
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                labelText: (HomeState.userType == 'client')
+                                    ? 'Cognome o Ragione Sociale'
+                                    : 'Codice RUI',
+                                labelStyle: GoogleFonts.ptSans(
+                                  fontSize: 15.0,
+                                  color: Color(0xff707070),
+                                ),
                               ),
                             ),
-                          ),
                           if (HomeState.userType == 'agency')
                             SizedBox(
                                 height:
@@ -190,9 +203,10 @@ class UpdateProfileState extends State<UpdateProfile> {
                                 ),
                               ),
                             ),
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
+                          if (HomeState.userType != 'admin')
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
                           TextFormField(
                             initialValue: 'mario.rossi@pagopolizza.com',
                             validator: (value) {
@@ -346,39 +360,45 @@ class UpdateProfileState extends State<UpdateProfile> {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Expanded(
-                                  flex: 0,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Annulla',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 15.0,
-                                        color: Color(0xffdf752c),
+                                if (HomeState.userType != 'admin')
+                                  Expanded(
+                                    flex: 0,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Annulla',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 15.0,
+                                          color: Color(0xffdf752c),
+                                        ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      textAlign: TextAlign.center,
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.06),
+                                          alignment: Alignment.center,
+                                          primary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(23),
+                                              side: BorderSide(
+                                                  color: Color(0xffdf752c)))),
                                     ),
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                            MediaQuery.of(context).size.height *
-                                                0.06),
-                                        alignment: Alignment.center,
-                                        primary: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(23),
-                                            side: BorderSide(
-                                                color: Color(0xffdf752c)))),
                                   ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.05,
-                                ),
+                                if (HomeState.userType != 'admin')
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.05,
+                                  ),
                                 Expanded(
                                   flex: 0,
                                   child: ElevatedButton(

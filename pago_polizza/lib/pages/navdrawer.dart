@@ -1,3 +1,4 @@
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/pages/agency_list.dart';
 import 'package:pago_polizza/pages/home.dart';
@@ -16,17 +17,38 @@ class NavDrawer extends StatefulWidget {
   State<StatefulWidget> createState() => NavDrawerState();
 }
 
+List<Widget> getPagesList() {
+  List<Widget> temp = [];
+  if (HomeState.userType == 'admin') {
+    temp.add(UpdateProfile());
+  } else {
+    temp.add(Profile());
+  }
+  temp.add(Home());
+  if (HomeState.userType == 'admin') {
+    temp.add(ListaAgenzie());
+  } else {
+    temp.add(Storico());
+  }
+  return temp;
+}
+
 class NavDrawerState extends State<NavDrawer> {
   int _selectedIndex = 1;
 
-  static const List<Widget> _pages = <Widget>[Profile(), Home(), Storico()];
+  List<Widget> _pages = getPagesList();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+          child: DoubleBackToCloseApp(
         child: _pages.elementAt(_selectedIndex),
-      ),
+        snackBar: const SnackBar(
+          content: Text('Premi di nuovo per uscire'),
+          backgroundColor: Colors.black,
+        ),
+      )),
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -34,7 +56,7 @@ class NavDrawerState extends State<NavDrawer> {
         backgroundColor: Colors.white,
         selectedIconTheme: IconThemeData(color: Colors.black, size: 30),
         selectedItemColor: Colors.black,
-        elevation: 3,
+        elevation: 5,
         items: [
           BottomNavigationBarItem(
               icon: Icon(

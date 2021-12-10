@@ -94,9 +94,10 @@ class RegisterState extends State<Register> {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.03,
-                          horizontal: MediaQuery.of(context).size.width * 0.1),
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.03,
+                          left: MediaQuery.of(context).size.width * 0.1,
+                          right: MediaQuery.of(context).size.width * 0.1),
                       child: SingleChildScrollView(
                         physics: BouncingScrollPhysics(),
                         child: Column(children: [
