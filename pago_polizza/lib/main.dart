@@ -1,16 +1,16 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/choice_agency.dart';
-import 'package:pago_polizza/login.dart';
+import 'package:pago_polizza/pages/choice_agency.dart';
+import 'package:pago_polizza/pages/login.dart';
 import 'package:flutter/services.dart';
-import 'package:pago_polizza/pagamento.dart';
-import 'package:pago_polizza/register.dart';
-import 'package:pago_polizza/navdrawer.dart';
+import 'package:pago_polizza/pages/pagamento.dart';
+import 'package:pago_polizza/pages/register.dart';
+import 'package:pago_polizza/pages/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pago_polizza/scan_qr_code.dart';
+import 'package:pago_polizza/pages/scan_qr_code.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,13 +34,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Color(0xffDF752C),
           scaffoldBackgroundColor: Colors.white,
         ),
-        home: Scaffold(
-            body: DoubleBackToCloseApp(
-          child: MainPage(title: title),
-          snackBar: const SnackBar(
-              content: Text('Premi di nuovo per uscire'),
-              backgroundColor: Colors.black),
-        )),
+        home: MainPage(title: title),
       );
 }
 

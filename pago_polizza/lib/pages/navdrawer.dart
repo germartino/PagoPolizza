@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/agency_list.dart';
-import 'package:pago_polizza/home.dart';
-import 'package:pago_polizza/login.dart';
+import 'package:pago_polizza/pages/agency_list.dart';
+import 'package:pago_polizza/pages/home.dart';
+import 'package:pago_polizza/pages/login.dart';
 import 'package:pago_polizza/main.dart';
-import 'package:pago_polizza/storico.dart';
-import 'package:pago_polizza/support.dart';
-import 'package:pago_polizza/profile.dart';
-import 'package:pago_polizza/update_profile.dart';
+import 'package:pago_polizza/pages/storico.dart';
+import 'package:pago_polizza/pages/support.dart';
+import 'package:pago_polizza/pages/profile.dart';
+import 'package:pago_polizza/pages/update_profile.dart';
 import 'package:ionicons/ionicons.dart';
 
 class NavDrawer extends StatefulWidget {

@@ -1,15 +1,15 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/login.dart';
+import 'package:pago_polizza/pages/login.dart';
 import 'package:flutter/services.dart';
-import 'package:pago_polizza/pagamento.dart';
-import 'package:pago_polizza/register.dart';
-import 'package:pago_polizza/navdrawer.dart';
+import 'package:pago_polizza/pages/pagamento.dart';
+import 'package:pago_polizza/pages/register.dart';
+import 'package:pago_polizza/pages/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pago_polizza/main.dart';
-import 'package:pago_polizza/home.dart';
+import 'package:pago_polizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ChoiceAgency extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pago_polizza/main.dart';
-import 'package:pago_polizza/navdrawer.dart';
+import 'package:pago_polizza/pages/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
-import 'package:pago_polizza/storico.dart';
+import 'package:pago_polizza/pages/storico.dart';
 
 class AgencyList extends StatelessWidget {
   const AgencyList({Key? key}) : super(key: key);
@@ -20,6 +20,7 @@ class AgencyList extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(25),
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
                 SizedBox(height: 30),

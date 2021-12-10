@@ -2,18 +2,18 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:pago_polizza/login.dart';
+import 'package:pago_polizza/pages/login.dart';
 import 'package:flutter/services.dart';
-import 'package:pago_polizza/pagamento.dart';
-import 'package:pago_polizza/register.dart';
-import 'package:pago_polizza/navdrawer.dart';
+import 'package:pago_polizza/pages/pagamento.dart';
+import 'package:pago_polizza/pages/register.dart';
+import 'package:pago_polizza/pages/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pago_polizza/main.dart';
-import 'package:pago_polizza/home.dart';
+import 'package:pago_polizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pago_polizza/update_profile.dart';
+import 'package:pago_polizza/pages/update_profile.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -64,6 +64,7 @@ class ProfileState extends State<Profile> {
                             horizontal:
                                 MediaQuery.of(context).size.width * 0.1),
                         child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
                           child: Column(
                             children: [
                               Row(
