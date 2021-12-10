@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pago_polizza">
    <application
-        android:label="pago_polizza"
+        android:label="PagoPolizza"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
