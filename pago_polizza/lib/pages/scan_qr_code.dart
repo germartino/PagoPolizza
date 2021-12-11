@@ -99,6 +99,7 @@ class ScanQRCodeState extends State<ScanQRCode> {
                     Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.05,
+                          bottom: MediaQuery.of(context).size.height * 0.03,
                           left: MediaQuery.of(context).size.width * 0.1,
                           right: MediaQuery.of(context).size.width * 0.1),
                       child: SizedBox(
@@ -117,8 +118,8 @@ class ScanQRCodeState extends State<ScanQRCode> {
                       alignment: Alignment.center,
                       child: Container(
                         alignment: Alignment.topCenter,
-                        width: 300,
-                        height: 300,
+                        width: MediaQuery.of(context).size.width * 0.85,
+                        height: MediaQuery.of(context).size.height * 0.48,
                         color: const Color(0xFFF9F9F9),
                         child: QRView(
                           key: qrKey,
