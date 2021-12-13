@@ -65,17 +65,19 @@ class _MainPageState extends State<MainPage> {
                 Padding(
                     padding: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height * 0.03,
-                        left: MediaQuery.of(context).size.width * 0.05),
+                        left: MediaQuery.of(context).size.width * 0.1),
                     child: Column(
                       children: [
                         Align(
                             alignment: Alignment.topLeft,
                             child: Image(
+                                width: MediaQuery.of(context).size.width * 0.5,
                                 image: AssetImage(
                                     'assets/pagopolizza_arancio.png'))),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.025),
+                              top: MediaQuery.of(context).size.height * 0.01,
+                              left: MediaQuery.of(context).size.width * 0.01),
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(

@@ -62,6 +62,7 @@ class SupportState extends State<Support> {
                   child: Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
+                        scale: 5,
                         alignment: Alignment.centerLeft,
                         image: AssetImage('assets/pagopolizza_bianco.png'),
                         fit: BoxFit.scaleDown,

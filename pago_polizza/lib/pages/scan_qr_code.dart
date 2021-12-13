@@ -54,20 +54,18 @@ class ScanQRCodeState extends State<ScanQRCode> {
               Padding(
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.08),
-                  child: Stack(
+                  child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            alignment: Alignment.topCenter,
-                            image: AssetImage('assets/pagopolizza_bianco.png'),
-                            fit: BoxFit.scaleDown,
-                          ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Image(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          image: AssetImage('assets/pagopolizza_bianco.png'),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.07,
+                          top: MediaQuery.of(context).size.height * 0.02,
                         ),
                         child: SizedBox(
                           width: double.infinity,

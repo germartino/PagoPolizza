@@ -55,12 +55,13 @@ class LoginState extends State<Login> {
                       Align(
                         alignment: Alignment.topCenter,
                         child: Image(
+                          width: MediaQuery.of(context).size.width * 0.5,
                           image: AssetImage('assets/pagopolizza_bianco.png'),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.00,
+                          top: MediaQuery.of(context).size.height * 0.01,
                         ),
                         child: SizedBox(
                           width: double.infinity,
