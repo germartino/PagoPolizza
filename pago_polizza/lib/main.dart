@@ -64,24 +64,20 @@ class _MainPageState extends State<MainPage> {
               child: Stack(children: [
                 Padding(
                     padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.05,
-                        left: MediaQuery.of(context).size.height * 0.05),
-                    child: Stack(
+                        top: MediaQuery.of(context).size.height * 0.03,
+                        left: MediaQuery.of(context).size.width * 0.05),
+                    child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              alignment: Alignment.topLeft,
-                              image: AssetImage('assets/logo_Arancio.png'),
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
-                        ),
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Image(
+                                image: AssetImage(
+                                    'assets/pagopolizza_arancio.png'))),
                         Padding(
                           padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.05,
-                          ),
-                          child: SizedBox(
+                              left: MediaQuery.of(context).size.width * 0.025),
+                          child: Align(
+                            alignment: Alignment.topLeft,
                             child: Text(
                               'Lorem ipsum dolor sit amet.',
                               style: GoogleFonts.lato(
@@ -197,7 +193,10 @@ class _MainPageState extends State<MainPage> {
                     alignment: Alignment.center,
                     width: 300,
                     height: 300,
-                    color: const Color(0xFFF9F9F9),
+                    color: const Color(0xFFFFFFFF),
+                    child: Image(
+                      image: AssetImage('assets/logo.png'),
+                    ),
                   ),
                 ),
               ]),

@@ -51,21 +51,18 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
               ),
               Padding(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.10),
-                  child: Stack(
+                      top: MediaQuery.of(context).size.height * 0.08),
+                  child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            alignment: Alignment.topCenter,
-                            image: AssetImage('assets/logo_Bianco.png'),
-                            fit: BoxFit.scaleDown,
-                          ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Image(
+                          image: AssetImage('assets/pagopolizza_bianco.png'),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.05,
+                          top: MediaQuery.of(context).size.height * 0.01,
                         ),
                         child: SizedBox(
                           width: double.infinity,

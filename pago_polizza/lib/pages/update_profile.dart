@@ -67,14 +67,14 @@ class UpdateProfileState extends State<UpdateProfile> {
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: (HomeState.userType == 'admin')
-                          ? MediaQuery.of(context).size.width * 0.1
+                          ? MediaQuery.of(context).size.width * 0.07
                           : 0,
                     ),
                     child: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           alignment: Alignment.centerLeft,
-                          image: AssetImage('assets/logo_Bianco.png'),
+                          image: AssetImage('assets/pagopolizza_bianco.png'),
                           fit: BoxFit.scaleDown,
                         ),
                       ),

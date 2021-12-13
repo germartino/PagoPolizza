@@ -49,21 +49,18 @@ class LoginState extends State<Login> {
               ),
               Padding(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.05),
-                  child: Stack(
+                      top: MediaQuery.of(context).size.height * 0.04),
+                  child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            alignment: Alignment.topCenter,
-                            image: AssetImage('assets/logo_Bianco.png'),
-                            fit: BoxFit.scaleDown,
-                          ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Image(
+                          image: AssetImage('assets/pagopolizza_bianco.png'),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.05,
+                          top: MediaQuery.of(context).size.height * 0.00,
                         ),
                         child: SizedBox(
                           width: double.infinity,

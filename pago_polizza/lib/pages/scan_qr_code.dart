@@ -53,21 +53,21 @@ class ScanQRCodeState extends State<ScanQRCode> {
               ),
               Padding(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.10),
+                      top: MediaQuery.of(context).size.height * 0.08),
                   child: Stack(
                     children: [
                       Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             alignment: Alignment.topCenter,
-                            image: AssetImage('assets/logo_Bianco.png'),
+                            image: AssetImage('assets/pagopolizza_bianco.png'),
                             fit: BoxFit.scaleDown,
                           ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.05,
+                          top: MediaQuery.of(context).size.height * 0.07,
                         ),
                         child: SizedBox(
                           width: double.infinity,

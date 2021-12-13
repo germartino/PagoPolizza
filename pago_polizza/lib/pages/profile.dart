@@ -40,12 +40,12 @@ class ProfileState extends State<Profile> {
               ),
               child: Padding(
                 padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.1),
+                    left: MediaQuery.of(context).size.width * 0.07),
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       alignment: Alignment.centerLeft,
-                      image: AssetImage('assets/logo_Bianco.png'),
+                      image: AssetImage('assets/pagopolizza_bianco.png'),
                       fit: BoxFit.scaleDown,
                     ),
                   ),
