@@ -91,8 +91,6 @@ List<Transaction> getList() {
   return temp;
 }
 
-List<Transaction> transactions = getList();
-
 class Storico extends StatefulWidget {
   const Storico({Key? key}) : super(key: key);
 
@@ -101,6 +99,7 @@ class Storico extends StatefulWidget {
 }
 
 class StoricoState extends State<Storico> {
+  List<Transaction> transactions = getList();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
