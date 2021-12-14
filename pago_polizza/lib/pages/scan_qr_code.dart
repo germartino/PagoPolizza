@@ -122,6 +122,13 @@ class ScanQRCodeState extends State<ScanQRCode> {
                         child: QRView(
                           key: qrKey,
                           onQRViewCreated: _onQRViewCreated,
+                          overlay: QrScannerOverlayShape(
+                            borderColor: Colors.black,
+                            borderWidth: 10,
+                            borderRadius: 10,
+                            cutOutSize: 300,
+                            borderLength: 30,
+                          ),
                         ),
                       ),
                     ),
@@ -135,7 +142,9 @@ class ScanQRCodeState extends State<ScanQRCode> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
+    this.controller.toggleFlash();
     controller.scannedDataStream.listen((scanData) async {
+      print(scanData.code);
       //do something with scanData.code
       Navigator.pushAndRemoveUntil(
           context,
