@@ -23,6 +23,7 @@ class ScanQRCode extends StatefulWidget {
 class ScanQRCodeState extends State<ScanQRCode> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late QRViewController controller;
+  bool isPressed = false;
 
   @override
   void dispose() {
@@ -85,7 +86,7 @@ class ScanQRCodeState extends State<ScanQRCode> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.65,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -131,6 +132,24 @@ class ScanQRCodeState extends State<ScanQRCode> {
                         ),
                       ),
                     ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    Align(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () => changeFlash(),
+                        child: Icon(
+                          isPressed
+                              ? Ionicons.flash_outline
+                              : Ionicons.flash_off_outline,
+                          size: 24,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary:
+                                isPressed ? Color(0xffDF752C) : Colors.black,
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(15)),
+                      ),
+                    )
                   ]),
                 ),
               ),
@@ -141,7 +160,6 @@ class ScanQRCodeState extends State<ScanQRCode> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    this.controller.toggleFlash();
     controller.scannedDataStream.listen((scanData) async {
       print(scanData.code);
       //do something with scanData.code
@@ -149,6 +167,13 @@ class ScanQRCodeState extends State<ScanQRCode> {
           context,
           PageTransition(child: Home(), type: PageTransitionType.fade),
           (route) => false);
+    });
+  }
+
+  void changeFlash() {
+    setState(() {
+      controller.toggleFlash();
+      isPressed = !isPressed;
     });
   }
 }
