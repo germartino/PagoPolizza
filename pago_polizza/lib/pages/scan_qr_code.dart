@@ -71,7 +71,7 @@ class ScanQRCodeState extends State<ScanQRCode> {
                         child: SizedBox(
                           width: double.infinity,
                           child: Text(
-                            'Lorem ipsum dolor sit amet.',
+                            'Assicurati la semplicità.',
                             style: GoogleFonts.lato(
                               fontSize: 16.0,
                               color: Colors.white,
