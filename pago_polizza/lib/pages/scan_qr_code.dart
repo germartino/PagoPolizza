@@ -118,7 +118,6 @@ class ScanQRCodeState extends State<ScanQRCode> {
                         alignment: Alignment.topCenter,
                         width: MediaQuery.of(context).size.width * 0.85,
                         height: MediaQuery.of(context).size.height * 0.48,
-                        color: const Color(0xFFF9F9F9),
                         child: QRView(
                           key: qrKey,
                           onQRViewCreated: _onQRViewCreated,
