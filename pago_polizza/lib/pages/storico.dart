@@ -141,7 +141,8 @@ class StoricoState extends State<Storico> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               alignment: Alignment.centerLeft,
-                              image: AssetImage('assets/logo_Bianco.png'),
+                              image:
+                                  AssetImage('assets/pagopolizza_bianco.png'),
                               fit: BoxFit.scaleDown,
                             ),
                           ),

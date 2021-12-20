@@ -42,13 +42,14 @@ class NavDrawerState extends State<NavDrawer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: DoubleBackToCloseApp(
-        child: _pages.elementAt(_selectedIndex),
-        snackBar: const SnackBar(
-          content: Text('Premi di nuovo per uscire'),
-          backgroundColor: Colors.black,
+        child: DoubleBackToCloseApp(
+          child: _pages.elementAt(_selectedIndex),
+          snackBar: const SnackBar(
+            content: Text('Premi di nuovo per uscire'),
+            backgroundColor: Colors.black,
+          ),
         ),
-      )),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,

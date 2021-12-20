@@ -66,7 +66,7 @@ class LoginState extends State<Login> {
                         child: SizedBox(
                           width: double.infinity,
                           child: Text(
-                            'Lorem ipsum dolor sit amet.',
+                            'Assicurati la semplicità.',
                             style: GoogleFonts.lato(
                               fontSize: 16.0,
                               color: Colors.white,
@@ -258,37 +258,6 @@ class LoginState extends State<Login> {
                                 SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.03),
-                                Container(
-                                  alignment: Alignment.topCenter,
-                                  child: RichText(
-                                      text: TextSpan(children: <TextSpan>[
-                                    TextSpan(
-                                      text: 'Non hai ancora un account? ',
-                                      style: GoogleFonts.lato(
-                                        fontSize: 14.0,
-                                        color: Color(0xff000000),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                        text: 'Registrati!',
-                                        style: GoogleFonts.lato(
-                                            fontSize: 14.0,
-                                            color: Color(0xffDF752C),
-                                            decoration:
-                                                TextDecoration.underline),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.pushReplacement(
-                                                context,
-                                                PageTransition(
-                                                  curve: Curves.easeInOut,
-                                                  type: PageTransitionType
-                                                      .rightToLeftWithFade,
-                                                  child: Register(),
-                                                ));
-                                          }),
-                                  ])),
-                                ),
                               ],
                             ),
                           ),

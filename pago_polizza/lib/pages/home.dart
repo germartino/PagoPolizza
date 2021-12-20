@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/pages/choice_agency.dart';
 import 'package:pago_polizza/pages/login.dart';
 import 'package:flutter/services.dart';
 import 'package:pago_polizza/pages/pagamento.dart';
@@ -11,6 +12,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/pages/support.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,295 +26,379 @@ class HomeState extends State<Home> {
   static String userType = 'client'; //can be 'client' or 'agency' or 'admin'
   var iconaPopup = Ionicons.menu_outline;
   final GlobalKey _menuKey = GlobalKey();
+  String _chosenValue = 'Allianz';
 
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: null,
-        appBar: null,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xffffffff),
-              ),
-              child: Column(children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      alignment: Alignment.topCenter,
-                      image: AssetImage('assets/banner.png'),
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: logged
-                          ? LinearGradient(
-                              begin: FractionalOffset.topCenter,
-                              end: FractionalOffset.bottomCenter,
-                              colors: [Color(0xffdf752c), Colors.transparent])
-                          : null,
-                    ),
-                    child: logged
-                        ? PopupMenuButton(
-                            iconSize: 20,
-                            onCanceled: () => {
-                                  setState(() {
-                                    iconaPopup = Ionicons.menu_outline;
-                                  })
-                                },
-                            onSelected: (value) => {
-                                  setState(() {
-                                    iconaPopup = Ionicons.menu_outline;
-                                  }),
-                                  if (value == 0)
-                                    {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                            curve: Curves.easeInOut,
-                                            type: PageTransitionType
-                                                .rightToLeftWithFade,
-                                            child: Support(),
-                                          ))
-                                    }
-                                  else
-                                    {
-                                      HomeState.logged = false,
-                                      HomeState.userType = 'client',
-                                      Navigator.pushReplacement(
-                                          context,
-                                          PageTransition(
-                                            curve: Curves.easeInOut,
-                                            type: PageTransitionType.fade,
-                                            child: Home(),
-                                          ))
-                                    }
-                                },
-                            key: _menuKey,
-                            elevation: 3,
-                            offset: Offset(
-                                1, MediaQuery.of(context).size.height * 0.07),
-                            shape: TooltipShape(),
-                            itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    value: 0,
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Ionicons.call_outline,
-                                        color: Color(0xffDF752C),
-                                        size: 20,
-                                      ),
-                                      title: Text(
-                                        "Assistenza",
-                                        style: GoogleFonts.lato(
-                                          fontSize: 15.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 1,
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Ionicons.log_out_outline,
-                                        color: Color(0xffDF752C),
-                                        size: 20,
-                                      ),
-                                      title: Text(
-                                        "Logout",
-                                        style: GoogleFonts.lato(
-                                          fontSize: 15.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                            icon: Stack(children: [
-                              Positioned(
-                                top: MediaQuery.of(context).size.height * 0.01,
-                                right: MediaQuery.of(context).size.width * 0.01,
-                                child: InkWell(
-                                    onTap: () => {
-                                          setState(() {
-                                            dynamic state =
-                                                _menuKey.currentState;
-                                            state.showButtonMenu();
-                                            iconaPopup = Ionicons.close_outline;
-                                          })
-                                        },
-                                    child: Container(
-                                        alignment: Alignment.topRight,
-                                        height: 30,
-                                        width: 30,
-                                        decoration: ShapeDecoration(
-                                          color: Colors.white,
-                                          shape: StadiumBorder(
-                                            side: BorderSide(
-                                                color: Colors.white, width: 2),
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Icon(
-                                            iconaPopup,
-                                            color: Colors.black,
-                                            size: 20,
-                                          ),
-                                        ))),
-                              ),
-                            ]))
-                        : null,
+      drawer: null,
+      appBar: null,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(0xffffffff),
+            ),
+            child: Column(children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.2,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.topCenter,
+                    image: AssetImage('assets/banner.png'),
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: logged
+                        ? LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [Color(0xffdf752c), Colors.transparent])
+                        : null,
+                  ),
+                  child: logged
+                      ? PopupMenuButton(
+                          iconSize: 20,
+                          onCanceled: () => {
+                                setState(() {
+                                  iconaPopup = Ionicons.menu_outline;
+                                })
+                              },
+                          onSelected: (value) => {
+                                setState(() {
+                                  iconaPopup = Ionicons.menu_outline;
+                                }),
+                                if (value == 0)
+                                  {
+                                    Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          curve: Curves.easeInOut,
+                                          type: PageTransitionType
+                                              .rightToLeftWithFade,
+                                          child: ChoiceAgency(),
+                                        ))
+                                  }
+                                else if (value == 1)
+                                  {
+                                    Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          curve: Curves.easeInOut,
+                                          type: PageTransitionType
+                                              .rightToLeftWithFade,
+                                          child: Support(),
+                                        ))
+                                  }
+                                else
+                                  {
+                                    HomeState.logged = false,
+                                    HomeState.userType = 'client',
+                                    Navigator.pushReplacement(
+                                        context,
+                                        PageTransition(
+                                          curve: Curves.easeInOut,
+                                          type: PageTransitionType.fade,
+                                          child: MyApp(),
+                                        ))
+                                  }
+                              },
+                          key: _menuKey,
+                          elevation: 3,
+                          offset: Offset(
+                              1, MediaQuery.of(context).size.height * 0.07),
+                          shape: TooltipShape(),
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: 0,
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Ionicons.add_circle_outline,
+                                      color: Color(0xffDF752C),
+                                      size: 20,
+                                    ),
+                                    title: Text(
+                                      "Aggiungi agenzia",
+                                      style: GoogleFonts.lato(
+                                        fontSize: 15.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  value: 1,
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Ionicons.call_outline,
+                                      color: Color(0xffDF752C),
+                                      size: 20,
+                                    ),
+                                    title: Text(
+                                      "Assistenza",
+                                      style: GoogleFonts.lato(
+                                        fontSize: 15.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  value: 2,
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Ionicons.log_out_outline,
+                                      color: Color(0xffDF752C),
+                                      size: 20,
+                                    ),
+                                    title: Text(
+                                      "Logout",
+                                      style: GoogleFonts.lato(
+                                        fontSize: 15.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                          icon: Stack(children: [
+                            Positioned(
+                              top: MediaQuery.of(context).size.height * 0.01,
+                              right: MediaQuery.of(context).size.width * 0.01,
+                              child: InkWell(
+                                  onTap: () => {
+                                        setState(() {
+                                          dynamic state = _menuKey.currentState;
+                                          state.showButtonMenu();
+                                          iconaPopup = Ionicons.close_outline;
+                                        })
+                                      },
+                                  child: Container(
+                                      alignment: Alignment.topRight,
+                                      height: 30,
+                                      width: 30,
+                                      decoration: ShapeDecoration(
+                                        color: Colors.white,
+                                        shape: StadiumBorder(
+                                          side: BorderSide(
+                                              color: Colors.white, width: 2),
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          iconaPopup,
+                                          color: Colors.black,
+                                          size: 20,
+                                        ),
+                                      ))),
+                            ),
+                          ]))
+                      : null,
+                ),
+              ),
+              if (HomeState.logged && HomeState.userType == 'client')
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.02,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      alignment: Alignment.topCenter,
-                      image: AssetImage('assets/insurance_logo.png'),
-                      fit: BoxFit.scaleDown,
+              if (HomeState.logged && HomeState.userType == 'client')
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.2),
+                  child: DropdownButton2(
+                    items: <String>['Allianz', 'Generali']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: GoogleFonts.lato(
+                            fontSize: 14.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    value: _chosenValue,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 13.0,
+                      color: Colors.black,
                     ),
+                    icon: Icon(Ionicons.caret_down_outline,
+                        color: Colors.black, size: 18),
+                    onChanged: (value) {
+                      setState(() {
+                        _chosenValue = value.toString();
+                      });
+                    },
+                    dropdownDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    alignment: Alignment.center,
+                    buttonElevation: 5,
+                    underline: SizedBox(),
+                    dropdownOverButton: true,
+                    buttonDecoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.16),
+                          offset: Offset(0, 3),
+                          blurRadius: 6,
+                        ),
+                      ],
+                    ),
+                    buttonPadding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.14),
                   ),
                 ),
-                Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.1),
-                    child: Column(children: [
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'NOME AGENZIA',
-                          style: GoogleFonts.montserrat(
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.1,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.topCenter,
+                    image: AssetImage('assets/insurance_logo.png'),
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.1),
+                  child: Column(children: [
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'NOME AGENZIA',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 13.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Allianz Bank Financial Advisors S.p.A.',
+                        style: GoogleFonts.lato(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'CODICE RUI',
+                        style: GoogleFonts.montserrat(
                             fontSize: 13.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'A000076887',
+                        style: GoogleFonts.lato(
+                          fontSize: 14.0,
+                          color: Colors.black,
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Allianz Bank Financial Advisors S.p.A.',
-                          style: GoogleFonts.lato(
-                            fontSize: 14.0,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'INDIRIZZO SEDE',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 13.0,
                             color: Colors.black,
-                          ),
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Via delle vie, 3, Roma',
+                        style: GoogleFonts.lato(
+                          fontSize: 14.0,
+                          color: Colors.black,
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      Container(
-                        alignment: Alignment.topLeft,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    if (HomeState.userType == 'client')
+                      ElevatedButton(
+                        onPressed: () {
+                          if (logged) {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                  curve: Curves.easeInOut,
+                                  type: PageTransitionType.rightToLeftWithFade,
+                                  child: Pagamento(),
+                                ));
+                          } else {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                  curve: Curves.easeInOut,
+                                  type: PageTransitionType.rightToLeftWithFade,
+                                  child: Register(),
+                                ));
+                          }
+                        },
                         child: Text(
-                          'CODICE RUI',
+                          logged ? 'Paga ora' : 'Registrati',
                           style: GoogleFonts.montserrat(
-                              fontSize: 13.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'A000076887',
-                          style: GoogleFonts.lato(
-                            fontSize: 14.0,
-                            color: Colors.black,
+                            fontSize: 15.0,
+                            color: Colors.white,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'INDIRIZZO SEDE',
-                          style: GoogleFonts.montserrat(
-                              fontSize: 13.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Via delle vie, 3, Roma',
-                          style: GoogleFonts.lato(
-                            fontSize: 14.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.1,
-                      ),
-                      if (HomeState.userType == 'client')
-                        ElevatedButton(
-                          onPressed: () {
-                            if (logged) {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    curve: Curves.easeInOut,
-                                    type:
-                                        PageTransitionType.rightToLeftWithFade,
-                                    child: Pagamento(),
-                                  ));
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    curve: Curves.easeInOut,
-                                    type:
-                                        PageTransitionType.rightToLeftWithFade,
-                                    child: Login(),
-                                  ));
-                            }
-                          },
-                          child: Text(
-                            logged ? 'Paga ora' : 'Accedi',
-                            style: GoogleFonts.montserrat(
-                              fontSize: 15.0,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.45,
-                                  MediaQuery.of(context).size.height * 0.06),
-                              alignment: Alignment.center,
-                              primary: Color(0xffdf752c),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(23))),
-                        )
-                    ])),
-              ]),
-            ),
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.45,
+                                MediaQuery.of(context).size.height * 0.06),
+                            alignment: Alignment.center,
+                            primary: Color(0xffdf752c),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(23))),
+                      )
+                  ])),
+            ]),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 

@@ -81,7 +81,7 @@ class _MainPageState extends State<MainPage> {
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Lorem ipsum dolor sit amet.',
+                              'Assicurati la semplicità.',
                               style: GoogleFonts.lato(
                                 fontSize: 16.0,
                                 color: Colors.black,
@@ -114,7 +114,7 @@ class _MainPageState extends State<MainPage> {
                                 children: [
                                   ElevatedButton.icon(
                                     icon: Icon(
-                                      Icons.work,
+                                      Ionicons.log_in_outline,
                                       color: Colors.black,
                                       size: 20,
                                     ),
@@ -134,11 +134,11 @@ class _MainPageState extends State<MainPage> {
                                             curve: Curves.easeInOut,
                                             type:
                                                 PageTransitionType.bottomToTop,
-                                            child: ChoiceAgency(),
+                                            child: Login(),
                                           ));
                                     },
                                     label: Text(
-                                      'Scegli Agenzia',
+                                      'Accedi',
                                       style: GoogleFonts.montserrat(
                                         fontSize: 15.0,
                                         color: Colors.black,
@@ -152,7 +152,7 @@ class _MainPageState extends State<MainPage> {
                                               0.03),
                                   ElevatedButton.icon(
                                     icon: Icon(
-                                      Ionicons.qr_code_outline,
+                                      Icons.work,
                                       color: Colors.white,
                                       size: 20,
                                     ),
@@ -172,11 +172,11 @@ class _MainPageState extends State<MainPage> {
                                             curve: Curves.easeInOut,
                                             type:
                                                 PageTransitionType.bottomToTop,
-                                            child: ScanQRCode(),
+                                            child: ChoiceAgency(),
                                           ));
                                     },
                                     label: Text(
-                                      'Scan QR Code',
+                                      'Scegli agenzia',
                                       style: GoogleFonts.montserrat(
                                         fontSize: 15.0,
                                         color: Colors.white,

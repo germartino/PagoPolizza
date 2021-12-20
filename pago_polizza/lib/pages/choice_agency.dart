@@ -11,6 +11,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pago_polizza/main.dart';
 import 'package:pago_polizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pago_polizza/pages/scan_qr_code.dart';
 
 class ChoiceAgency extends StatefulWidget {
   const ChoiceAgency({Key? key}) : super(key: key);
@@ -20,7 +21,6 @@ class ChoiceAgency extends StatefulWidget {
 }
 
 class ChoiceAgencyState extends State<ChoiceAgency> {
-  bool _passwordVisible = false;
   final _formkey = GlobalKey<FormState>();
   final controller = TextEditingController();
   void dispose() {
@@ -68,7 +68,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                         child: SizedBox(
                           width: double.infinity,
                           child: Text(
-                            'Lorem ipsum dolor sit amet.',
+                            'Assicurati la semplicità.',
                             style: GoogleFonts.lato(
                               fontSize: 16.0,
                               color: Colors.white,
@@ -108,6 +108,9 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.04,
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.1),
@@ -143,55 +146,24 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.05),
-                            TextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Perfavore inserisci la password';
-                                }
-                                return null;
-                              },
-                              obscureText: !_passwordVisible,
-                              cursorColor: Colors.black,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                              ),
-                              decoration: InputDecoration(
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black)),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                      _passwordVisible
-                                          ? Ionicons.eye_outline
-                                          : Ionicons.eye_off_outline,
-                                      color: Color(0xff9e9e9e),
-                                      size: 25),
-                                  onPressed: () {
-                                    setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                    });
-                                  },
-                                ),
-                                labelText: "Password",
-                                labelStyle: GoogleFonts.ptSans(
-                                  fontSize: 15.0,
-                                  color: Color(0xff707070),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05),
                             ElevatedButton(
                               onPressed: () {
                                 if (_formkey.currentState!.validate()) {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      PageTransition(
-                                          child: Home(),
-                                          type: PageTransitionType.fade),
-                                      (route) => false);
+                                  if (HomeState.logged) {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        PageTransition(
+                                            child: NavDrawer(),
+                                            type: PageTransitionType.fade),
+                                        (route) => false);
+                                  } else {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        PageTransition(
+                                            child: Home(),
+                                            type: PageTransitionType.fade),
+                                        (route) => false);
+                                  }
                                 }
                               },
                               child: Text(
@@ -210,8 +182,53 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                   alignment: Alignment.center,
                                   primary: Color(0xffdf752c),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(23))),
-                            )
+                                      borderRadius: BorderRadius.circular(15))),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            Text(
+                              'oppure',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            ElevatedButton.icon(
+                              icon: Icon(
+                                Ionicons.qr_code_outline,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: ScanQRCode(),
+                                      type: PageTransitionType.bottomToTop),
+                                );
+                              },
+                              label: Text(
+                                'Scan QR Code',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 15.0,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.width * 0.45,
+                                      MediaQuery.of(context).size.height *
+                                          0.06),
+                                  alignment: Alignment.center,
+                                  primary: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15))),
+                            ),
                           ],
                         ),
                       ),

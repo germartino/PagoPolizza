@@ -99,87 +99,24 @@ class SupportState extends State<Support> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.03,
                     ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Inserisci la tua richiesta di assistenza',
+                        style: GoogleFonts.ptSans(
+                          fontSize: 15.0,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
                     Form(
                       key: _formkey,
                       child: Column(
                         children: [
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci il nome';
-                              }
-                              return null;
-                            },
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelText: "Nome",
-                              labelStyle: GoogleFonts.ptSans(
-                                fontSize: 15.0,
-                                color: Color(0xff707070),
-                              ),
-                            ),
-                          ),
                           SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.03),
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci il cognome o la ragione sociale';
-                              }
-                              return null;
-                            },
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelText: "Cognome o Ragione sociale",
-                              labelStyle: GoogleFonts.ptSans(
-                                fontSize: 15.0,
-                                color: Color(0xff707070),
-                              ),
-                            ),
+                            height: MediaQuery.of(context).size.height * 0.05,
                           ),
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.03),
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci l\'email';
-                              }
-                              return null;
-                            },
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              suffixIcon: Icon(Ionicons.mail_outline,
-                                  color: Color(0xff9e9e9e), size: 25),
-                              labelText: "Email",
-                              labelStyle: GoogleFonts.ptSans(
-                                fontSize: 15.0,
-                                color: Color(0xff707070),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.05),
                           TextFormField(
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -187,8 +124,8 @@ class SupportState extends State<Support> {
                               }
                               return null;
                             },
-                            minLines: 3,
-                            maxLines: 5,
+                            minLines: 10,
+                            maxLines: 20,
                             cursorColor: Colors.black,
                             style: TextStyle(
                               color: Colors.black,

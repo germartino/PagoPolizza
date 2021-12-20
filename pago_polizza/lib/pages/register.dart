@@ -68,7 +68,7 @@ class RegisterState extends State<Register> {
                         child: SizedBox(
                           width: double.infinity,
                           child: Text(
-                            'Lorem ipsum dolor sit amet.',
+                            'Assicurati la semplicità.',
                             style: GoogleFonts.lato(
                               fontSize: 16.0,
                               color: Colors.white,
@@ -365,14 +365,14 @@ class RegisterState extends State<Register> {
                                         0.01),
                                 ElevatedButton(
                                   onPressed: () {
-                                    if (_formkey.currentState!.validate()) {
-                                      HomeState.logged = true;
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  NavDrawer()),
-                                          (route) => false);
+                                    if (_formkey.currentState!.validate() &&
+                                        ischecked1 &&
+                                        ischecked2) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Login()),
+                                      );
                                     }
                                   },
                                   child: Text(
