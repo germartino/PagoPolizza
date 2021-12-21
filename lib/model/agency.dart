@@ -5,9 +5,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pago_polizza/pages/home.dart';
-import 'package:pago_polizza/pages/storico.dart';
-import 'package:pago_polizza/model/custom_expansion_tile.dart';
+import 'package:PagoPolizza/pages/home.dart';
+import 'package:PagoPolizza/pages/storico.dart';
+import 'package:PagoPolizza/model/custom_expansion_tile.dart';
 
 class Agency {
   final String name;
