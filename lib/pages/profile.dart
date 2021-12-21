@@ -9,11 +9,13 @@ import 'package:PagoPolizza/pages/register.dart';
 import 'package:PagoPolizza/pages/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:PagoPolizza/main.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:PagoPolizza/pages/update_profile.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -23,6 +25,9 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileState extends State<Profile> {
+  XFile? _logo;
+  XFile? _banner;
+
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,
@@ -268,6 +273,60 @@ class ProfileState extends State<Profile> {
                             ),
                           ),
                         ),
+                        if (HomeState.userType == 'agency')
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                        if (HomeState.userType == 'agency')
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.8,
+                                    MediaQuery.of(context).size.height * 0.06),
+                                alignment: Alignment.center,
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(23),
+                                    side: BorderSide(color: Colors.black))),
+                            onPressed: () {
+                              _logoFromGallery();
+                            },
+                            child: Text(
+                              'Modifica Logo',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15.0,
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        if (HomeState.userType == 'agency')
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                        if (HomeState.userType == 'agency')
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.8,
+                                    MediaQuery.of(context).size.height * 0.06),
+                                alignment: Alignment.center,
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(23),
+                                    side: BorderSide(color: Colors.black))),
+                            onPressed: () {
+                              _bannerFromGallery();
+                            },
+                            child: Text(
+                              'Modifica Banner',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15.0,
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -276,5 +335,39 @@ class ProfileState extends State<Profile> {
             )
           ]),
         ));
+  }
+
+  Future _logoFromGallery() async {
+    var logo = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _logo = logo;
+    });
+
+    ArtSweetAlert.show(
+        context: context,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.success,
+          title: "Logo modificato",
+        ));
+
+    //devo prendere _logo come File(_logo.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
+  }
+
+  Future _bannerFromGallery() async {
+    var banner = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _banner = banner;
+    });
+
+    ArtSweetAlert.show(
+        context: context,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.success,
+          title: "Banner modificato",
+        ));
+
+    //devo prendere _banner come File(_banner.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
   }
 }

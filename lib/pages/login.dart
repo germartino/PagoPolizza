@@ -13,6 +13,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:PagoPolizza/main.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -228,6 +229,12 @@ class LoginState extends State<Login> {
                                       HomeState.logged = true;
                                       HomeState.userType = email.text.substring(
                                           0, email.text.indexOf('@'));
+                                      ArtSweetAlert.show(
+                                          context: context,
+                                          artDialogArgs: ArtDialogArgs(
+                                            type: ArtSweetAlertType.success,
+                                            title: "Benvenuto",
+                                          ));
                                       Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(

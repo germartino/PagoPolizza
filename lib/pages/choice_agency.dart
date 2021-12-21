@@ -23,6 +23,7 @@ class ChoiceAgency extends StatefulWidget {
 class ChoiceAgencyState extends State<ChoiceAgency> {
   final _formkey = GlobalKey<FormState>();
   final controller = TextEditingController();
+  bool _passwordVisible = false;
   static String rui = '';
   void dispose() {
     controller.dispose();
@@ -95,7 +96,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                   child: Column(children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.1,
+                          top: MediaQuery.of(context).size.height * 0.08,
                           left: MediaQuery.of(context).size.width * 0.1,
                           right: MediaQuery.of(context).size.width * 0.1),
                       child: SizedBox(
@@ -110,7 +111,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.04,
+                      height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -139,6 +140,47 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                 suffixIcon: Icon(Ionicons.key_outline,
                                     color: Color(0xff9e9e9e), size: 25),
                                 labelText: "Codice RUI",
+                                labelStyle: GoogleFonts.ptSans(
+                                  fontSize: 15.0,
+                                  color: Color(0xff707070),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
+                            TextFormField(
+                              controller: controller,
+                              obscureText: !_passwordVisible,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Perfavore inserisci la password';
+                                }
+                                return null;
+                              },
+                              cursorColor: Colors.black,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                              ),
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                      _passwordVisible
+                                          ? Ionicons.eye_outline
+                                          : Ionicons.eye_off_outline,
+                                      color: Color(0xff9e9e9e),
+                                      size: 25),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                ),
+                                labelText: "Password",
                                 labelStyle: GoogleFonts.ptSans(
                                   fontSize: 15.0,
                                   color: Color(0xff707070),

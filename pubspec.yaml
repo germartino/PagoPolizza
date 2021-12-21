@@ -52,6 +52,8 @@ dependencies:
   cloud_firestore: ^2.2.0 #new
   firebase_auth: ^1.0.1 #new
   google_sign_in: ^5.0.0 #new
+  image_picker: ^0.8.4+4
+  art_sweetalert: ^0.0.5
 
 dev_dependencies:
   flutter_test:
