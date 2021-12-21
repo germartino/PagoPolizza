@@ -25,6 +25,7 @@ class LoginState extends State<Login> {
   bool _passwordVisible = false;
   final _formkey = GlobalKey<FormState>();
   TextEditingController email = new TextEditingController();
+  TextEditingController pass = new TextEditingController();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,11 +134,10 @@ class LoginState extends State<Login> {
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Perfavore inserisci l\'email';
-                                    } else if (value !=
-                                            'client@pagopolizza.com' &&
-                                        value != 'admin@pagopolizza.com' &&
-                                        value != 'agency@pagopolizza.com') {
-                                      return 'email errata';
+                                    } else if (!RegExp(
+                                            '[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?')
+                                        .hasMatch(value)) {
+                                      return 'Perfavore inserisci una mail valida';
                                     }
                                     return null;
                                   },
@@ -163,6 +163,7 @@ class LoginState extends State<Login> {
                                     height: MediaQuery.of(context).size.height *
                                         0.05),
                                 TextFormField(
+                                  controller: pass,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Perfavore inserisci la password';

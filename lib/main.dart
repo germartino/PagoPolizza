@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/model/user.dart';
 import 'package:pago_polizza/pages/choice_agency.dart';
 import 'package:pago_polizza/pages/login.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +20,8 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await FirebaseAuth.instance.signOut();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -55,6 +59,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   String qrCode = 'Unknown';
+
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,
