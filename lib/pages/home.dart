@@ -26,9 +26,62 @@ class HomeState extends State<Home> {
   static String userType = 'client'; //can be 'client' or 'agency' or 'admin'
   var iconaPopup = Ionicons.menu_outline;
   final GlobalKey _menuKey = GlobalKey();
-  String _chosenValue = 'Allianz';
+  AssetImage _selected = AssetImage('assets/insurance_logo.png');
 
   Widget build(BuildContext context) {
+    final SimpleDialog dialog = SimpleDialog(
+      title: Text('Scegli l\'agenzia'),
+      children: [
+        SimpleDialogItem(
+          icon: Image(
+            image: AssetImage('assets/insurance_logo.png'),
+            fit: BoxFit.scaleDown,
+            width: 36,
+            height: 36,
+          ),
+          text: 'Allianz Roma',
+          onPressed: () {
+            Navigator.pop(context);
+            setState(() {
+              _selected = AssetImage('assets/insurance_logo.png');
+            });
+          },
+        ),
+        SimpleDialogItem(
+          icon: Image(
+            image: AssetImage('assets/insurance_logo.png'),
+            fit: BoxFit.scaleDown,
+            width: 36,
+            height: 36,
+          ),
+          text: 'Allianz Milano',
+          onPressed: () {
+            Navigator.pop(context);
+            setState(() {
+              _selected = AssetImage('assets/insurance_logo.png');
+            });
+          },
+        ),
+        SimpleDialogItem(
+          icon: Icon(
+            Ionicons.add_circle,
+            size: 36,
+            color: Colors.black,
+          ),
+          text: 'Aggiungi agenzia',
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                PageTransition(
+                  curve: Curves.easeInOut,
+                  type: PageTransitionType.rightToLeftWithFade,
+                  child: ChoiceAgency(),
+                ));
+          },
+        ),
+      ],
+    );
     return Scaffold(
       drawer: null,
       appBar: null,
@@ -60,216 +113,146 @@ class HomeState extends State<Home> {
                         : null,
                   ),
                   child: logged
-                      ? PopupMenuButton(
-                          iconSize: 20,
-                          onCanceled: () => {
-                                setState(() {
-                                  iconaPopup = Ionicons.menu_outline;
-                                })
-                              },
-                          onSelected: (value) => {
-                                setState(() {
-                                  iconaPopup = Ionicons.menu_outline;
-                                }),
-                                if (value == 0)
-                                  {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                          curve: Curves.easeInOut,
-                                          type: PageTransitionType
-                                              .rightToLeftWithFade,
-                                          child: Support(),
-                                        ))
-                                  }
-                                else
-                                  {
-                                    HomeState.logged = false,
-                                    HomeState.userType = 'client',
-                                    Navigator.pushReplacement(
-                                        context,
-                                        PageTransition(
-                                          curve: Curves.easeInOut,
-                                          type: PageTransitionType.fade,
-                                          child: MyApp(),
-                                        ))
-                                  }
-                              },
-                          key: _menuKey,
-                          elevation: 3,
-                          offset: Offset(
-                              1, MediaQuery.of(context).size.height * 0.07),
-                          shape: TooltipShape(),
-                          itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  value: 0,
-                                  child: ListTile(
-                                    leading: Icon(
-                                      Ionicons.call_outline,
-                                      color: Color(0xffDF752C),
-                                      size: 20,
-                                    ),
-                                    title: Text(
-                                      "Assistenza",
-                                      style: GoogleFonts.lato(
-                                        fontSize: 15.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
+                      ? Stack(children: [
+                          Positioned(
+                              left: MediaQuery.of(context).size.width * 0.03,
+                              top: MediaQuery.of(context).size.height * 0.03,
+                              child: ElevatedButton(
+                                child: Image(
+                                  image: _selected,
+                                  fit: BoxFit.scaleDown,
+                                  width: 30,
+                                  alignment: Alignment.center,
                                 ),
-                                PopupMenuItem(
-                                  value: 1,
-                                  child: ListTile(
-                                    leading: Icon(
-                                      Ionicons.log_out_outline,
-                                      color: Color(0xffDF752C),
-                                      size: 20,
-                                    ),
-                                    title: Text(
-                                      "Logout",
-                                      style: GoogleFonts.lato(
-                                        fontSize: 15.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
+                                onPressed: () {
+                                  showDialog<void>(
+                                      context: context,
+                                      builder: (context) => dialog);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                  shape: CircleBorder(),
+                                  padding: EdgeInsets.all(10),
                                 ),
-                              ],
-                          icon: Stack(children: [
-                            Positioned(
-                              top: MediaQuery.of(context).size.height * 0.01,
-                              right: MediaQuery.of(context).size.width * 0.01,
-                              child: InkWell(
-                                  onTap: () => {
+                              )),
+                          Positioned(
+                              right: MediaQuery.of(context).size.width * 0.03,
+                              top: MediaQuery.of(context).size.height * 0.03,
+                              child: PopupMenuButton(
+                                  iconSize: 20,
+                                  onCanceled: () => {
                                         setState(() {
-                                          dynamic state = _menuKey.currentState;
-                                          state.showButtonMenu();
-                                          iconaPopup = Ionicons.close_outline;
+                                          iconaPopup = Ionicons.menu_outline;
                                         })
                                       },
-                                  child: Container(
-                                      alignment: Alignment.topRight,
-                                      height: 30,
-                                      width: 30,
-                                      decoration: ShapeDecoration(
-                                        color: Colors.white,
-                                        shape: StadiumBorder(
-                                          side: BorderSide(
-                                              color: Colors.white, width: 2),
+                                  onSelected: (value) => {
+                                        setState(() {
+                                          iconaPopup = Ionicons.menu_outline;
+                                        }),
+                                        if (value == 0)
+                                          {
+                                            Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  curve: Curves.easeInOut,
+                                                  type: PageTransitionType
+                                                      .rightToLeftWithFade,
+                                                  child: Support(),
+                                                ))
+                                          }
+                                        else
+                                          {
+                                            HomeState.logged = false,
+                                            HomeState.userType = 'client',
+                                            Navigator.pushReplacement(
+                                                context,
+                                                PageTransition(
+                                                  curve: Curves.easeInOut,
+                                                  type: PageTransitionType.fade,
+                                                  child: MyApp(),
+                                                ))
+                                          }
+                                      },
+                                  key: _menuKey,
+                                  elevation: 3,
+                                  offset: Offset(
+                                      1,
+                                      MediaQuery.of(context).size.height *
+                                          0.07),
+                                  shape: TooltipShape(),
+                                  itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          value: 0,
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Ionicons.call_outline,
+                                              color: Color(0xffDF752C),
+                                              size: 20,
+                                            ),
+                                            title: Text(
+                                              "Assistenza",
+                                              style: GoogleFonts.lato(
+                                                fontSize: 15.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          iconaPopup,
-                                          color: Colors.black,
-                                          size: 20,
+                                        PopupMenuItem(
+                                          value: 1,
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Ionicons.log_out_outline,
+                                              color: Color(0xffDF752C),
+                                              size: 20,
+                                            ),
+                                            title: Text(
+                                              "Logout",
+                                              style: GoogleFonts.lato(
+                                                fontSize: 15.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ))),
-                            ),
-                          ]))
+                                      ],
+                                  icon: Stack(children: [
+                                    InkWell(
+                                        onTap: () => {
+                                              setState(() {
+                                                dynamic state =
+                                                    _menuKey.currentState;
+                                                state.showButtonMenu();
+                                                iconaPopup =
+                                                    Ionicons.close_outline;
+                                              })
+                                            },
+                                        child: Container(
+                                            alignment: Alignment.topRight,
+                                            height: 30,
+                                            width: 30,
+                                            decoration: ShapeDecoration(
+                                              color: Colors.white,
+                                              shape: StadiumBorder(
+                                                side: BorderSide(
+                                                    color: Colors.white,
+                                                    width: 2),
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                iconaPopup,
+                                                color: Colors.black,
+                                                size: 20,
+                                              ),
+                                            ))),
+                                  ])))
+                        ])
                       : null,
                 ),
               ),
-              if (HomeState.logged && HomeState.userType == 'client')
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
-                ),
-              if (HomeState.logged && HomeState.userType == 'client')
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.1),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        fit: FlexFit.tight,
-                        flex: 10,
-                        child: DropdownButton2(
-                          items: <String>['Allianz', 'Generali']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: GoogleFonts.lato(
-                                  fontSize: 14.0,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          value: _chosenValue,
-                          style: GoogleFonts.montserrat(
-                            fontSize: 13.0,
-                            color: Colors.black,
-                          ),
-                          icon: Icon(Ionicons.caret_down_outline,
-                              color: Colors.black, size: 18),
-                          onChanged: (value) {
-                            setState(() {
-                              _chosenValue = value.toString();
-                            });
-                          },
-                          dropdownDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                          alignment: Alignment.center,
-                          buttonElevation: 5,
-                          underline: SizedBox(),
-                          dropdownOverButton: true,
-                          buttonDecoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(28),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.16),
-                                offset: Offset(0, 3),
-                                blurRadius: 6,
-                              ),
-                            ],
-                          ),
-                          focusColor: Colors.white,
-                          buttonPadding: EdgeInsets.symmetric(
-                              horizontal:
-                                  MediaQuery.of(context).size.width * 0.14),
-                        ),
-                      ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        flex: 0,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    curve: Curves.easeInOut,
-                                    type:
-                                        PageTransitionType.rightToLeftWithFade,
-                                    child: ChoiceAgency(),
-                                  ));
-                            },
-                            child: Icon(Ionicons.add_circle_outline,
-                                color: Colors.green, size: 24),
-                            style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(), primary: Colors.white)),
-                      ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        flex: 0,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              //remove selected agency
-                            },
-                            child: Icon(Ionicons.remove_circle_outline,
-                                color: Colors.red, size: 24),
-                            style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(), primary: Colors.white)),
-                      ),
-                    ],
-                  ),
-                ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.02,
               ),
@@ -404,6 +387,35 @@ class HomeState extends State<Home> {
                             primary: Color(0xffdf752c),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(23))),
+                      ),
+                    if (HomeState.userType == 'client' && HomeState.logged)
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.03,
+                      ),
+                    if (HomeState.userType == 'client' && HomeState.logged)
+                      ElevatedButton(
+                        onPressed: () {
+                          //remove agency from db and list
+                          //then setState with new agency
+                        },
+                        child: Text(
+                          'Rimuovi Agenzia',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15.0,
+                            color: Color(0xffdf752c),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.45,
+                                MediaQuery.of(context).size.height * 0.06),
+                            alignment: Alignment.center,
+                            primary: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 2, color: Color(0xffdf752c)),
+                                borderRadius: BorderRadius.circular(23))),
                       )
                   ])),
             ]),
@@ -465,4 +477,46 @@ class TooltipShape extends ShapeBorder {
         side: _side.scale(t),
         borderRadius: _borderRadius * t,
       );
+}
+
+class SimpleDialogItem extends StatelessWidget {
+  const SimpleDialogItem(
+      {Key? key,
+      required this.icon,
+      required this.text,
+      required this.onPressed})
+      : super(key: key);
+
+  final Widget icon;
+  final String text;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialogOption(
+      onPressed: onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            child: icon,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(start: 16.0),
+            child: Text(
+              text,
+              style: GoogleFonts.montserrat(
+                fontSize: 13.0,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
