@@ -79,17 +79,6 @@ class HomeState extends State<Home> {
                                           curve: Curves.easeInOut,
                                           type: PageTransitionType
                                               .rightToLeftWithFade,
-                                          child: ChoiceAgency(),
-                                        ))
-                                  }
-                                else if (value == 1)
-                                  {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                          curve: Curves.easeInOut,
-                                          type: PageTransitionType
-                                              .rightToLeftWithFade,
                                           child: Support(),
                                         ))
                                   }
@@ -116,24 +105,6 @@ class HomeState extends State<Home> {
                                   value: 0,
                                   child: ListTile(
                                     leading: Icon(
-                                      Ionicons.add_circle_outline,
-                                      color: Color(0xffDF752C),
-                                      size: 20,
-                                    ),
-                                    title: Text(
-                                      "Aggiungi agenzia",
-                                      style: GoogleFonts.lato(
-                                        fontSize: 15.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: 1,
-                                  child: ListTile(
-                                    leading: Icon(
                                       Ionicons.call_outline,
                                       color: Color(0xffDF752C),
                                       size: 20,
@@ -149,7 +120,7 @@ class HomeState extends State<Home> {
                                   ),
                                 ),
                                 PopupMenuItem(
-                                  value: 2,
+                                  value: 1,
                                   child: ListTile(
                                     leading: Icon(
                                       Ionicons.log_out_outline,
@@ -208,54 +179,95 @@ class HomeState extends State<Home> {
                 ),
               if (HomeState.logged && HomeState.userType == 'client')
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.2),
-                  child: DropdownButton2(
-                    items: <String>['Allianz', 'Generali']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: GoogleFonts.lato(
-                            fontSize: 14.0,
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.1),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 10,
+                        child: DropdownButton2(
+                          items: <String>['Allianz', 'Generali']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: GoogleFonts.lato(
+                                  fontSize: 14.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          value: _chosenValue,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 13.0,
                             color: Colors.black,
                           ),
+                          icon: Icon(Ionicons.caret_down_outline,
+                              color: Colors.black, size: 18),
+                          onChanged: (value) {
+                            setState(() {
+                              _chosenValue = value.toString();
+                            });
+                          },
+                          dropdownDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                          alignment: Alignment.center,
+                          buttonElevation: 5,
+                          underline: SizedBox(),
+                          dropdownOverButton: true,
+                          buttonDecoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(28),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.16),
+                                offset: Offset(0, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
+                          ),
+                          focusColor: Colors.white,
+                          buttonPadding: EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.of(context).size.width * 0.14),
                         ),
-                      );
-                    }).toList(),
-                    value: _chosenValue,
-                    style: GoogleFonts.montserrat(
-                      fontSize: 13.0,
-                      color: Colors.black,
-                    ),
-                    icon: Icon(Ionicons.caret_down_outline,
-                        color: Colors.black, size: 18),
-                    onChanged: (value) {
-                      setState(() {
-                        _chosenValue = value.toString();
-                      });
-                    },
-                    dropdownDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    alignment: Alignment.center,
-                    buttonElevation: 5,
-                    underline: SizedBox(),
-                    dropdownOverButton: true,
-                    buttonDecoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.16),
-                          offset: Offset(0, 3),
-                          blurRadius: 6,
-                        ),
-                      ],
-                    ),
-                    buttonPadding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.14),
+                      ),
+                      Flexible(
+                        fit: FlexFit.loose,
+                        flex: 0,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    curve: Curves.easeInOut,
+                                    type:
+                                        PageTransitionType.rightToLeftWithFade,
+                                    child: ChoiceAgency(),
+                                  ));
+                            },
+                            child: Icon(Ionicons.add_circle_outline,
+                                color: Colors.green, size: 24),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(), primary: Colors.white)),
+                      ),
+                      Flexible(
+                        fit: FlexFit.loose,
+                        flex: 0,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              //remove selected agency
+                            },
+                            child: Icon(Ionicons.remove_circle_outline,
+                                color: Colors.red, size: 24),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(), primary: Colors.white)),
+                      ),
+                    ],
                   ),
                 ),
               SizedBox(
