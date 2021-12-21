@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/pages/choice_agency.dart';
 import 'package:pago_polizza/pages/login.dart';
 import 'package:flutter/services.dart';
 import 'package:pago_polizza/pages/pagamento.dart';
@@ -163,6 +164,7 @@ class ScanQRCodeState extends State<ScanQRCode> {
     controller.scannedDataStream.listen((scanData) async {
       print(scanData.code);
       //do something with scanData.code
+      ChoiceAgencyState.rui = scanData.code.toString();
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(child: Home(), type: PageTransitionType.fade),

@@ -23,6 +23,7 @@ class ChoiceAgency extends StatefulWidget {
 class ChoiceAgencyState extends State<ChoiceAgency> {
   final _formkey = GlobalKey<FormState>();
   final controller = TextEditingController();
+  static String rui = '';
   void dispose() {
     controller.dispose();
     super.dispose();
@@ -119,6 +120,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                         child: Column(
                           children: [
                             TextFormField(
+                              controller: controller,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Perfavore inserisci il Codice RUI';
@@ -157,6 +159,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                             type: PageTransitionType.fade),
                                         (route) => false);
                                   } else {
+                                    rui = controller.text;
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         PageTransition(

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "153404632664",
+    "project_id": "pagopolizza",
+    "storage_bucket": "pagopolizza.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153404632664:android:6ea87d8e4e08891337e42d",
+        "android_client_info": {
+          "package_name": "com.unoone.pagopolizza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153404632664-m5m7i7f7nkiu7lktq9d4pcf08m5fdho6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unoone.pagopolizza",
+            "certificate_hash": "74b04df06d7205f9704944866f5045b5292fe4ea"
+          }
+        },
+        {
+          "client_id": "153404632664-jfcj1a7n9akors4cdnhs38s9v4hvj032.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6FwKhWpudESk3IoOn43f58PcDwegr2xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153404632664-jfcj1a7n9akors4cdnhs38s9v4hvj032.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

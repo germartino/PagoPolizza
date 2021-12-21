@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:pago_polizza/pages/choice_agency.dart';
 import 'package:pago_polizza/pages/login.dart';
 import 'package:flutter/services.dart';
 import 'package:pago_polizza/pages/pagamento.dart';
@@ -22,11 +25,18 @@ class Register extends StatefulWidget {
 }
 
 class RegisterState extends State<Register> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   bool _passwordVisible = false;
   bool _passwordVisible1 = false;
   bool ischecked1 = false;
   bool ischecked2 = false;
+  bool valid = true;
   final _formkey = GlobalKey<FormState>();
+  TextEditingController nome = new TextEditingController();
+  TextEditingController cognome = new TextEditingController();
+  TextEditingController email = new TextEditingController();
+  TextEditingController pass = new TextEditingController();
+  TextEditingController confPass = new TextEditingController();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,6 +141,7 @@ class RegisterState extends State<Register> {
                             child: Column(
                               children: [
                                 TextFormField(
+                                  controller: nome,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Perfavore inserisci il nome';
@@ -157,6 +168,7 @@ class RegisterState extends State<Register> {
                                     height: MediaQuery.of(context).size.height *
                                         0.01),
                                 TextFormField(
+                                  controller: cognome,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Perfavore inserisci cognome o ragione sociale';
@@ -183,9 +195,17 @@ class RegisterState extends State<Register> {
                                     height: MediaQuery.of(context).size.height *
                                         0.01),
                                 TextFormField(
+                                  onChanged: (value) => valid = true,
+                                  controller: email,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Perfavore inserisci l\'email';
+                                    } else if (!RegExp(
+                                            '[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?')
+                                        .hasMatch(value)) {
+                                      return 'Perfavore inserisci una mail valida';
+                                    } else if (!valid) {
+                                      return 'Un account con questa email esiste già';
                                     }
                                     return null;
                                   },
@@ -211,9 +231,14 @@ class RegisterState extends State<Register> {
                                     height: MediaQuery.of(context).size.height *
                                         0.01),
                                 TextFormField(
+                                  controller: pass,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Perfavore inserisci la password';
+                                    } else if (!RegExp(
+                                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
+                                        .hasMatch(value)) {
+                                      return 'La password deve contenere almeno 8 caratteri, una lettera maiuscola, una lettera minuscola e un numero';
                                     }
                                     return null;
                                   },
@@ -224,6 +249,7 @@ class RegisterState extends State<Register> {
                                     fontSize: 15,
                                   ),
                                   decoration: InputDecoration(
+                                    errorMaxLines: 4,
                                     focusedBorder: UnderlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.black)),
@@ -251,9 +277,12 @@ class RegisterState extends State<Register> {
                                     height: MediaQuery.of(context).size.height *
                                         0.01),
                                 TextFormField(
+                                  controller: confPass,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Perfavore reinserisci la password';
+                                      return 'Perfavore inserisci la password';
+                                    } else if (value != pass.text) {
+                                      return 'La password inserita deve essere uguale alla precedente';
                                     }
                                     return null;
                                   },
@@ -264,6 +293,7 @@ class RegisterState extends State<Register> {
                                     fontSize: 15,
                                   ),
                                   decoration: InputDecoration(
+                                    errorMaxLines: 2,
                                     focusedBorder: UnderlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.black)),
@@ -368,11 +398,7 @@ class RegisterState extends State<Register> {
                                     if (_formkey.currentState!.validate() &&
                                         ischecked1 &&
                                         ischecked2) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Login()),
-                                      );
+                                      signUser();
                                     }
                                   },
                                   child: Text(
@@ -439,5 +465,35 @@ class RegisterState extends State<Register> {
             ]),
           ),
         ));
+  }
+
+  Future<void> signUser() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: email.text, password: pass.text);
+      FirebaseFirestore.instance
+          .collection('utenti')
+          .doc(userCredential.user!.uid)
+          .set({
+        "Nome": nome.text,
+        "Cognome": cognome.text,
+        "Ruolo": "client",
+        "CodiceRUI": [ChoiceAgencyState.rui]
+      });
+      await userCredential.user!.sendEmailVerification();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        valid = false;
+        _formkey.currentState!.validate();
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
