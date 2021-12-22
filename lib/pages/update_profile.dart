@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -47,7 +48,7 @@ class UpdateProfileState extends State<UpdateProfile> {
               ),
               child: Row(
                 children: [
-                  if (HomeState.userType != 'admin')
+                  if (CurrentUser.role != 'admin')
                     Expanded(
                       flex: 0,
                       child: Padding(
@@ -68,7 +69,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                     flex: 1,
                     child: Padding(
                       padding: EdgeInsets.only(
-                        left: (HomeState.userType == 'admin')
+                        left: (CurrentUser.role == 'admin')
                             ? MediaQuery.of(context).size.width * 0.07
                             : 0,
                       ),
@@ -121,9 +122,9 @@ class UpdateProfileState extends State<UpdateProfile> {
                               key: _formkey,
                               child: Column(
                                 children: [
-                                  if (HomeState.userType != 'admin')
+                                  if (CurrentUser.role != 'admin')
                                     TextFormField(
-                                      initialValue: (HomeState.userType ==
+                                      initialValue: (CurrentUser.role ==
                                               'client')
                                           ? 'Mario'
                                           : 'Allianz Bank Financial Advisors S.p.A.',
@@ -149,15 +150,15 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         ),
                                       ),
                                     ),
-                                  if (HomeState.userType != 'admin')
+                                  if (CurrentUser.role != 'admin')
                                     SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.02),
-                                  if (HomeState.userType != 'admin')
+                                  if (CurrentUser.role != 'admin')
                                     TextFormField(
                                       initialValue:
-                                          (HomeState.userType == 'client')
+                                          (CurrentUser.role == 'client')
                                               ? 'Rossi'
                                               : 'A000076887',
                                       validator: (value) {
@@ -176,7 +177,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                             borderSide: BorderSide(
                                                 color: Colors.black)),
                                         labelText:
-                                            (HomeState.userType == 'client')
+                                            (CurrentUser.role == 'client')
                                                 ? 'Cognome o Ragione Sociale'
                                                 : 'Codice RUI',
                                         labelStyle: GoogleFonts.ptSans(
@@ -185,12 +186,12 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         ),
                                       ),
                                     ),
-                                  if (HomeState.userType == 'agency')
+                                  if (CurrentUser.role == 'agency')
                                     SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.02),
-                                  if (HomeState.userType == 'agency')
+                                  if (CurrentUser.role == 'agency')
                                     TextFormField(
                                       initialValue: 'Via delle vie, 3, Roma',
                                       validator: (value) {
@@ -215,7 +216,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         ),
                                       ),
                                     ),
-                                  if (HomeState.userType != 'admin')
+                                  if (CurrentUser.role != 'admin')
                                     SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
@@ -384,7 +385,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      if (HomeState.userType != 'admin')
+                                      if (CurrentUser.role != 'admin')
                                         Expanded(
                                           flex: 0,
                                           child: ElevatedButton(
@@ -420,7 +421,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                                             0xffdf752c)))),
                                           ),
                                         ),
-                                      if (HomeState.userType != 'admin')
+                                      if (CurrentUser.role != 'admin')
                                         SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size

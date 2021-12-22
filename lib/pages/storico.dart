@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -17,7 +18,7 @@ import 'package:PagoPolizza/model/transaction.dart';
 
 List<Transaction> getList() {
   List<Transaction> temp = [];
-  if (HomeState.userType == 'client') {
+  if (CurrentUser.role == 'client') {
     temp.add(Transaction(
       true,
       '07/12/2021',
@@ -116,7 +117,7 @@ class StoricoState extends State<Storico> {
               ),
               color: Color(0xffdf752c),
             ),
-            child: (HomeState.userType == 'admin')
+            child: (CurrentUser.role == 'admin')
                 ? Row(
                     children: [
                       Expanded(

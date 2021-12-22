@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,12 +36,12 @@ class Transaction {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  (HomeState.userType == 'client')
+                  (CurrentUser.role == 'client')
                       ? (success ? 'EFFETTUATO CON SUCCESSO' : "NON EFFETTUATO")
                       : intestatario.toUpperCase(),
                   style: GoogleFonts.montserrat(
                     fontSize: 12.0,
-                    color: (HomeState.userType == 'client')
+                    color: (CurrentUser.role == 'client')
                         ? (success ? Color(0xff00701A) : Color(0xffA30000))
                         : Color(0xffdf752c),
                     fontWeight: FontWeight.bold,
@@ -220,7 +221,7 @@ class Transaction {
             0.03,
             0.03
           ], colors: [
-            (HomeState.userType == 'client')
+            (CurrentUser.role == 'client')
                 ? (success ? Color(0xff00701A) : Color(0xffA30000))
                 : Color(0xffdf752c),
             Colors.white
@@ -236,7 +237,7 @@ class Transaction {
           ],
         ),
         child: CustomExpansionTile(
-          borderColor: (HomeState.userType == 'client')
+          borderColor: (CurrentUser.role == 'client')
               ? (success ? Color(0xff00701A) : Color(0xffA30000))
               : Color(0xffdf752c),
           tilePadding: EdgeInsets.zero,

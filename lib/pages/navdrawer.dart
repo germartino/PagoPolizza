@@ -1,3 +1,4 @@
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/agency_list.dart';
@@ -19,13 +20,13 @@ class NavDrawer extends StatefulWidget {
 
 List<Widget> getPagesList() {
   List<Widget> temp = [];
-  if (HomeState.userType == 'admin') {
+  if (CurrentUser.role == 'admin') {
     temp.add(UpdateProfile());
   } else {
     temp.add(Profile());
   }
   temp.add(Home());
-  if (HomeState.userType == 'admin') {
+  if (CurrentUser.role == 'admin') {
     temp.add(ListaAgenzie());
   } else {
     temp.add(Storico());

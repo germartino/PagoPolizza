@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,6 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  static String userType = 'client'; //can be 'client' or 'agency' or 'admin'
   var iconaPopup = Ionicons.menu_outline;
   final GlobalKey _menuKey = GlobalKey();
   AssetImage _selected = AssetImage('assets/insurance_logo.png');
@@ -115,7 +115,7 @@ class HomeState extends State<Home> {
                   ),
                   child: FirebaseAuth.instance.currentUser != null
                       ? Stack(children: [
-                          if (HomeState.userType == 'client')
+                          if (CurrentUser.role == 'client')
                             Positioned(
                                 left: MediaQuery.of(context).size.width * 0.03,
                                 top: MediaQuery.of(context).size.height * 0.03,
@@ -151,7 +151,7 @@ class HomeState extends State<Home> {
                                         setState(() {
                                           iconaPopup = Ionicons.menu_outline;
                                         }),
-                                        if (HomeState.userType == 'admin')
+                                        if (CurrentUser.role == 'admin')
                                           {makeLogout(context)}
                                         else if (value == 0)
                                           {
@@ -175,7 +175,7 @@ class HomeState extends State<Home> {
                                           0.07),
                                   shape: TooltipShape(),
                                   itemBuilder: (context) => [
-                                        if (HomeState.userType != 'admin')
+                                        if (CurrentUser.role != 'admin')
                                           PopupMenuItem(
                                             value: 0,
                                             child: ListTile(
@@ -195,7 +195,7 @@ class HomeState extends State<Home> {
                                             ),
                                           ),
                                         PopupMenuItem(
-                                          value: HomeState.userType == 'admin'
+                                          value: CurrentUser.role == 'admin'
                                               ? 0
                                               : 1,
                                           child: ListTile(
@@ -347,7 +347,7 @@ class HomeState extends State<Home> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.05,
                     ),
-                    if (HomeState.userType == 'client')
+                    if (CurrentUser.role == 'client')
                       ElevatedButton(
                         onPressed: () {
                           if (FirebaseAuth.instance.currentUser != null) {
@@ -387,12 +387,12 @@ class HomeState extends State<Home> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(23))),
                       ),
-                    if (HomeState.userType == 'client' &&
+                    if (CurrentUser.role == 'client' &&
                         FirebaseAuth.instance.currentUser != null)
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
                       ),
-                    if (HomeState.userType == 'client' &&
+                    if (CurrentUser.role == 'client' &&
                         FirebaseAuth.instance.currentUser != null)
                       ElevatedButton(
                         onPressed: () {

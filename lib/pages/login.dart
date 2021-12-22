@@ -284,8 +284,6 @@ class LoginState extends State<Login> {
   void makeLogin() async {
     int result = await Database.login(email.text, pass.text, context);
 
-    log(result.toString());
-
     if (result == 0) {
       Navigator.pushAndRemoveUntil(
           context,

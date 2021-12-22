@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +31,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static String userType = 'client';
   static final String title = 'PagoPolizza';
 
   @override
@@ -231,7 +231,9 @@ class _MainPageState extends State<MainPage> {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
       DocumentSnapshot snap = await users.doc(user.uid).get();
-      HomeState.userType = snap["Ruolo"].toString();
+      CurrentUser(
+          snap["Nome"], snap["Cognome"], snap["Ruolo"], snap["CodiceRUI"]);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => NavDrawer()),

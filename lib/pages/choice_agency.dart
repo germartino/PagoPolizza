@@ -1,4 +1,7 @@
 import 'dart:developer';
+import 'package:PagoPolizza/model/database.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -198,6 +201,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                 if (_formkey.currentState!.validate()) {
                                   if (FirebaseAuth.instance.currentUser !=
                                       null) {
+                                    //controllo che esiste e nel caso aggiungo un'altra agenzia alla lista
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         PageTransition(
@@ -205,13 +209,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                             type: PageTransitionType.fade),
                                         (route) => false);
                                   } else {
-                                    rui = codRui.text;
-                                    Navigator.pushAndRemoveUntil(
-                                        context,
-                                        PageTransition(
-                                            child: Home(),
-                                            type: PageTransitionType.fade),
-                                        (route) => false);
+                                    setAgency();
                                   }
                                 }
                               },
@@ -288,5 +286,27 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
             ]),
           ),
         ));
+  }
+
+  void setAgency() async {
+    bool result = await Database.existAgency(codRui.text, pass.text);
+
+    if (result) {
+      rui = codRui.text;
+      Navigator.pushAndRemoveUntil(
+          context,
+          PageTransition(child: Home(), type: PageTransitionType.fade),
+          (route) => false);
+    } else {
+      pass.clear();
+      FocusScope.of(context).unfocus();
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Codice RUI o Password errato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    }
   }
 }

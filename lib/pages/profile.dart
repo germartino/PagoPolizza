@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -156,7 +157,7 @@ class ProfileState extends State<Profile> {
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            (HomeState.userType == 'client')
+                            (CurrentUser.role == 'client')
                                 ? 'Mario'
                                 : 'Allianz Bank Financial Advisors S.p.A.',
                             style: GoogleFonts.ptSans(
@@ -170,7 +171,7 @@ class ProfileState extends State<Profile> {
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            (HomeState.userType == 'client')
+                            (CurrentUser.role == 'client')
                                 ? 'COGNOME / RAGIONE SOCIALE'
                                 : 'CODICE RUI',
                             style: GoogleFonts.montserrat(
@@ -184,7 +185,7 @@ class ProfileState extends State<Profile> {
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            (HomeState.userType == 'client')
+                            (CurrentUser.role == 'client')
                                 ? 'Rossi'
                                 : 'A000076887',
                             style: GoogleFonts.ptSans(
@@ -193,11 +194,11 @@ class ProfileState extends State<Profile> {
                             ),
                           ),
                         ),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.05),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
@@ -208,11 +209,11 @@ class ProfileState extends State<Profile> {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.01),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
@@ -240,7 +241,7 @@ class ProfileState extends State<Profile> {
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            (HomeState.userType == 'client')
+                            (CurrentUser.role == 'client')
                                 ? 'client@pagopolizza.com'
                                 : 'agency@pagopolizza.com',
                             style: GoogleFonts.ptSans(
@@ -273,11 +274,11 @@ class ProfileState extends State<Profile> {
                             ),
                           ),
                         ),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.02),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(
@@ -300,11 +301,11 @@ class ProfileState extends State<Profile> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.02),
-                        if (HomeState.userType == 'agency')
+                        if (CurrentUser.role == 'agency')
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(
@@ -348,6 +349,7 @@ class ProfileState extends State<Profile> {
             artDialogArgs: ArtDialogArgs(
               type: ArtSweetAlertType.success,
               title: "Logo modificato",
+              confirmButtonColor: Color(0xffDF752C),
             ));
       }
     });
@@ -366,6 +368,7 @@ class ProfileState extends State<Profile> {
             artDialogArgs: ArtDialogArgs(
               type: ArtSweetAlertType.success,
               title: "Banner modificato",
+              confirmButtonColor: Color(0xffDF752C),
             ));
       }
     });

@@ -1,3 +1,4 @@
+import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,6 +50,7 @@ class Database {
             confirmButtonText: "OK",
             denyButtonText: "Reinvia email",
             denyButtonColor: Color(0xffDF752C),
+            confirmButtonColor: Color(0xffDF752C),
           ));
 
       if (response.isTapDenyButton) {
@@ -58,6 +60,7 @@ class Database {
             artDialogArgs: ArtDialogArgs(
               type: ArtSweetAlertType.success,
               title: "Email inviata",
+              confirmButtonColor: Color(0xffDF752C),
             ));
       }
       return -1;
@@ -65,12 +68,14 @@ class Database {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
       DocumentSnapshot snap = await users.doc(user.uid).get();
-      HomeState.userType = snap["Ruolo"].toString();
+      CurrentUser(
+          snap["Nome"], snap["Cognome"], snap["Ruolo"], snap["CodiceRUI"]);
       ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
             type: ArtSweetAlertType.success,
             title: "Benvenuto",
+            confirmButtonColor: Color(0xffDF752C),
           ));
       return 0;
     } else {
@@ -85,6 +90,7 @@ class Database {
               artDialogArgs: ArtDialogArgs(
                 type: ArtSweetAlertType.danger,
                 title: "Email o Password errato",
+                confirmButtonColor: Color(0xffDF752C),
               ));
         } else if (e.code == 'wrong-password') {
           ArtSweetAlert.show(
@@ -92,6 +98,7 @@ class Database {
               artDialogArgs: ArtDialogArgs(
                 type: ArtSweetAlertType.danger,
                 title: "Email o Password errato",
+                confirmButtonColor: Color(0xffDF752C),
               ));
         }
       }
@@ -102,7 +109,7 @@ class Database {
   //logout
   static Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
-    HomeState.userType = 'client';
+    CurrentUser('', '', 'client', []);
   }
 
   //reset password
@@ -119,6 +126,7 @@ class Database {
             artDialogArgs: ArtDialogArgs(
               type: ArtSweetAlertType.danger,
               title: "Non esiste un account con questa email",
+              confirmButtonColor: Color(0xffDF752C),
             ));
         return -1;
       } else if (e.code == 'wrong-password') {
@@ -128,10 +136,30 @@ class Database {
             artDialogArgs: ArtDialogArgs(
               type: ArtSweetAlertType.info,
               title: "Email inviata",
+              confirmButtonColor: Color(0xffDF752C),
             ));
         return 0;
       }
     }
     return -1;
+  }
+
+  //check if agency with rui and pass exist
+  static Future<bool> existAgency(rui, pass) async {
+    FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .get()
+        .then((value) {
+      print(value);
+      if (pass == value.get('PasswordRUI')) {
+        return true;
+      } else {
+        return false;
+      }
+    }).catchError((e) {
+      return false;
+    });
+    return false;
   }
 }
