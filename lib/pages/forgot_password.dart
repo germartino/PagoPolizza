@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:PagoPolizza/model/database.dart';
-import 'package:PagoPolizza/pages/forgot_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -19,22 +18,19 @@ import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => LoginState();
+  State<StatefulWidget> createState() => ForgotPasswordState();
 }
 
-class LoginState extends State<Login> {
-  bool _passwordVisible = false;
+class ForgotPasswordState extends State<ForgotPassword> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController email = new TextEditingController();
-  TextEditingController pass = new TextEditingController();
 
   void dispose() {
     email.dispose();
-    pass.dispose();
     super.dispose();
   }
 
@@ -112,7 +108,7 @@ class LoginState extends State<Login> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Login',
+                              'Recupera Password',
                               style: GoogleFonts.montserrat(
                                   fontSize: 23.0,
                                   color: Colors.black,
@@ -125,7 +121,7 @@ class LoginState extends State<Login> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              'Inserisci le tue credenziali per continuare.',
+                              'Inserisci la tua email.',
                               style: GoogleFonts.ptSans(
                                 fontSize: 15.0,
                                 color: Colors.black,
@@ -172,82 +168,15 @@ class LoginState extends State<Login> {
                                 ),
                                 SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.05),
-                                TextFormField(
-                                  controller: pass,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Perfavore inserisci la password';
-                                    }
-                                    return null;
-                                  },
-                                  obscureText: !_passwordVisible,
-                                  cursorColor: Colors.black,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                  ),
-                                  decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.black)),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                          _passwordVisible
-                                              ? Ionicons.eye_outline
-                                              : Ionicons.eye_off_outline,
-                                          color: Color(0xff9e9e9e),
-                                          size: 25),
-                                      onPressed: () {
-                                        setState(() {
-                                          _passwordVisible = !_passwordVisible;
-                                        });
-                                      },
-                                    ),
-                                    labelText: "Password",
-                                    labelStyle: GoogleFonts.ptSans(
-                                      fontSize: 15.0,
-                                      color: Color(0xff707070),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.01),
-                                Container(
-                                  alignment: Alignment.topRight,
-                                  child: RichText(
-                                    text: TextSpan(
-                                        text: 'Password dimenticata?',
-                                        style: GoogleFonts.lato(
-                                            fontSize: 14.0,
-                                            color: Color(0xffDF752C),
-                                            decoration:
-                                                TextDecoration.underline),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                  curve: Curves.easeInOut,
-                                                  type: PageTransitionType
-                                                      .rightToLeftWithFade,
-                                                  child: ForgotPassword(),
-                                                ));
-                                          }),
-                                  ),
-                                ),
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height *
                                         0.07),
                                 ElevatedButton(
                                   onPressed: () {
                                     if (_formkey.currentState!.validate()) {
-                                      makeLogin();
+                                      resetPass();
                                     }
                                   },
                                   child: Text(
-                                    'Accedi',
+                                    'Invia email',
                                     style: GoogleFonts.montserrat(
                                       fontSize: 15.0,
                                       color: Colors.white,
@@ -281,16 +210,20 @@ class LoginState extends State<Login> {
         ));
   }
 
-  void makeLogin() async {
-    int result = await Database.login(email.text, pass.text, context);
-
-    log(result.toString());
+  void resetPass() async {
+    int result = await Database.resetPassword(email.text, context);
 
     if (result == 0) {
-      Navigator.pushAndRemoveUntil(
+      Navigator.pop(
           context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-          (route) => false);
+          PageTransition(
+            curve: Curves.easeInOut,
+            type: PageTransitionType.rightToLeftWithFade,
+            child: Login(),
+          ));
+    } else {
+      email.clear();
+      FocusScope.of(context).unfocus();
     }
   }
 }

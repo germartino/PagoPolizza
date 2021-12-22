@@ -479,7 +479,7 @@ class RegisterState extends State<Register> {
 
   Future<void> signUser() async {
     int result = await Database.signUser(
-        email, pass, nome, cognome, ChoiceAgencyState.rui);
+        email.text, pass.text, nome.text, cognome.text, ChoiceAgencyState.rui);
 
     if (result == 0) {
       Navigator.pushReplacement(

@@ -11,14 +11,13 @@ class Database {
   static Future<int> signUser(email, pass, nome, cognome, rui) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: email.text, password: pass.text);
+          .createUserWithEmailAndPassword(email: email, password: pass);
       FirebaseFirestore.instance
           .collection('utenti')
           .doc(userCredential.user!.uid)
           .set({
-        "Nome": nome.text,
-        "Cognome": cognome.text,
+        "Nome": nome,
+        "Cognome": cognome,
         "Ruolo": "client",
         "CodiceRUI": [rui]
       });
@@ -77,9 +76,9 @@ class Database {
       return 0;
     } else {
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email.text, password: pass.text);
-        login(email, pass, context);
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: pass);
+        return await login(email, pass, context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           ArtSweetAlert.show(
@@ -101,9 +100,40 @@ class Database {
     return -1;
   }
 
+  //logout
   static Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
     HomeState.logged = false;
     HomeState.userType = 'client';
+  }
+
+  //reset password
+  //return -1 wrong email
+  //return 0 email sent
+  static Future<int> resetPassword(email, context) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: 'aaaaaa');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.danger,
+              title: "Non esiste un account con questa email",
+            ));
+        return -1;
+      } else if (e.code == 'wrong-password') {
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+        ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.info,
+              title: "Email inviata",
+            ));
+        return 0;
+      }
+    }
+    return -1;
   }
 }
