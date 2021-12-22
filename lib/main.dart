@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:PagoPolizza/pages/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +22,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  await FirebaseAuth.instance.signOut();
-
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
   runApp(MyApp());
 }
 
@@ -59,6 +59,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   String qrCode = 'Unknown';
+
+  @override
+  void initState() {
+    super.initState();
+    checkLogged();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,5 +224,20 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
         ));
+  }
+
+  void checkLogged() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('utenti');
+      DocumentSnapshot snap = await users.doc(user.uid).get();
+      HomeState.logged = true;
+      HomeState.userType = snap["Ruolo"].toString();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => NavDrawer()),
+      );
+    }
   }
 }

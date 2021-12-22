@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/choice_agency.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -162,17 +163,7 @@ class HomeState extends State<Home> {
                                                 ))
                                           }
                                         else
-                                          {
-                                            HomeState.logged = false,
-                                            HomeState.userType = 'client',
-                                            Navigator.pushReplacement(
-                                                context,
-                                                PageTransition(
-                                                  curve: Curves.easeInOut,
-                                                  type: PageTransitionType.fade,
-                                                  child: MyApp(),
-                                                ))
-                                          }
+                                          {makeLogout(context)}
                                       },
                                   key: _menuKey,
                                   elevation: 3,
@@ -424,6 +415,19 @@ class HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void makeLogout(context) async {
+    await FirebaseAuth.instance.signOut();
+    HomeState.logged = false;
+    HomeState.userType = 'client';
+    Navigator.pushReplacement(
+        context,
+        PageTransition(
+          curve: Curves.easeInOut,
+          type: PageTransitionType.fade,
+          child: MyApp(),
+        ));
   }
 }
 

@@ -22,11 +22,13 @@ class ChoiceAgency extends StatefulWidget {
 
 class ChoiceAgencyState extends State<ChoiceAgency> {
   final _formkey = GlobalKey<FormState>();
-  final controller = TextEditingController();
+  final codRui = TextEditingController();
+  final pass = TextEditingController();
   bool _passwordVisible = false;
   static String rui = '';
   void dispose() {
-    controller.dispose();
+    pass.dispose();
+    codRui.dispose();
     super.dispose();
   }
 
@@ -121,7 +123,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                         child: Column(
                           children: [
                             TextFormField(
-                              controller: controller,
+                              controller: codRui,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Perfavore inserisci il Codice RUI';
@@ -150,7 +152,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                 height:
                                     MediaQuery.of(context).size.height * 0.02),
                             TextFormField(
-                              controller: controller,
+                              controller: pass,
                               obscureText: !_passwordVisible,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -201,7 +203,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                             type: PageTransitionType.fade),
                                         (route) => false);
                                   } else {
-                                    rui = controller.text;
+                                    rui = codRui.text;
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         PageTransition(

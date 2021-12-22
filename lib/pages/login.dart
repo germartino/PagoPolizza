@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -27,6 +29,12 @@ class LoginState extends State<Login> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController email = new TextEditingController();
   TextEditingController pass = new TextEditingController();
+
+  void dispose() {
+    email.dispose();
+    pass.dispose();
+    super.dispose();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -216,6 +224,7 @@ class LoginState extends State<Login> {
                                                 TextDecoration.underline),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
+                                            //go to page for insert email and then send email to change pass
                                             print('password dimenticata');
                                           }),
                                   ),
@@ -226,21 +235,7 @@ class LoginState extends State<Login> {
                                 ElevatedButton(
                                   onPressed: () {
                                     if (_formkey.currentState!.validate()) {
-                                      HomeState.logged = true;
-                                      HomeState.userType = email.text.substring(
-                                          0, email.text.indexOf('@'));
-                                      ArtSweetAlert.show(
-                                          context: context,
-                                          artDialogArgs: ArtDialogArgs(
-                                            type: ArtSweetAlertType.success,
-                                            title: "Benvenuto",
-                                          ));
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  NavDrawer()),
-                                          (route) => false);
+                                      makeLogin();
                                     }
                                   },
                                   child: Text(
@@ -276,5 +271,72 @@ class LoginState extends State<Login> {
             ]),
           ),
         ));
+  }
+
+  void makeLogin() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.reload();
+    }
+
+    if (user != null && !user.emailVerified) {
+      ArtDialogResponse response = await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Devi prima confermare l'email",
+            confirmButtonText: "OK",
+            denyButtonText: "Reinvia email",
+            denyButtonColor: Color(0xffDF752C),
+          ));
+
+      if (response.isTapDenyButton) {
+        await user.sendEmailVerification();
+        ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.success,
+              title: "Email inviata",
+            ));
+      }
+    } else if (user != null && user.emailVerified) {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('utenti');
+      DocumentSnapshot snap = await users.doc(user.uid).get();
+      HomeState.logged = true;
+      HomeState.userType = snap["Ruolo"].toString();
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Benvenuto",
+          ));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => NavDrawer()),
+          (route) => false);
+    } else {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email.text, password: pass.text);
+        makeLogin();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          ArtSweetAlert.show(
+              context: context,
+              artDialogArgs: ArtDialogArgs(
+                type: ArtSweetAlertType.danger,
+                title: "Email o Password errato",
+              ));
+        } else if (e.code == 'wrong-password') {
+          ArtSweetAlert.show(
+              context: context,
+              artDialogArgs: ArtDialogArgs(
+                type: ArtSweetAlertType.danger,
+                title: "Email o Password errato",
+              ));
+        }
+      }
+    }
   }
 }

@@ -38,6 +38,15 @@ class RegisterState extends State<Register> {
   TextEditingController pass = new TextEditingController();
   TextEditingController confPass = new TextEditingController();
 
+  void dispose() {
+    nome.dispose();
+    cognome.dispose();
+    email.dispose();
+    pass.dispose();
+    confPass.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,
