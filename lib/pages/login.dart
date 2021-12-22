@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -274,69 +275,13 @@ class LoginState extends State<Login> {
   }
 
   void makeLogin() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await user.reload();
-    }
+    int result = await Database.login(email, pass, context);
 
-    if (user != null && !user.emailVerified) {
-      ArtDialogResponse response = await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.danger,
-            title: "Devi prima confermare l'email",
-            confirmButtonText: "OK",
-            denyButtonText: "Reinvia email",
-            denyButtonColor: Color(0xffDF752C),
-          ));
-
-      if (response.isTapDenyButton) {
-        await user.sendEmailVerification();
-        ArtSweetAlert.show(
-            context: context,
-            artDialogArgs: ArtDialogArgs(
-              type: ArtSweetAlertType.success,
-              title: "Email inviata",
-            ));
-      }
-    } else if (user != null && user.emailVerified) {
-      CollectionReference users =
-          FirebaseFirestore.instance.collection('utenti');
-      DocumentSnapshot snap = await users.doc(user.uid).get();
-      HomeState.logged = true;
-      HomeState.userType = snap["Ruolo"].toString();
-      ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.success,
-            title: "Benvenuto",
-          ));
+    if (result == 0) {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => NavDrawer()),
           (route) => false);
-    } else {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email.text, password: pass.text);
-        makeLogin();
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          ArtSweetAlert.show(
-              context: context,
-              artDialogArgs: ArtDialogArgs(
-                type: ArtSweetAlertType.danger,
-                title: "Email o Password errato",
-              ));
-        } else if (e.code == 'wrong-password') {
-          ArtSweetAlert.show(
-              context: context,
-              artDialogArgs: ArtDialogArgs(
-                type: ArtSweetAlertType.danger,
-                title: "Email o Password errato",
-              ));
-        }
-      }
     }
   }
 }

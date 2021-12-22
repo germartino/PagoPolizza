@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:PagoPolizza/model/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/choice_agency.dart';
@@ -423,9 +424,7 @@ class HomeState extends State<Home> {
   }
 
   void makeLogout(context) async {
-    await FirebaseAuth.instance.signOut();
-    HomeState.logged = false;
-    HomeState.userType = 'client';
+    await Database.logout();
     Navigator.pushReplacement(
         context,
         PageTransition(

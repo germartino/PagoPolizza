@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -477,32 +478,19 @@ class RegisterState extends State<Register> {
   }
 
   Future<void> signUser() async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: email.text, password: pass.text);
-      FirebaseFirestore.instance
-          .collection('utenti')
-          .doc(userCredential.user!.uid)
-          .set({
-        "Nome": nome.text,
-        "Cognome": cognome.text,
-        "Ruolo": "client",
-        "CodiceRUI": [ChoiceAgencyState.rui]
-      });
-      await userCredential.user!.sendEmailVerification();
+    int result = await Database.signUser(
+        email, pass, nome, cognome, ChoiceAgencyState.rui);
+
+    if (result == 0) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Login()),
       );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        valid = false;
-        _formkey.currentState!.validate();
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
+    } else if (result == -1) {
+      valid = false;
+      _formkey.currentState!.validate();
+    } else {
+      log(result.toString() + " register error");
     }
   }
 }
