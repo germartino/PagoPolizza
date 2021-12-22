@@ -151,7 +151,9 @@ class HomeState extends State<Home> {
                                         setState(() {
                                           iconaPopup = Ionicons.menu_outline;
                                         }),
-                                        if (value == 0)
+                                        if (HomeState.userType == 'admin')
+                                          {makeLogout(context)}
+                                        else if (value == 0)
                                           {
                                             Navigator.push(
                                                 context,
@@ -173,26 +175,29 @@ class HomeState extends State<Home> {
                                           0.07),
                                   shape: TooltipShape(),
                                   itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          value: 0,
-                                          child: ListTile(
-                                            leading: Icon(
-                                              Ionicons.call_outline,
-                                              color: Color(0xffDF752C),
-                                              size: 20,
-                                            ),
-                                            title: Text(
-                                              "Assistenza",
-                                              style: GoogleFonts.lato(
-                                                fontSize: 15.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
+                                        if (HomeState.userType != 'admin')
+                                          PopupMenuItem(
+                                            value: 0,
+                                            child: ListTile(
+                                              leading: Icon(
+                                                Ionicons.call_outline,
+                                                color: Color(0xffDF752C),
+                                                size: 20,
+                                              ),
+                                              title: Text(
+                                                "Assistenza",
+                                                style: GoogleFonts.lato(
+                                                  fontSize: 15.0,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
                                         PopupMenuItem(
-                                          value: 1,
+                                          value: HomeState.userType == 'admin'
+                                              ? 0
+                                              : 1,
                                           child: ListTile(
                                             leading: Icon(
                                               Ionicons.log_out_outline,
