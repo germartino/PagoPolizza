@@ -154,7 +154,6 @@ class SupportState extends State<Support> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
-                                HomeState.logged = true;
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(

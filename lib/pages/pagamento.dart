@@ -235,7 +235,6 @@ class PagamentoState extends State<Pagamento> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
-                                HomeState.logged = true;
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(

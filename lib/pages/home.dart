@@ -24,7 +24,6 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  static bool logged = false;
   static String userType = 'client'; //can be 'client' or 'agency' or 'admin'
   var iconaPopup = Ionicons.menu_outline;
   final GlobalKey _menuKey = GlobalKey();
@@ -107,14 +106,14 @@ class HomeState extends State<Home> {
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: logged
+                    gradient: FirebaseAuth.instance.currentUser != null
                         ? LinearGradient(
                             begin: FractionalOffset.topCenter,
                             end: FractionalOffset.bottomCenter,
                             colors: [Color(0xffdf752c), Colors.transparent])
                         : null,
                   ),
-                  child: logged
+                  child: FirebaseAuth.instance.currentUser != null
                       ? Stack(children: [
                           if (HomeState.userType == 'client')
                             Positioned(
@@ -351,7 +350,7 @@ class HomeState extends State<Home> {
                     if (HomeState.userType == 'client')
                       ElevatedButton(
                         onPressed: () {
-                          if (logged) {
+                          if (FirebaseAuth.instance.currentUser != null) {
                             Navigator.push(
                                 context,
                                 PageTransition(
@@ -370,7 +369,9 @@ class HomeState extends State<Home> {
                           }
                         },
                         child: Text(
-                          logged ? 'Paga ora' : 'Registrati',
+                          FirebaseAuth.instance.currentUser != null
+                              ? 'Paga ora'
+                              : 'Registrati',
                           style: GoogleFonts.montserrat(
                             fontSize: 15.0,
                             color: Colors.white,
@@ -386,11 +387,13 @@ class HomeState extends State<Home> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(23))),
                       ),
-                    if (HomeState.userType == 'client' && HomeState.logged)
+                    if (HomeState.userType == 'client' &&
+                        FirebaseAuth.instance.currentUser != null)
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
                       ),
-                    if (HomeState.userType == 'client' && HomeState.logged)
+                    if (HomeState.userType == 'client' &&
+                        FirebaseAuth.instance.currentUser != null)
                       ElevatedButton(
                         onPressed: () {
                           //remove agency from db and list

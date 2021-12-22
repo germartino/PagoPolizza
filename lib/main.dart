@@ -232,7 +232,6 @@ class _MainPageState extends State<MainPage> {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
       DocumentSnapshot snap = await users.doc(user.uid).get();
-      HomeState.logged = true;
       HomeState.userType = snap["Ruolo"].toString();
       Navigator.pushReplacement(
         context,

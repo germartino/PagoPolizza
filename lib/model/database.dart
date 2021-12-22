@@ -65,7 +65,6 @@ class Database {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
       DocumentSnapshot snap = await users.doc(user.uid).get();
-      HomeState.logged = true;
       HomeState.userType = snap["Ruolo"].toString();
       ArtSweetAlert.show(
           context: context,
@@ -103,7 +102,6 @@ class Database {
   //logout
   static Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
-    HomeState.logged = false;
     HomeState.userType = 'client';
   }
 
