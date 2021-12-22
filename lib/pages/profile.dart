@@ -341,15 +341,16 @@ class ProfileState extends State<Profile> {
     var logo = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
-      _logo = logo;
+      if (logo != null) {
+        _logo = logo;
+        ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.success,
+              title: "Logo modificato",
+            ));
+      }
     });
-
-    ArtSweetAlert.show(
-        context: context,
-        artDialogArgs: ArtDialogArgs(
-          type: ArtSweetAlertType.success,
-          title: "Logo modificato",
-        ));
 
     //devo prendere _logo come File(_logo.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
   }
@@ -358,15 +359,16 @@ class ProfileState extends State<Profile> {
     var banner = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
-      _banner = banner;
+      if (banner != null) {
+        _banner = banner;
+        ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.success,
+              title: "Banner modificato",
+            ));
+      }
     });
-
-    ArtSweetAlert.show(
-        context: context,
-        artDialogArgs: ArtDialogArgs(
-          type: ArtSweetAlertType.success,
-          title: "Banner modificato",
-        ));
 
     //devo prendere _banner come File(_banner.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
   }

@@ -114,27 +114,28 @@ class HomeState extends State<Home> {
                   ),
                   child: logged
                       ? Stack(children: [
-                          Positioned(
-                              left: MediaQuery.of(context).size.width * 0.03,
-                              top: MediaQuery.of(context).size.height * 0.03,
-                              child: ElevatedButton(
-                                child: Image(
-                                  image: _selected,
-                                  fit: BoxFit.scaleDown,
-                                  width: 30,
-                                  alignment: Alignment.center,
-                                ),
-                                onPressed: () {
-                                  showDialog<void>(
-                                      context: context,
-                                      builder: (context) => dialog);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.white,
-                                  shape: CircleBorder(),
-                                  padding: EdgeInsets.all(10),
-                                ),
-                              )),
+                          if (HomeState.userType == 'client')
+                            Positioned(
+                                left: MediaQuery.of(context).size.width * 0.03,
+                                top: MediaQuery.of(context).size.height * 0.03,
+                                child: ElevatedButton(
+                                  child: Image(
+                                    image: _selected,
+                                    fit: BoxFit.scaleDown,
+                                    width: 30,
+                                    alignment: Alignment.center,
+                                  ),
+                                  onPressed: () {
+                                    showDialog<void>(
+                                        context: context,
+                                        builder: (context) => dialog);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.white,
+                                    shape: CircleBorder(),
+                                    padding: EdgeInsets.all(10),
+                                  ),
+                                )),
                           Positioned(
                               right: MediaQuery.of(context).size.width * 0.03,
                               top: MediaQuery.of(context).size.height * 0.03,
