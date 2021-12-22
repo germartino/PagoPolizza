@@ -201,13 +201,7 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
                                 if (_formkey.currentState!.validate()) {
                                   if (FirebaseAuth.instance.currentUser !=
                                       null) {
-                                    //controllo che esiste e nel caso aggiungo un'altra agenzia alla lista
-                                    Navigator.pushAndRemoveUntil(
-                                        context,
-                                        PageTransition(
-                                            child: NavDrawer(),
-                                            type: PageTransitionType.fade),
-                                        (route) => false);
+                                    addAgency();
                                   } else {
                                     setAgency();
                                   }
@@ -296,6 +290,29 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(child: Home(), type: PageTransitionType.fade),
+          (route) => false);
+    } else {
+      pass.clear();
+      FocusScope.of(context).unfocus();
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Codice RUI o Password errato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    }
+  }
+
+  void addAgency() async {
+    bool result = await Database.existAgency(codRui.text, pass.text);
+    log(result.toString());
+
+    if (result) {
+      await Database.addAgency(codRui.text);
+      Navigator.pushAndRemoveUntil(
+          context,
+          PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
           (route) => false);
     } else {
       pass.clear();

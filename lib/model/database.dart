@@ -10,6 +10,7 @@ class Database {
   //return 0 if registered
   //return -1 if error
   static Future<int> signUser(email, pass, nome, cognome, rui) async {
+    int r = 0;
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: pass);
@@ -23,19 +24,20 @@ class Database {
         "CodiceRUI": [rui]
       });
       await userCredential.user!.sendEmailVerification();
-      return 0;
+      r = 0;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        return -1;
+        r = -1;
       }
-    } catch (e) {}
-    return 1;
+    }
+    return r;
   }
 
   //login
   //return -1 if not logged
   //return 0 if logged
   static Future<int> login(email, pass, context) async {
+    int r = 0;
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await user.reload();
@@ -63,7 +65,7 @@ class Database {
               confirmButtonColor: Color(0xffDF752C),
             ));
       }
-      return -1;
+      r = -1;
     } else if (user != null && user.emailVerified) {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
@@ -77,12 +79,12 @@ class Database {
             title: "Benvenuto",
             confirmButtonColor: Color(0xffDF752C),
           ));
-      return 0;
+      r = 0;
     } else {
       try {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: pass);
-        return await login(email, pass, context);
+        r = await login(email, pass, context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           ArtSweetAlert.show(
@@ -103,7 +105,7 @@ class Database {
         }
       }
     }
-    return -1;
+    return r;
   }
 
   //logout
@@ -116,6 +118,7 @@ class Database {
   //return -1 wrong email
   //return 0 email sent
   static Future<int> resetPassword(email, context) async {
+    int r = 0;
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: 'aaaaaa');
@@ -128,7 +131,7 @@ class Database {
               title: "Non esiste un account con questa email",
               confirmButtonColor: Color(0xffDF752C),
             ));
-        return -1;
+        r = -1;
       } else if (e.code == 'wrong-password') {
         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
         ArtSweetAlert.show(
@@ -138,28 +141,39 @@ class Database {
               title: "Email inviata",
               confirmButtonColor: Color(0xffDF752C),
             ));
-        return 0;
+        r = 0;
       }
     }
-    return -1;
+    return r;
   }
 
   //check if agency with rui and pass exist
   static Future<bool> existAgency(rui, pass) async {
-    FirebaseFirestore.instance
+    bool r = false;
+    await FirebaseFirestore.instance
         .collection('agenzie')
         .doc(rui)
         .get()
         .then((value) {
-      print(value);
       if (pass == value.get('PasswordRUI')) {
-        return true;
+        r = true;
       } else {
-        return false;
+        r = false;
       }
     }).catchError((e) {
-      return false;
+      r = false;
     });
-    return false;
+    return r;
+  }
+
+  static Future<void> addAgency(rui) async {
+    List<String> list = CurrentUser.codRui;
+    list.add(rui);
+    await FirebaseFirestore.instance
+        .collection('utenti')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({'CodiceRUI': list})
+        .then((value) {})
+        .catchError((error) {});
   }
 }
