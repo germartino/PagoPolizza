@@ -3,7 +3,6 @@ import 'package:PagoPolizza/pages/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:PagoPolizza/model/user.dart';
 import 'package:PagoPolizza/pages/choice_agency.dart';
 import 'package:PagoPolizza/pages/login.dart';
 import 'package:flutter/services.dart';
