@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:PagoPolizza/pages/agency_list.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/choice_agency.dart';
@@ -18,6 +23,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:PagoPolizza/main.dart';
 import 'package:PagoPolizza/pages/support.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -367,6 +375,29 @@ class HomeState extends State<Home> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(23))),
                       ),
+                    if (CurrentUser.role == 'agency')
+                      ElevatedButton(
+                        onPressed: () {
+                          //generate and download qrcode
+                          saveQRCode(agenzia);
+                        },
+                        child: Text(
+                          'Scarica il QR Code',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15.0,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.45,
+                                MediaQuery.of(context).size.height * 0.06),
+                            alignment: Alignment.center,
+                            primary: Color(0xffdf752c),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(23))),
+                      ),
                     if (CurrentUser.role == 'client' &&
                         FirebaseAuth.instance.currentUser != null)
                       SizedBox(
@@ -378,9 +409,6 @@ class HomeState extends State<Home> {
                       ElevatedButton(
                         onPressed: () {
                           removeAgency(agenzie, agenzia.ruiCode);
-
-                          //remove agency from db and list
-                          //then setState with new agency
                         },
                         child: Text(
                           'Rimuovi Agenzia',
@@ -407,6 +435,48 @@ class HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void saveQRCode(agenzia) async {
+    try {
+      String qr =
+          jsonEncode({'rui': agenzia.ruiCode, 'password': agenzia.passRUI});
+
+      final img = await QrPainter(
+        data: qr,
+        version: QrVersions.auto,
+        color: Colors.black,
+        emptyColor: Colors.white,
+        gapless: true,
+      ).toImage(2048);
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+      final ts = DateTime.now().millisecondsSinceEpoch.toString();
+      String path = '$tempPath/$ts.png';
+      ByteData? painter = await CodePainter(qrImage: img)
+          .toImageData(2048, format: ui.ImageByteFormat.png);
+      if (painter != null) {
+        await writeToFile(painter, path);
+        bool? success = await GallerySaver.saveImage(path);
+        if (success != null && success) {
+          ArtSweetAlert.show(
+              context: context,
+              artDialogArgs: ArtDialogArgs(
+                type: ArtSweetAlertType.success,
+                title: "QRCode scaricato",
+                confirmButtonColor: Color(0xffDF752C),
+              ));
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> writeToFile(ByteData data, String path) async {
+    final buffer = data.buffer;
+    await File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
   void makeLogout(context) async {
@@ -568,5 +638,54 @@ class SimpleDialogItem extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CodePainter extends CustomPainter {
+  // ********************************* VARS ******************************** //
+
+  final double margin;
+  final ui.Image qrImage;
+  late Paint vpaint;
+
+  // ***************************** CONSTRUCTORS **************************** //
+
+  CodePainter({required this.qrImage, this.margin = 30}) {
+    vpaint = Paint()
+      ..color = Colors.white
+      ..style = ui.PaintingStyle.fill;
+  }
+
+  //***************************** PUBLIC METHODS *************************** //
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Draw everything in white.
+    final rect = Rect.fromPoints(Offset.zero, Offset(size.width, size.height));
+    canvas.drawRect(rect, vpaint);
+
+    // Draw the image in the center.
+    canvas.drawImage(qrImage, Offset(margin, margin), Paint());
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+
+  ui.Picture toPicture(double size) {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    paint(canvas, Size(size, size));
+    return recorder.endRecording();
+  }
+
+  Future<ui.Image> toImage(double size,
+      {ui.ImageByteFormat format = ui.ImageByteFormat.png}) async {
+    return await toPicture(size).toImage(size.toInt(), size.toInt());
+  }
+
+  Future<ByteData?> toImageData(double originalSize,
+      {ui.ImageByteFormat format = ui.ImageByteFormat.png}) async {
+    final image = await toImage(originalSize + margin * 2, format: format);
+    return image.toByteData(format: format);
   }
 }

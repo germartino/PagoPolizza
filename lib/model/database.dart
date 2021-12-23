@@ -38,7 +38,7 @@ class Database {
   //return -1 if not logged
   //return 0 if logged
   static Future<int> login(email, pass, context) async {
-    int r = 0;
+    int r = -1;
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await user.reload();
@@ -85,8 +85,10 @@ class Database {
       try {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: pass);
+        print('logged');
         r = await login(email, pass, context);
       } on FirebaseAuthException catch (e) {
+        print(e.toString());
         if (e.code == 'user-not-found') {
           ArtSweetAlert.show(
               context: context,
@@ -101,6 +103,15 @@ class Database {
               artDialogArgs: ArtDialogArgs(
                 type: ArtSweetAlertType.danger,
                 title: "Email o Password errato",
+                confirmButtonColor: Color(0xffDF752C),
+              ));
+        } else if (e.code == 'too-many-requests') {
+          ArtSweetAlert.show(
+              context: context,
+              artDialogArgs: ArtDialogArgs(
+                type: ArtSweetAlertType.danger,
+                title: "Troppe richieste",
+                text: 'Riprova più tardi',
                 confirmButtonColor: Color(0xffDF752C),
               ));
         }
@@ -180,14 +191,14 @@ class Database {
   }
 
   static Future<Agency> getAgency(rui) async {
-    Agency agenzia = Agency('', '', '', '', '');
+    Agency agenzia = Agency('', '', '', '', '', '');
     await FirebaseFirestore.instance
         .collection('agenzie')
         .doc(rui)
         .get()
         .then((value) {
       agenzia = Agency(value.get('Nome'), rui, value.get('Indirizzo'),
-          value.get('Logo'), value.get('Banner'));
+          value.get('Logo'), value.get('Banner'), value.get('PasswordRUI'));
     });
     return agenzia;
   }

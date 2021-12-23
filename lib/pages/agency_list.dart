@@ -20,13 +20,13 @@ import 'package:PagoPolizza/pages/storico.dart';
 List<Agency> getList() {
   List<Agency> temp = [];
   temp.add(Agency('Allianz Bank Financial Advisors S.p.A.', 'A000076887',
-      'Via delle vie, 3, Roma', '', ''));
-  temp.add(Agency(
-      'Alleanza Assicurazioni', 'A000075857', 'Via Verdi, 30, Milano', '', ''));
+      'Via delle vie, 3, Roma', '', '', ''));
+  temp.add(Agency('Alleanza Assicurazioni', 'A000075857',
+      'Via Verdi, 30, Milano', '', '', ''));
   temp.add(Agency('Unipol Gruppo S.p.A', 'A000072336',
-      'Via Stalingrado, 45, Bologna', '', ''));
+      'Via Stalingrado, 45, Bologna', '', '', ''));
   temp.add(
-      Agency('AXA S.p.A.', 'A000072984', 'Corso Como, 17, Milano', '', ''));
+      Agency('AXA S.p.A.', 'A000072984', 'Corso Como, 17, Milano', '', '', ''));
   return temp;
 }
 
