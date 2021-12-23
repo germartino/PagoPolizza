@@ -59,10 +59,24 @@ class HomeState extends State<Home> {
     return FutureBuilder(
         future: getAgencies(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildWidget(context, snapshot.data);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(
+              color: Color(0xffDF752C),
+              strokeWidth: 5,
+            );
           } else {
-            return CircularProgressIndicator();
+            if (snapshot.hasData) {
+              return buildWidget(context, snapshot.data);
+            } else {
+              return Scaffold(
+                  drawer: null,
+                  appBar: null,
+                  body: Center(
+                      child: CircularProgressIndicator(
+                    color: Color(0xffDF752C),
+                    strokeWidth: 5,
+                  )));
+            }
           }
         });
   }

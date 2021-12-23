@@ -59,13 +59,26 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   String qrCode = 'Unknown';
 
-  @override
-  void initState() {
-    super.initState();
-    checkLogged();
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: checkLogged(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+                drawer: null,
+                appBar: null,
+                body: Center(
+                    child: CircularProgressIndicator(
+                  color: Color(0xffDF752C),
+                  strokeWidth: 5,
+                )));
+          } else {
+            return buildWidget(context);
+          }
+        });
   }
 
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context) {
     return Scaffold(
         drawer: null,
         appBar: null,
@@ -225,7 +238,7 @@ class _MainPageState extends State<MainPage> {
         ));
   }
 
-  void checkLogged() async {
+  Future<void> checkLogged() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       CollectionReference users =
@@ -234,7 +247,7 @@ class _MainPageState extends State<MainPage> {
       CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
           snap["CodiceRUI"], user.email);
 
-      Navigator.pushReplacement(
+      await Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => NavDrawer()),
       );

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:PagoPolizza/pages/profile.dart';
@@ -198,7 +200,7 @@ class CurrentUser {
                   borderRadius: BorderRadius.circular(23),
                   side: BorderSide(color: Colors.black))),
           onPressed: () {
-            ProfileState().logoFromGallery();
+            ProfileState().logoFromGallery(agenzia.ruiCode, context);
           },
           child: Text(
             'Modifica Logo',
@@ -220,7 +222,7 @@ class CurrentUser {
                   borderRadius: BorderRadius.circular(23),
                   side: BorderSide(color: Colors.black))),
           onPressed: () {
-            ProfileState().bannerFromGallery();
+            ProfileState().bannerFromGallery(agenzia.ruiCode, context);
           },
           child: Text(
             'Modifica Banner',

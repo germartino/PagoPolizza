@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:ui';
 import 'package:PagoPolizza/model/current_user.dart';
+import 'package:PagoPolizza/model/database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -26,9 +28,6 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileState extends State<Profile> {
-  XFile? _logo;
-  XFile? _banner;
-
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,
@@ -160,41 +159,28 @@ class ProfileState extends State<Profile> {
         ));
   }
 
-  void logoFromGallery() async {
-    var logo = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (logo != null) {
-        _logo = logo;
-        ArtSweetAlert.show(
-            context: context,
-            artDialogArgs: ArtDialogArgs(
-              type: ArtSweetAlertType.success,
-              title: "Logo modificato",
-              confirmButtonColor: Color(0xffDF752C),
-            ));
-      }
-    });
-
-    //devo prendere _logo come File(_logo.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
+  void logoFromGallery(String rui, context) async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      String logoUrl = await Database.uploadLogo(file);
+      log(logoUrl.toString());
+      String exLogo = await Database.getLogo(rui);
+      await Database.deleteFromStorage(exLogo);
+      await Database.updateAgencyLogo(logoUrl, rui, context);
+    }
   }
 
-  void bannerFromGallery() async {
-    var banner = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (banner != null) {
-        _banner = banner;
-        ArtSweetAlert.show(
-            context: context,
-            artDialogArgs: ArtDialogArgs(
-              type: ArtSweetAlertType.success,
-              title: "Banner modificato",
-              confirmButtonColor: Color(0xffDF752C),
-            ));
-      }
-    });
-
-    //devo prendere _banner come File(_banner.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
+  void bannerFromGallery(String rui, context) async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      String bannerUrl = await Database.uploadBanner(file);
+      String exBanner = await Database.getBanner(rui);
+      await Database.deleteFromStorage(exBanner);
+      await Database.updateAgencyBanner(bannerUrl, rui, context);
+    }
   }
 }

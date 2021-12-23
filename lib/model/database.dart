@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:math' as math;
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/pages/home.dart';
@@ -5,6 +8,7 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Database {
   //sign in User
@@ -216,5 +220,95 @@ class Database {
             confirmButtonColor: Color(0xffDF752C),
           ));
     });
+  }
+
+  static Future<String> uploadLogo(File file) async {
+    String linkLogo = '';
+    String filename = 'logo_' +
+        DateTime.now().millisecondsSinceEpoch.toString() +
+        math.Random().nextInt(100).toString();
+    await FirebaseStorage.instance
+        .ref()
+        .child('Loghi/$filename')
+        .putFile(file)
+        .then((p0) async {
+      await p0.ref.getDownloadURL().then((value) {
+        linkLogo = value.toString();
+      });
+    });
+    return linkLogo;
+  }
+
+  static Future<String> uploadBanner(File file) async {
+    String linkBanner = '';
+    String filename = 'banner_' +
+        DateTime.now().millisecondsSinceEpoch.toString() +
+        math.Random().nextInt(100).toString();
+    await FirebaseStorage.instance
+        .ref()
+        .child('Banner/$filename')
+        .putFile(file)
+        .then((p0) async {
+      await p0.ref.getDownloadURL().then((value) {
+        linkBanner = value.toString();
+      });
+    });
+
+    return linkBanner;
+  }
+
+  static Future<void> deleteFromStorage(String url) async {
+    await FirebaseStorage.instance.refFromURL(url).delete();
+  }
+
+  static Future<void> updateAgencyLogo(String url, String rui, context) async {
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .update({'Logo': url}).then((value) {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Logo modificato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    });
+  }
+
+  static Future<void> updateAgencyBanner(
+      String url, String rui, context) async {
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .update({'Banner': url}).then((value) {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Banner modificato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    });
+  }
+
+  static Future<String> getLogo(String rui) async {
+    String logo = '';
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .get()
+        .then((value) => logo = value['Logo']);
+    return logo;
+  }
+
+  static Future<String> getBanner(String rui) async {
+    String logo = '';
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .get()
+        .then((value) => logo = value['Banner']);
+    return logo;
   }
 }
