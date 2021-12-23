@@ -13,8 +13,10 @@ class Agency {
   final String name;
   final String ruiCode;
   final String address;
+  final String logo;
+  final String banner;
 
-  Agency(this.name, this.ruiCode, this.address);
+  Agency(this.name, this.ruiCode, this.address, this.logo, this.banner);
 
   Widget getElementCollapsed(BuildContext context) {
     return Padding(

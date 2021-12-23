@@ -1,3 +1,4 @@
+import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
@@ -169,11 +170,40 @@ class Database {
   static Future<void> addAgency(rui) async {
     List<String> list = CurrentUser.codRui;
     list.add(rui);
+    CurrentUser.codRui = list;
     await FirebaseFirestore.instance
         .collection('utenti')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .update({'CodiceRUI': list})
         .then((value) {})
         .catchError((error) {});
+  }
+
+  static Future<Agency> getAgency(rui) async {
+    Agency agenzia = Agency('', '', '', '', '');
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .get()
+        .then((value) {
+      agenzia = Agency(value.get('Nome'), rui, value.get('Indirizzo'),
+          value.get('Logo'), value.get('Banner'));
+    });
+    return agenzia;
+  }
+
+  static Future<void> removeAgency(rui, uid, context) async {
+    await FirebaseFirestore.instance
+        .collection('utenti')
+        .doc(uid)
+        .update({'CodiceRUI': rui}).then((value) {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Agenzia eliminata",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    });
   }
 }

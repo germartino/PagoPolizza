@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/database.dart';
+import 'package:PagoPolizza/pages/agency_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/choice_agency.dart';
@@ -27,62 +29,40 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   var iconaPopup = Ionicons.menu_outline;
   final GlobalKey _menuKey = GlobalKey();
-  AssetImage _selected = AssetImage('assets/insurance_logo.png');
+  int selectedAgency = 0;
+  List<Agency> agenzie = [];
+
+  Future<List<Agency>> getAgencies() async {
+    List<Agency> agenzieTemp = [];
+    User? usr = FirebaseAuth.instance.currentUser;
+    if (usr != null) {
+      for (var i = 0; i < CurrentUser.codRui.length; i++) {
+        Agency temp = await Database.getAgency(CurrentUser.codRui[i]);
+        agenzieTemp.add(temp);
+      }
+    } else {
+      Agency temp = await Database.getAgency(ChoiceAgencyState.rui);
+      agenzieTemp.add(temp);
+    }
+    return agenzieTemp;
+  }
 
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: getAgencies(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return buildWidget(context, snapshot.data);
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
+  }
+
+  Widget buildWidget(context, agenzie) {
     final SimpleDialog dialog = SimpleDialog(
-      title: Text('Scegli l\'agenzia'),
-      children: [
-        SimpleDialogItem(
-          icon: Image(
-            image: AssetImage('assets/insurance_logo.png'),
-            fit: BoxFit.scaleDown,
-            width: 36,
-            height: 36,
-          ),
-          text: 'Allianz Roma',
-          onPressed: () {
-            Navigator.pop(context);
-            setState(() {
-              _selected = AssetImage('assets/insurance_logo.png');
-            });
-          },
-        ),
-        SimpleDialogItem(
-          icon: Image(
-            image: AssetImage('assets/insurance_logo.png'),
-            fit: BoxFit.scaleDown,
-            width: 36,
-            height: 36,
-          ),
-          text: 'Allianz Milano',
-          onPressed: () {
-            Navigator.pop(context);
-            setState(() {
-              _selected = AssetImage('assets/insurance_logo.png');
-            });
-          },
-        ),
-        SimpleDialogItem(
-          icon: Icon(
-            Ionicons.add_circle,
-            size: 36,
-            color: Colors.black,
-          ),
-          text: 'Aggiungi agenzia',
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                PageTransition(
-                  curve: Curves.easeInOut,
-                  type: PageTransitionType.rightToLeftWithFade,
-                  child: ChoiceAgency(),
-                ));
-          },
-        ),
-      ],
-    );
+        title: Text('Scegli l\'agenzia'), children: getAgenciesItem(agenzie));
+    Agency agenzia = agenzie[selectedAgency];
     return Scaffold(
       drawer: null,
       appBar: null,
@@ -100,7 +80,7 @@ class HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     alignment: Alignment.topCenter,
-                    image: AssetImage('assets/banner.png'),
+                    image: NetworkImage(agenzia.banner),
                     fit: BoxFit.fitWidth,
                   ),
                 ),
@@ -121,7 +101,7 @@ class HomeState extends State<Home> {
                                 top: MediaQuery.of(context).size.height * 0.03,
                                 child: ElevatedButton(
                                   child: Image(
-                                    image: _selected,
+                                    image: NetworkImage(agenzia.logo),
                                     fit: BoxFit.scaleDown,
                                     width: 30,
                                     alignment: Alignment.center,
@@ -259,7 +239,7 @@ class HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     alignment: Alignment.topCenter,
-                    image: AssetImage('assets/insurance_logo.png'),
+                    image: NetworkImage(agenzia.logo),
                     fit: BoxFit.scaleDown,
                   ),
                 ),
@@ -285,7 +265,7 @@ class HomeState extends State<Home> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Allianz Bank Financial Advisors S.p.A.',
+                        agenzia.name,
                         style: GoogleFonts.lato(
                           fontSize: 14.0,
                           color: Colors.black,
@@ -311,7 +291,7 @@ class HomeState extends State<Home> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'A000076887',
+                        agenzia.ruiCode,
                         style: GoogleFonts.lato(
                           fontSize: 14.0,
                           color: Colors.black,
@@ -337,7 +317,7 @@ class HomeState extends State<Home> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Via delle vie, 3, Roma',
+                        agenzia.address,
                         style: GoogleFonts.lato(
                           fontSize: 14.0,
                           color: Colors.black,
@@ -393,9 +373,12 @@ class HomeState extends State<Home> {
                         height: MediaQuery.of(context).size.height * 0.03,
                       ),
                     if (CurrentUser.role == 'client' &&
-                        FirebaseAuth.instance.currentUser != null)
+                        FirebaseAuth.instance.currentUser != null &&
+                        agenzie.length > 1)
                       ElevatedButton(
                         onPressed: () {
+                          removeAgency(agenzie, agenzia.ruiCode);
+
                           //remove agency from db and list
                           //then setState with new agency
                         },
@@ -435,6 +418,61 @@ class HomeState extends State<Home> {
           type: PageTransitionType.fade,
           child: MyApp(),
         ));
+  }
+
+  List<SimpleDialogItem> getAgenciesItem(List<Agency> agenzie) {
+    List<SimpleDialogItem> items = [];
+    for (Agency item in agenzie) {
+      items.add(SimpleDialogItem(
+        icon: Image(
+          image: NetworkImage(item.logo),
+          fit: BoxFit.scaleDown,
+          width: 36,
+          height: 36,
+        ),
+        text: item.name,
+        onPressed: () {
+          Navigator.pop(context);
+          setState(() {
+            selectedAgency = agenzie.indexOf(item);
+          });
+        },
+      ));
+    }
+    items.add(SimpleDialogItem(
+      icon: Icon(
+        Ionicons.add_circle,
+        size: 36,
+        color: Colors.black,
+      ),
+      text: 'Aggiungi agenzia',
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            PageTransition(
+              curve: Curves.easeInOut,
+              type: PageTransitionType.rightToLeftWithFade,
+              child: ChoiceAgency(),
+            ));
+      },
+    ));
+    return items;
+  }
+
+  void removeAgency(List<Agency> agenzie, String rui) async {
+    List<String> ruiCodes = [];
+    for (Agency temp in agenzie) {
+      if (temp.ruiCode != rui) {
+        ruiCodes.add(temp.ruiCode);
+      }
+    }
+    await Database.removeAgency(
+        ruiCodes, FirebaseAuth.instance.currentUser!.uid, context);
+    CurrentUser.codRui = ruiCodes;
+    setState(() {
+      selectedAgency = 0;
+    });
   }
 }
 
