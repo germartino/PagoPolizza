@@ -68,14 +68,10 @@ class HomeState extends State<Home> {
             if (snapshot.hasData) {
               return buildWidget(context, snapshot.data);
             } else {
-              return Scaffold(
-                  drawer: null,
-                  appBar: null,
-                  body: Center(
-                      child: CircularProgressIndicator(
-                    color: Color(0xffDF752C),
-                    strokeWidth: 5,
-                  )));
+              return CircularProgressIndicator(
+                color: Color(0xffDF752C),
+                strokeWidth: 5,
+              );
             }
           }
         });

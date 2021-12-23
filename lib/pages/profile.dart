@@ -143,10 +143,21 @@ class ProfileState extends State<Profile> {
                         future: CurrentUser.getProfile(context),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            return snapshot.data;
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(
+                              color: Color(0xffDF752C),
+                              strokeWidth: 5,
+                            );
                           } else {
-                            return Column();
+                            if (snapshot.hasData) {
+                              return snapshot.data;
+                            } else {
+                              return CircularProgressIndicator(
+                                color: Color(0xffDF752C),
+                                strokeWidth: 5,
+                              );
+                            }
                           }
                         },
                       )
