@@ -71,8 +71,8 @@ class ProfileState extends State<Profile> {
                       right: MediaQuery.of(context).size.width * 0.1),
                   child: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
+                    child: Column(children: [
+                      Column(children: [
                         Row(
                           children: [
                             Expanded(
@@ -139,197 +139,19 @@ class ProfileState extends State<Profile> {
                             )
                           ],
                         ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.07,
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'NOME',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 12.0,
-                                color: Color(0xff545454),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            (CurrentUser.role == 'client')
-                                ? 'Mario'
-                                : 'Allianz Bank Financial Advisors S.p.A.',
-                            style: GoogleFonts.ptSans(
-                              fontSize: 14.0,
-                              color: Color(0xff545454),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            (CurrentUser.role == 'client')
-                                ? 'COGNOME / RAGIONE SOCIALE'
-                                : 'CODICE RUI',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 12.0,
-                                color: Color(0xff545454),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            (CurrentUser.role == 'client')
-                                ? 'Rossi'
-                                : 'A000076887',
-                            style: GoogleFonts.ptSans(
-                              fontSize: 14.0,
-                              color: Color(0xff545454),
-                            ),
-                          ),
-                        ),
-                        if (CurrentUser.role == 'agency')
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.05),
-                        if (CurrentUser.role == 'agency')
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'INDIRIZZO SEDE',
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 12.0,
-                                  color: Color(0xff545454),
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        if (CurrentUser.role == 'agency')
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.01),
-                        if (CurrentUser.role == 'agency')
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Via delle vie, 3, Roma',
-                              style: GoogleFonts.ptSans(
-                                fontSize: 14.0,
-                                color: Color(0xff545454),
-                              ),
-                            ),
-                          ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'EMAIL',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 12.0,
-                                color: Color(0xff545454),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            (CurrentUser.role == 'client')
-                                ? 'client@pagopolizza.com'
-                                : 'agency@pagopolizza.com',
-                            style: GoogleFonts.ptSans(
-                              fontSize: 14.0,
-                              color: Color(0xff545454),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'PASSWORD',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 12.0,
-                                color: Color(0xff545454),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            '*********',
-                            style: GoogleFonts.ptSans(
-                              fontSize: 14.0,
-                              color: Color(0xff545454),
-                            ),
-                          ),
-                        ),
-                        if (CurrentUser.role == 'agency')
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
-                        if (CurrentUser.role == 'agency')
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.8,
-                                    MediaQuery.of(context).size.height * 0.06),
-                                alignment: Alignment.center,
-                                primary: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(23),
-                                    side: BorderSide(color: Colors.black))),
-                            onPressed: () {
-                              _logoFromGallery();
-                            },
-                            child: Text(
-                              'Modifica Logo',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 15.0,
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        if (CurrentUser.role == 'agency')
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
-                        if (CurrentUser.role == 'agency')
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.8,
-                                    MediaQuery.of(context).size.height * 0.06),
-                                alignment: Alignment.center,
-                                primary: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(23),
-                                    side: BorderSide(color: Colors.black))),
-                            onPressed: () {
-                              _bannerFromGallery();
-                            },
-                            child: Text(
-                              'Modifica Banner',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 15.0,
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                      ],
-                    ),
+                      ]),
+                      FutureBuilder(
+                        future: CurrentUser.getProfile(context),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            return snapshot.data;
+                          } else {
+                            return Column();
+                          }
+                        },
+                      )
+                    ]),
                   ),
                 ),
               ),
@@ -338,7 +160,7 @@ class ProfileState extends State<Profile> {
         ));
   }
 
-  Future _logoFromGallery() async {
+  void logoFromGallery() async {
     var logo = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
@@ -357,7 +179,7 @@ class ProfileState extends State<Profile> {
     //devo prendere _logo come File(_logo.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
   }
 
-  Future _bannerFromGallery() async {
+  void bannerFromGallery() async {
     var banner = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {

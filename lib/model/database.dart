@@ -71,8 +71,8 @@ class Database {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
       DocumentSnapshot snap = await users.doc(user.uid).get();
-      CurrentUser(
-          snap["Nome"], snap["Cognome"], snap["Ruolo"], snap["CodiceRUI"]);
+      CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
+          snap["CodiceRUI"], user.email);
       ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
@@ -112,7 +112,7 @@ class Database {
   //logout
   static Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
-    CurrentUser('', '', 'client', []);
+    CurrentUser('', '', 'client', [], '');
   }
 
   //reset password

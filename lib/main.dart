@@ -231,8 +231,8 @@ class _MainPageState extends State<MainPage> {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
       DocumentSnapshot snap = await users.doc(user.uid).get();
-      CurrentUser(
-          snap["Nome"], snap["Cognome"], snap["Ruolo"], snap["CodiceRUI"]);
+      CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
+          snap["CodiceRUI"], user.email);
 
       Navigator.pushReplacement(
         context,
