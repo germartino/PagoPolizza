@@ -43,5 +43,7 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Save QRCode</string>
 	</dict>
 </plist>
