@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'package:PagoPolizza/model/database.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/choice_agency.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -162,14 +166,54 @@ class ScanQRCodeState extends State<ScanQRCode> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
-      print(scanData.code);
-      //do something with scanData.code
-      ChoiceAgencyState.rui = scanData.code.toString();
+      var json = jsonDecode(scanData.code.toString());
+      await controller.stopCamera();
+      if (FirebaseAuth.instance.currentUser != null) {
+        await addAgency(json['rui'], json['password']);
+      } else {
+        await setAgency(json['rui'], json['password']);
+      }
+    });
+  }
+
+  Future<void> setAgency(rui, pass) async {
+    bool result = await Database.existAgency(rui, pass);
+
+    if (result) {
+      ChoiceAgencyState.rui = rui;
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(child: Home(), type: PageTransitionType.fade),
           (route) => false);
-    });
+    } else {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Codice QR errato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    }
+  }
+
+  Future<void> addAgency(rui, pass) async {
+    bool result = await Database.existAgency(rui, pass);
+
+    if (result) {
+      await Database.addAgency(rui);
+      Navigator.pushAndRemoveUntil(
+          context,
+          PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
+          (route) => false);
+    } else {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Codice QR errato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    }
   }
 
   void changeFlash() {
