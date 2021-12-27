@@ -124,7 +124,7 @@ class HomeState extends State<Home> {
           child: Column(children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.2,
+              constraints: BoxConstraints(maxHeight: 200),
               decoration: BoxDecoration(
                 image: DecorationImage(
                   alignment: Alignment.topCenter,
