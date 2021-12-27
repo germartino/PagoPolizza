@@ -140,15 +140,7 @@ class HomeState extends State<Home> {
                               top: MediaQuery.of(context).size.height * 0.03,
                               child: PopupMenuButton(
                                   iconSize: 20,
-                                  onCanceled: () => {
-                                        setState(() {
-                                          iconaPopup = Ionicons.menu_outline;
-                                        })
-                                      },
                                   onSelected: (value) => {
-                                        setState(() {
-                                          iconaPopup = Ionicons.menu_outline;
-                                        }),
                                         if (CurrentUser.role == 'admin')
                                           {makeLogout(context)}
                                         else if (value == 0)
@@ -214,35 +206,24 @@ class HomeState extends State<Home> {
                                         ),
                                       ],
                                   icon: Stack(children: [
-                                    InkWell(
-                                        onTap: () => {
-                                              setState(() {
-                                                dynamic state =
-                                                    _menuKey.currentState;
-                                                state.showButtonMenu();
-                                                iconaPopup =
-                                                    Ionicons.close_outline;
-                                              })
-                                            },
-                                        child: Container(
-                                            alignment: Alignment.topRight,
-                                            height: 30,
-                                            width: 30,
-                                            decoration: ShapeDecoration(
-                                              color: Colors.white,
-                                              shape: StadiumBorder(
-                                                side: BorderSide(
-                                                    color: Colors.white,
-                                                    width: 2),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Icon(
-                                                iconaPopup,
-                                                color: Colors.black,
-                                                size: 20,
-                                              ),
-                                            ))),
+                                    Container(
+                                        alignment: Alignment.topRight,
+                                        height: 30,
+                                        width: 30,
+                                        decoration: ShapeDecoration(
+                                          color: Colors.white,
+                                          shape: StadiumBorder(
+                                            side: BorderSide(
+                                                color: Colors.white, width: 2),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            iconaPopup,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
+                                        )),
                                   ])))
                         ])
                       : null,
@@ -388,7 +369,6 @@ class HomeState extends State<Home> {
                     if (CurrentUser.role == 'agency')
                       ElevatedButton(
                         onPressed: () {
-                          //generate and download qrcode
                           saveQRCode(agenzia);
                         },
                         child: Text(

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
+import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:flutter/gestures.dart';
@@ -97,16 +98,20 @@ class ProfileState extends State<Profile> {
                                       MediaQuery.of(context).size.width * 0.01,
                                 ),
                                 child: InkWell(
-                                    onTap: () => {
+                                    onTap: () async {
+                                      await getAgency().then((value) =>
                                           Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                curve: Curves.easeInOut,
-                                                type: PageTransitionType
-                                                    .rightToLeftWithFade,
-                                                child: UpdateProfile(),
-                                              ))
-                                        },
+                                                  context,
+                                                  PageTransition(
+                                                    curve: Curves.easeInOut,
+                                                    type: PageTransitionType
+                                                        .rightToLeftWithFade,
+                                                    child: UpdateProfile(
+                                                        agenzia: value),
+                                                  ))
+                                              .then(
+                                                  (value) => setState(() {})));
+                                    },
                                     child: Container(
                                         alignment: Alignment.topRight,
                                         height: 35,
@@ -168,6 +173,14 @@ class ProfileState extends State<Profile> {
             )
           ]),
         ));
+  }
+
+  Future<Agency> getAgency() async {
+    Agency a = Agency('', '', '', '', '', '');
+    if (CurrentUser.role == 'agency') {
+      a = await Database.getAgency(CurrentUser.codRui[0]);
+    }
+    return a;
   }
 
   void logoFromGallery(String rui, context) async {

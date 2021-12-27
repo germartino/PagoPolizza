@@ -116,7 +116,7 @@ class CurrentUser {
         Container(
           alignment: Alignment.topLeft,
           child: Text(
-            name,
+            agenzia.name,
             style: GoogleFonts.ptSans(
               fontSize: 14.0,
               color: Color(0xff545454),

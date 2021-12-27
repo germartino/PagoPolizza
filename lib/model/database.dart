@@ -311,4 +311,51 @@ class Database {
         .then((value) => logo = value['Banner']);
     return logo;
   }
+
+  static Future<void> updateUser(uid, update) async {
+    await FirebaseFirestore.instance
+        .collection('utenti')
+        .doc(uid)
+        .update(update)
+        .then((value) {
+      if (update['Nome'] != null) {
+        CurrentUser.name = update['Nome'];
+      }
+      if (update['Cognome'] != null) {
+        CurrentUser.surname = update['Cognome'];
+      }
+    });
+  }
+
+  static Future<int> changePassword(oldPass, password) async {
+    int r = -1;
+    var user = await FirebaseAuth.instance.currentUser;
+    log(user.toString());
+    await user!
+        .reauthenticateWithCredential(EmailAuthProvider.credential(
+            email: CurrentUser.email, password: oldPass))
+        .then((value) async {
+      await user.updatePassword(password).then((value) {
+        r = 0;
+      }).catchError((error) {
+        log(error.toString());
+      });
+    }).catchError((error) {
+      log(error.toString());
+      if (error.code == 'wrong-password') {
+        log('si');
+        r = 1;
+      } else if (error.code == 'too-many-requests') {
+        r = 2;
+      }
+    });
+    return r;
+  }
+
+  static Future<void> updateAgency(rui, update) async {
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .update(update);
+  }
 }
