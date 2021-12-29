@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:PagoPolizza/model/current_user.dart';
+import 'package:PagoPolizza/model/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -16,82 +18,6 @@ import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:PagoPolizza/model/transaction.dart';
 
-List<Transaction> getList() {
-  List<Transaction> temp = [];
-  if (CurrentUser.role == 'client') {
-    temp.add(Transaction(
-      true,
-      '07/12/2021',
-      '150.50',
-      '23987598',
-      'Allianz Bank Financial Advisors S.p.A.',
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-    ));
-    temp.add(
-      Transaction(
-        false,
-        '05/12/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-      ),
-    );
-    temp.add(
-      Transaction(
-        false,
-        '30/11/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-      ),
-    );
-    temp.add(Transaction(
-      true,
-      '15/09/2021',
-      '750',
-      '23987598',
-      'Allianz Bank Financial Advisors S.p.A.',
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-    ));
-  } else {
-    temp.add(Transaction.agencyConstructor(
-        true,
-        '07/12/2021',
-        '150.50',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Alessio Ambruoso'));
-    temp.add(Transaction.agencyConstructor(
-        false,
-        '05/12/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Marco Borrelli'));
-    temp.add(Transaction.agencyConstructor(
-        false,
-        '30/11/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Roberto Veneruso'));
-    temp.add(Transaction.agencyConstructor(
-        true,
-        '15/09/2021',
-        '750',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Gerardo Martino'));
-  }
-  return temp;
-}
-
 class Storico extends StatefulWidget {
   const Storico({Key? key}) : super(key: key);
 
@@ -100,7 +26,20 @@ class Storico extends StatefulWidget {
 }
 
 class StoricoState extends State<Storico> {
-  List<Transaction> transactions = getList();
+  Future<List<Transaction>> getTransactions() async {
+    List<Transaction> temp = [];
+    if (CurrentUser.role == 'client') {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      temp = await Database.getTransactionsClient(uid);
+    } else if (CurrentUser.role == 'agency') {
+      String rui = CurrentUser.codRui[0];
+      temp = await Database.getTransactionsAgency(rui);
+    } else if (CurrentUser.role == 'admin') {
+      //by selected rui
+    }
+    return temp;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,8 +145,27 @@ class StoricoState extends State<Storico> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.03,
                     ),
-                    Column(
-                      children: _getPanel(context),
+                    FutureBuilder(
+                      future: getTransactions(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: Color(0xffDF752C),
+                            strokeWidth: 5,
+                          );
+                        } else {
+                          if (snapshot.hasData) {
+                            return Column(
+                                children: _getPanel(context, snapshot.data));
+                          } else {
+                            return CircularProgressIndicator(
+                              color: Color(0xffDF752C),
+                              strokeWidth: 5,
+                            );
+                          }
+                        }
+                      },
                     )
                   ]),
                 ),
@@ -217,10 +175,10 @@ class StoricoState extends State<Storico> {
         ])));
   }
 
-  List<Widget> _getPanel(BuildContext context) {
+  List<Widget> _getPanel(BuildContext context, data) {
     List<Widget> panels = [];
-    for (var i = 0; i < transactions.length; i++) {
-      panels.add(transactions[i].getElement(context));
+    for (var i = 0; i < data.length; i++) {
+      panels.add(data[i].getElement(context));
       panels.add(SizedBox(
         height: 10,
       ));

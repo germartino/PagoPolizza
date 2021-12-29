@@ -17,13 +17,10 @@ class Transaction {
   final String nPolizza;
   final String compagnia;
   final String note;
-  String intestatario = '';
+  final String intestatario;
 
   Transaction(this.success, this.data, this.importo, this.nPolizza,
-      this.compagnia, this.note);
-
-  Transaction.agencyConstructor(this.success, this.data, this.importo,
-      this.nPolizza, this.compagnia, this.note, this.intestatario);
+      this.compagnia, this.note, this.intestatario);
 
   Widget getElementCollapsed(BuildContext context) {
     return Padding(

@@ -3,12 +3,14 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
+import 'package:PagoPolizza/model/transaction.dart' as transazione;
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 class Database {
   //sign in User
@@ -357,5 +359,62 @@ class Database {
         .collection('agenzie')
         .doc(rui)
         .update(update);
+  }
+
+  static Future<List<transazione.Transaction>> getTransactionsClient(
+      uid) async {
+    List<transazione.Transaction> temp = [];
+    await FirebaseFirestore.instance
+        .collection('transazioni')
+        .where('uidUtente', isEqualTo: uid)
+        .orderBy('data', descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        temp.add(transazione.Transaction(
+            element.get('successo'),
+            DateFormat('dd/MM/yyyy')
+                .format(element.get('data').toDate().add(Duration(days: 1))),
+            element.get('importo').toString(),
+            element.get('nPolizza'),
+            element.get('compagnia'),
+            element.get('note'),
+            CurrentUser.name.toString() +
+                ' ' +
+                CurrentUser.surname.toString()));
+      }
+    });
+    return temp;
+  }
+
+  static Future<List<transazione.Transaction>> getTransactionsAgency(
+      rui) async {
+    List<transazione.Transaction> temp = [];
+    await FirebaseFirestore.instance
+        .collection('transazioni')
+        .where('codRUI', isEqualTo: rui)
+        .orderBy('data', descending: true)
+        .get()
+        .then((value) async {
+      for (var element in value.docs) {
+        String uid = element.get('uidUtente');
+        await FirebaseFirestore.instance
+            .collection('utenti')
+            .doc(uid)
+            .get()
+            .then((us) {
+          temp.add(transazione.Transaction(
+              element.get('successo'),
+              DateFormat('dd/MM/yyyy')
+                  .format(element.get('data').toDate().add(Duration(days: 1))),
+              element.get('importo').toString(),
+              element.get('nPolizza'),
+              element.get('compagnia'),
+              element.get('note'),
+              us.get('Nome').toString() + ' ' + us.get('Cognome').toString()));
+        });
+      }
+    });
+    return temp;
   }
 }
