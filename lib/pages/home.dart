@@ -135,7 +135,8 @@ class HomeState extends State<Home> {
                     ? DecorationImage(
                         alignment: Alignment.center,
                         image: AssetImage('assets/pagopolizza_arancio.png'),
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.scaleDown,
+                        scale: 4,
                       )
                     : DecorationImage(
                         alignment: Alignment.topCenter,

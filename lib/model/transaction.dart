@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:PagoPolizza/model/current_user.dart';
@@ -248,11 +249,12 @@ class Transaction {
 
   bool isSearched(search) {
     bool searched = false;
-    if (data.contains(search) ||
-        importo.contains(search) ||
-        nPolizza.contains(search) ||
-        compagnia.contains(search) ||
-        note.contains(search)) searched = true;
+    if (data.toLowerCase().contains(search) ||
+        importo.toLowerCase().contains(search) ||
+        nPolizza.toLowerCase().contains(search) ||
+        compagnia.toLowerCase().contains(search) ||
+        note.toLowerCase().contains(search) ||
+        intestatario.toLowerCase().contains(search)) searched = true;
     return searched;
   }
 }
