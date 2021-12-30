@@ -306,7 +306,6 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
 
   void addAgency() async {
     bool result = await Database.existAgency(codRui.text, pass.text);
-    log(result.toString());
 
     if (result) {
       await Database.addAgency(codRui.text);

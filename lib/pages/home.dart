@@ -56,144 +56,166 @@ class HomeState extends State<Home> {
   }
 
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getAgencies(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildWidget(context, snapshot.data);
-          } else {
-            return CircularProgressIndicator();
-          }
-        });
+    if (FirebaseAuth.instance.currentUser == null)
+      return Scaffold(
+          drawer: null,
+          appBar: null,
+          body: DoubleBackToCloseApp(
+            child: FutureBuilder(
+                future: getAgencies(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator(
+                      color: Color(0xffDF752C),
+                      strokeWidth: 5,
+                    );
+                  } else {
+                    if (snapshot.hasData) {
+                      return buildWidget(context, snapshot.data);
+                    } else {
+                      return CircularProgressIndicator(
+                        color: Color(0xffDF752C),
+                        strokeWidth: 5,
+                      );
+                    }
+                  }
+                }),
+            snackBar: const SnackBar(
+              content: Text('Premi di nuovo per uscire'),
+              backgroundColor: Colors.black,
+            ),
+          ));
+    else if (CurrentUser.role != 'admin')
+      return Scaffold(
+          drawer: null,
+          appBar: null,
+          body: FutureBuilder(
+              future: getAgencies(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(
+                    color: Color(0xffDF752C),
+                    strokeWidth: 5,
+                  );
+                } else {
+                  if (snapshot.hasData) {
+                    return buildWidget(context, snapshot.data);
+                  } else {
+                    return CircularProgressIndicator(
+                      color: Color(0xffDF752C),
+                      strokeWidth: 5,
+                    );
+                  }
+                }
+              }));
+    else
+      return Scaffold(
+          drawer: null, appBar: null, body: buildWidget(context, []));
   }
 
   Widget buildWidget(context, agenzie) {
     final SimpleDialog dialog = SimpleDialog(
         title: Text('Scegli l\'agenzia'), children: getAgenciesItem(agenzie));
-    Agency agenzia = agenzie[selectedAgency];
-    return Scaffold(
-      drawer: null,
-      appBar: null,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Color(0xffffffff),
-            ),
-            child: Column(children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.2,
+    Agency agenzia = CurrentUser.role == 'admin'
+        ? Agency('', '', '', '', '', '')
+        : agenzie[selectedAgency];
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xffffffff),
+          ),
+          child: Column(children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              constraints: BoxConstraints(maxHeight: 200),
+              decoration: BoxDecoration(
+                image: (CurrentUser.role == 'admin')
+                    ? DecorationImage(
+                        alignment: Alignment.center,
+                        image: AssetImage('assets/pagopolizza_arancio.png'),
+                        fit: BoxFit.scaleDown,
+                        scale: 4,
+                      )
+                    : DecorationImage(
+                        alignment: Alignment.topCenter,
+                        image: NetworkImage(agenzia.banner),
+                        fit: BoxFit.fitWidth,
+                      ),
+              ),
+              child: Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    alignment: Alignment.topCenter,
-                    image: NetworkImage(agenzia.banner),
-                    fit: BoxFit.fitWidth,
-                  ),
+                  gradient: FirebaseAuth.instance.currentUser != null
+                      ? LinearGradient(
+                          begin: FractionalOffset.topCenter,
+                          end: FractionalOffset.bottomCenter,
+                          colors: [Color(0xffdf752c), Colors.transparent])
+                      : null,
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: FirebaseAuth.instance.currentUser != null
-                        ? LinearGradient(
-                            begin: FractionalOffset.topCenter,
-                            end: FractionalOffset.bottomCenter,
-                            colors: [Color(0xffdf752c), Colors.transparent])
-                        : null,
-                  ),
-                  child: FirebaseAuth.instance.currentUser != null
-                      ? Stack(children: [
-                          if (CurrentUser.role == 'client')
-                            Positioned(
-                                left: MediaQuery.of(context).size.width * 0.03,
-                                top: MediaQuery.of(context).size.height * 0.03,
-                                child: ElevatedButton(
-                                  child: Image(
-                                    image: NetworkImage(agenzia.logo),
-                                    fit: BoxFit.scaleDown,
-                                    width: 30,
-                                    alignment: Alignment.center,
-                                  ),
-                                  onPressed: () {
-                                    showDialog<void>(
-                                        context: context,
-                                        builder: (context) => dialog);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.white,
-                                    shape: CircleBorder(),
-                                    padding: EdgeInsets.all(10),
-                                  ),
-                                )),
+                child: FirebaseAuth.instance.currentUser != null
+                    ? Stack(children: [
+                        if (CurrentUser.role == 'client')
                           Positioned(
-                              right: MediaQuery.of(context).size.width * 0.03,
+                              left: MediaQuery.of(context).size.width * 0.03,
                               top: MediaQuery.of(context).size.height * 0.03,
-                              child: PopupMenuButton(
-                                  iconSize: 20,
-                                  onCanceled: () => {
-                                        setState(() {
-                                          iconaPopup = Ionicons.menu_outline;
-                                        })
-                                      },
-                                  onSelected: (value) => {
-                                        setState(() {
-                                          iconaPopup = Ionicons.menu_outline;
-                                        }),
-                                        if (CurrentUser.role == 'admin')
-                                          {makeLogout(context)}
-                                        else if (value == 0)
-                                          {
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                  curve: Curves.easeInOut,
-                                                  type: PageTransitionType
-                                                      .rightToLeftWithFade,
-                                                  child: Support(),
-                                                ))
-                                          }
-                                        else
-                                          {makeLogout(context)}
-                                      },
-                                  key: _menuKey,
-                                  elevation: 3,
-                                  offset: Offset(
-                                      1,
-                                      MediaQuery.of(context).size.height *
-                                          0.07),
-                                  shape: TooltipShape(),
-                                  itemBuilder: (context) => [
-                                        if (CurrentUser.role != 'admin')
-                                          PopupMenuItem(
-                                            value: 0,
-                                            child: ListTile(
-                                              leading: Icon(
-                                                Ionicons.call_outline,
-                                                color: Color(0xffDF752C),
-                                                size: 20,
-                                              ),
-                                              title: Text(
-                                                "Assistenza",
-                                                style: GoogleFonts.lato(
-                                                  fontSize: 15.0,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                              child: ElevatedButton(
+                                child: Image(
+                                  image: NetworkImage(agenzia.logo),
+                                  fit: BoxFit.scaleDown,
+                                  width: 30,
+                                  alignment: Alignment.center,
+                                ),
+                                onPressed: () {
+                                  showDialog<void>(
+                                      context: context,
+                                      builder: (context) => dialog);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                  shape: CircleBorder(),
+                                  padding: EdgeInsets.all(10),
+                                ),
+                              )),
+                        Positioned(
+                            right: MediaQuery.of(context).size.width * 0.03,
+                            top: MediaQuery.of(context).size.height * 0.03,
+                            child: PopupMenuButton(
+                                iconSize: 20,
+                                onSelected: (value) => {
+                                      if (CurrentUser.role == 'admin')
+                                        {makeLogout(context)}
+                                      else if (value == 0)
+                                        {
+                                          Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                curve: Curves.easeInOut,
+                                                type: PageTransitionType
+                                                    .rightToLeftWithFade,
+                                                child: Support(),
+                                              ))
+                                        }
+                                      else
+                                        {makeLogout(context)}
+                                    },
+                                key: _menuKey,
+                                elevation: 3,
+                                offset: Offset(1,
+                                    MediaQuery.of(context).size.height * 0.07),
+                                shape: TooltipShape(),
+                                itemBuilder: (context) => [
+                                      if (CurrentUser.role != 'admin')
                                         PopupMenuItem(
-                                          value: CurrentUser.role == 'admin'
-                                              ? 0
-                                              : 1,
+                                          value: 0,
                                           child: ListTile(
                                             leading: Icon(
-                                              Ionicons.log_out_outline,
+                                              Ionicons.call_outline,
                                               color: Color(0xffDF752C),
                                               size: 20,
                                             ),
                                             title: Text(
-                                              "Logout",
+                                              "Assistenza",
                                               style: GoogleFonts.lato(
                                                 fontSize: 15.0,
                                                 color: Colors.black,
@@ -202,45 +224,55 @@ class HomeState extends State<Home> {
                                             ),
                                           ),
                                         ),
-                                      ],
-                                  icon: Stack(children: [
-                                    InkWell(
-                                        onTap: () => {
-                                              setState(() {
-                                                dynamic state =
-                                                    _menuKey.currentState;
-                                                state.showButtonMenu();
-                                                iconaPopup =
-                                                    Ionicons.close_outline;
-                                              })
-                                            },
-                                        child: Container(
-                                            alignment: Alignment.topRight,
-                                            height: 30,
-                                            width: 30,
-                                            decoration: ShapeDecoration(
-                                              color: Colors.white,
-                                              shape: StadiumBorder(
-                                                side: BorderSide(
-                                                    color: Colors.white,
-                                                    width: 2),
-                                              ),
+                                      PopupMenuItem(
+                                        value:
+                                            CurrentUser.role == 'admin' ? 0 : 1,
+                                        child: ListTile(
+                                          leading: Icon(
+                                            Ionicons.log_out_outline,
+                                            color: Color(0xffDF752C),
+                                            size: 20,
+                                          ),
+                                          title: Text(
+                                            "Logout",
+                                            style: GoogleFonts.lato(
+                                              fontSize: 15.0,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            child: Center(
-                                              child: Icon(
-                                                iconaPopup,
-                                                color: Colors.black,
-                                                size: 20,
-                                              ),
-                                            ))),
-                                  ])))
-                        ])
-                      : null,
-                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                icon: Stack(children: [
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      height: 30,
+                                      width: 30,
+                                      decoration: ShapeDecoration(
+                                        color: Colors.white,
+                                        shape: StadiumBorder(
+                                          side: BorderSide(
+                                              color: Colors.white, width: 2),
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          iconaPopup,
+                                          color: Colors.black,
+                                          size: 20,
+                                        ),
+                                      )),
+                                ])))
+                      ])
+                    : null,
               ),
+            ),
+            if (CurrentUser.role != 'admin')
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.02,
               ),
+            if (CurrentUser.role != 'admin')
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.1,
@@ -252,6 +284,7 @@ class HomeState extends State<Home> {
                   ),
                 ),
               ),
+            if (CurrentUser.role != 'admin')
               Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * 0.1),
@@ -378,7 +411,6 @@ class HomeState extends State<Home> {
                     if (CurrentUser.role == 'agency')
                       ElevatedButton(
                         onPressed: () {
-                          //generate and download qrcode
                           saveQRCode(agenzia);
                         },
                         child: Text(
@@ -430,8 +462,33 @@ class HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(23))),
                       )
                   ])),
-            ]),
-          ),
+            if (CurrentUser.role == 'admin')
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.1),
+                child: Column(
+                  children: [
+                    Container(
+                      child: Image(
+                        width: 200,
+                        fit: BoxFit.scaleDown,
+                        image: AssetImage('assets/logo.png'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.1,
+                    ),
+                    Text(
+                      'Benvenuto amministratore',
+                      style: GoogleFonts.lato(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+          ]),
         ),
       ),
     );
@@ -490,24 +547,26 @@ class HomeState extends State<Home> {
         ));
   }
 
-  List<SimpleDialogItem> getAgenciesItem(List<Agency> agenzie) {
+  List<SimpleDialogItem> getAgenciesItem(agenzie) {
     List<SimpleDialogItem> items = [];
-    for (Agency item in agenzie) {
-      items.add(SimpleDialogItem(
-        icon: Image(
-          image: NetworkImage(item.logo),
-          fit: BoxFit.scaleDown,
-          width: 36,
-          height: 36,
-        ),
-        text: item.name,
-        onPressed: () {
-          Navigator.pop(context);
-          setState(() {
-            selectedAgency = agenzie.indexOf(item);
-          });
-        },
-      ));
+    if (CurrentUser.role != 'admin') {
+      for (Agency item in agenzie) {
+        items.add(SimpleDialogItem(
+          icon: Image(
+            image: NetworkImage(item.logo),
+            fit: BoxFit.scaleDown,
+            width: 36,
+            height: 36,
+          ),
+          text: item.name,
+          onPressed: () {
+            Navigator.pop(context);
+            setState(() {
+              selectedAgency = agenzie.indexOf(item);
+            });
+          },
+        ));
+      }
     }
     items.add(SimpleDialogItem(
       icon: Icon(

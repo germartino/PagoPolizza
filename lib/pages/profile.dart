@@ -1,6 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:ui';
+import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
+import 'package:PagoPolizza/model/database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -26,9 +29,6 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileState extends State<Profile> {
-  XFile? _logo;
-  XFile? _banner;
-
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,
@@ -98,16 +98,20 @@ class ProfileState extends State<Profile> {
                                       MediaQuery.of(context).size.width * 0.01,
                                 ),
                                 child: InkWell(
-                                    onTap: () => {
+                                    onTap: () async {
+                                      await getAgency().then((value) =>
                                           Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                curve: Curves.easeInOut,
-                                                type: PageTransitionType
-                                                    .rightToLeftWithFade,
-                                                child: UpdateProfile(),
-                                              ))
-                                        },
+                                                  context,
+                                                  PageTransition(
+                                                    curve: Curves.easeInOut,
+                                                    type: PageTransitionType
+                                                        .rightToLeftWithFade,
+                                                    child: UpdateProfile(
+                                                        agenzia: value),
+                                                  ))
+                                              .then(
+                                                  (value) => setState(() {})));
+                                    },
                                     child: Container(
                                         alignment: Alignment.topRight,
                                         height: 35,
@@ -144,10 +148,21 @@ class ProfileState extends State<Profile> {
                         future: CurrentUser.getProfile(context),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            return snapshot.data;
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(
+                              color: Color(0xffDF752C),
+                              strokeWidth: 5,
+                            );
                           } else {
-                            return Column();
+                            if (snapshot.hasData) {
+                              return snapshot.data;
+                            } else {
+                              return CircularProgressIndicator(
+                                color: Color(0xffDF752C),
+                                strokeWidth: 5,
+                              );
+                            }
                           }
                         },
                       )
@@ -160,41 +175,36 @@ class ProfileState extends State<Profile> {
         ));
   }
 
-  void logoFromGallery() async {
-    var logo = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (logo != null) {
-        _logo = logo;
-        ArtSweetAlert.show(
-            context: context,
-            artDialogArgs: ArtDialogArgs(
-              type: ArtSweetAlertType.success,
-              title: "Logo modificato",
-              confirmButtonColor: Color(0xffDF752C),
-            ));
-      }
-    });
-
-    //devo prendere _logo come File(_logo.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
+  Future<Agency> getAgency() async {
+    Agency a = Agency('', '', '', '', '', '');
+    if (CurrentUser.role == 'agency') {
+      a = await Database.getAgency(CurrentUser.codRui[0]);
+    }
+    return a;
   }
 
-  void bannerFromGallery() async {
-    var banner = await ImagePicker().pickImage(source: ImageSource.gallery);
+  void logoFromGallery(String rui, context) async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      String logoUrl = await Database.uploadLogo(file);
+      log(logoUrl.toString());
+      String exLogo = await Database.getLogo(rui);
+      await Database.deleteFromStorage(exLogo);
+      await Database.updateAgencyLogo(logoUrl, rui, context);
+    }
+  }
 
-    setState(() {
-      if (banner != null) {
-        _banner = banner;
-        ArtSweetAlert.show(
-            context: context,
-            artDialogArgs: ArtDialogArgs(
-              type: ArtSweetAlertType.success,
-              title: "Banner modificato",
-              confirmButtonColor: Color(0xffDF752C),
-            ));
-      }
-    });
-
-    //devo prendere _banner come File(_banner.path) e lo devo salvare nello storage firebase. Poi prendo il link dello storage e aggiorno il db
+  void bannerFromGallery(String rui, context) async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      String bannerUrl = await Database.uploadBanner(file);
+      String exBanner = await Database.getBanner(rui);
+      await Database.deleteFromStorage(exBanner);
+      await Database.updateAgencyBanner(bannerUrl, rui, context);
+    }
   }
 }

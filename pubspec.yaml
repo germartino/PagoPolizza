@@ -56,6 +56,8 @@ dependencies:
   qr_flutter: ^4.0.0
   path_provider: ^2.0.8
   gallery_saver: ^2.3.2
+  firebase_storage: ^10.2.4
+  anim_search_bar: ^2.0.2
 
 dev_dependencies:
   flutter_test:

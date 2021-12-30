@@ -1,10 +1,16 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:math' as math;
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
+import 'package:PagoPolizza/model/transaction.dart' as transazione;
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 class Database {
   //sign in User
@@ -216,5 +222,215 @@ class Database {
             confirmButtonColor: Color(0xffDF752C),
           ));
     });
+  }
+
+  static Future<String> uploadLogo(File file) async {
+    String linkLogo = '';
+    String filename = 'logo_' +
+        DateTime.now().millisecondsSinceEpoch.toString() +
+        math.Random().nextInt(100).toString();
+    await FirebaseStorage.instance
+        .ref()
+        .child('Loghi/$filename')
+        .putFile(file)
+        .then((p0) async {
+      await p0.ref.getDownloadURL().then((value) {
+        linkLogo = value.toString();
+      });
+    });
+    return linkLogo;
+  }
+
+  static Future<String> uploadBanner(File file) async {
+    String linkBanner = '';
+    String filename = 'banner_' +
+        DateTime.now().millisecondsSinceEpoch.toString() +
+        math.Random().nextInt(100).toString();
+    await FirebaseStorage.instance
+        .ref()
+        .child('Banner/$filename')
+        .putFile(file)
+        .then((p0) async {
+      await p0.ref.getDownloadURL().then((value) {
+        linkBanner = value.toString();
+      });
+    });
+
+    return linkBanner;
+  }
+
+  static Future<void> deleteFromStorage(String url) async {
+    await FirebaseStorage.instance.refFromURL(url).delete();
+  }
+
+  static Future<void> updateAgencyLogo(String url, String rui, context) async {
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .update({'Logo': url}).then((value) {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Logo modificato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    });
+  }
+
+  static Future<void> updateAgencyBanner(
+      String url, String rui, context) async {
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .update({'Banner': url}).then((value) {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Banner modificato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    });
+  }
+
+  static Future<String> getLogo(String rui) async {
+    String logo = '';
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .get()
+        .then((value) => logo = value['Logo']);
+    return logo;
+  }
+
+  static Future<String> getBanner(String rui) async {
+    String logo = '';
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .get()
+        .then((value) => logo = value['Banner']);
+    return logo;
+  }
+
+  static Future<void> updateUser(uid, update) async {
+    await FirebaseFirestore.instance
+        .collection('utenti')
+        .doc(uid)
+        .update(update)
+        .then((value) {
+      if (update['Nome'] != null) {
+        CurrentUser.name = update['Nome'];
+      }
+      if (update['Cognome'] != null) {
+        CurrentUser.surname = update['Cognome'];
+      }
+    });
+  }
+
+  static Future<int> changePassword(oldPass, password) async {
+    int r = -1;
+    var user = await FirebaseAuth.instance.currentUser;
+    log(user.toString());
+    await user!
+        .reauthenticateWithCredential(EmailAuthProvider.credential(
+            email: CurrentUser.email, password: oldPass))
+        .then((value) async {
+      await user.updatePassword(password).then((value) {
+        r = 0;
+      }).catchError((error) {
+        log(error.toString());
+      });
+    }).catchError((error) {
+      log(error.toString());
+      if (error.code == 'wrong-password') {
+        log('si');
+        r = 1;
+      } else if (error.code == 'too-many-requests') {
+        r = 2;
+      }
+    });
+    return r;
+  }
+
+  static Future<void> updateAgency(rui, update) async {
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .update(update);
+  }
+
+  static Future<List<transazione.Transaction>> getTransactionsClient(
+      uid) async {
+    List<transazione.Transaction> temp = [];
+    await FirebaseFirestore.instance
+        .collection('transazioni')
+        .where('uidUtente', isEqualTo: uid)
+        .orderBy('data', descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        temp.add(transazione.Transaction(
+            element.get('successo'),
+            DateFormat('dd/MM/yyyy')
+                .format(element.get('data').toDate().add(Duration(days: 1))),
+            element.get('importo').toString(),
+            element.get('nPolizza'),
+            element.get('compagnia'),
+            element.get('note'),
+            CurrentUser.name.toString() +
+                ' ' +
+                CurrentUser.surname.toString()));
+      }
+    });
+    return temp;
+  }
+
+  static Future<List<transazione.Transaction>> getTransactionsAgency(
+      rui) async {
+    List<transazione.Transaction> temp = [];
+    await FirebaseFirestore.instance
+        .collection('transazioni')
+        .where('codRUI', isEqualTo: rui)
+        .orderBy('data', descending: true)
+        .get()
+        .then((value) async {
+      for (var element in value.docs) {
+        String uid = element.get('uidUtente');
+        await FirebaseFirestore.instance
+            .collection('utenti')
+            .doc(uid)
+            .get()
+            .then((us) {
+          temp.add(transazione.Transaction(
+              element.get('successo'),
+              DateFormat('dd/MM/yyyy')
+                  .format(element.get('data').toDate().add(Duration(days: 1))),
+              element.get('importo').toString(),
+              element.get('nPolizza'),
+              element.get('compagnia'),
+              element.get('note'),
+              us.get('Nome').toString() + ' ' + us.get('Cognome').toString()));
+        });
+      }
+    });
+    return temp;
+  }
+
+  static Future<List<Agency>> getAllAgencies() async {
+    List<Agency> temp = [];
+    await FirebaseFirestore.instance.collection('agenzie').get().then((value) {
+      for (var element in value.docs) {
+        temp.add(Agency(
+            element.get('Nome'),
+            element.id,
+            element.get('Indirizzo'),
+            element.get('Logo'),
+            element.get('Banner'),
+            element.get('PasswordRUI')));
+      }
+    });
+    return temp;
   }
 }

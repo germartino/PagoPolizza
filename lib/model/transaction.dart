@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:PagoPolizza/model/current_user.dart';
@@ -17,13 +18,10 @@ class Transaction {
   final String nPolizza;
   final String compagnia;
   final String note;
-  String intestatario = '';
+  final String intestatario;
 
   Transaction(this.success, this.data, this.importo, this.nPolizza,
-      this.compagnia, this.note);
-
-  Transaction.agencyConstructor(this.success, this.data, this.importo,
-      this.nPolizza, this.compagnia, this.note, this.intestatario);
+      this.compagnia, this.note, this.intestatario);
 
   Widget getElementCollapsed(BuildContext context) {
     return Padding(
@@ -247,5 +245,16 @@ class Transaction {
           title: getElementCollapsed(context),
           children: [getElementExpanded(context)],
         ));
+  }
+
+  bool isSearched(search) {
+    bool searched = false;
+    if (data.toLowerCase().contains(search) ||
+        importo.toLowerCase().contains(search) ||
+        nPolizza.toLowerCase().contains(search) ||
+        compagnia.toLowerCase().contains(search) ||
+        note.toLowerCase().contains(search) ||
+        intestatario.toLowerCase().contains(search)) searched = true;
+    return searched;
   }
 }

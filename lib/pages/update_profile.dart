@@ -1,6 +1,10 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
+import 'package:PagoPolizza/model/database.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -17,7 +21,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UpdateProfile extends StatefulWidget {
-  const UpdateProfile({Key? key}) : super(key: key);
+  final Agency agenzia;
+  const UpdateProfile({Key? key, required this.agenzia}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => UpdateProfileState();
@@ -28,8 +33,36 @@ class UpdateProfileState extends State<UpdateProfile> {
   bool _passwordVisible = false;
   bool _passwordVisible1 = false;
   bool _passwordVisible2 = false;
-  TextEditingController password = TextEditingController(text: 'nuovapassword');
+  TextEditingController password = TextEditingController();
+  late TextEditingController name = TextEditingController(
+      text: CurrentUser.role == 'agency'
+          ? widget.agenzia.name
+          : CurrentUser.name);
+  TextEditingController surname =
+      TextEditingController(text: CurrentUser.surname);
+  late TextEditingController address =
+      TextEditingController(text: widget.agenzia.address);
+  TextEditingController oldPass = TextEditingController();
+  TextEditingController confPass = TextEditingController();
+  late TextEditingController passRUI =
+      TextEditingController(text: widget.agenzia.passRUI);
+  bool oldPassError = false;
+  bool passwordError = false;
+  bool confPassError = false;
 
+  @override
+  void dispose() {
+    password.dispose();
+    name.dispose();
+    surname.dispose();
+    address.dispose();
+    oldPass.dispose();
+    confPass.dispose();
+    passRUI.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: null,
@@ -124,10 +157,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                 children: [
                                   if (CurrentUser.role != 'admin')
                                     TextFormField(
-                                      initialValue: (CurrentUser.role ==
-                                              'client')
-                                          ? 'Mario'
-                                          : 'Allianz Bank Financial Advisors S.p.A.',
+                                      controller: name,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Perfavore inserisci il nome';
@@ -140,6 +170,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         fontSize: 15,
                                       ),
                                       decoration: InputDecoration(
+                                        errorMaxLines: 4,
                                         focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Colors.black)),
@@ -155,12 +186,9 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.02),
-                                  if (CurrentUser.role != 'admin')
+                                  if (CurrentUser.role == 'client')
                                     TextFormField(
-                                      initialValue:
-                                          (CurrentUser.role == 'client')
-                                              ? 'Rossi'
-                                              : 'A000076887',
+                                      controller: surname,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Perfavore inserisci il cognome o la ragione sociale';
@@ -173,13 +201,37 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         fontSize: 15,
                                       ),
                                       decoration: InputDecoration(
+                                        errorMaxLines: 4,
                                         focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Colors.black)),
-                                        labelText:
-                                            (CurrentUser.role == 'client')
-                                                ? 'Cognome o Ragione Sociale'
-                                                : 'Codice RUI',
+                                        labelText: 'Cognome o Ragione Sociale',
+                                        labelStyle: GoogleFonts.ptSans(
+                                          fontSize: 15.0,
+                                          color: Color(0xff707070),
+                                        ),
+                                      ),
+                                    ),
+                                  if (CurrentUser.role == 'agency')
+                                    TextFormField(
+                                      controller: address,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Perfavore inserisci l\'indirizzo della sede';
+                                        }
+                                        return null;
+                                      },
+                                      cursorColor: Colors.black,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                      ),
+                                      decoration: InputDecoration(
+                                        errorMaxLines: 4,
+                                        focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.black)),
+                                        labelText: 'Indirizzo Sede',
                                         labelStyle: GoogleFonts.ptSans(
                                           fontSize: 15.0,
                                           color: Color(0xff707070),
@@ -193,12 +245,13 @@ class UpdateProfileState extends State<UpdateProfile> {
                                                 0.02),
                                   if (CurrentUser.role == 'agency')
                                     TextFormField(
-                                      initialValue: 'Via delle vie, 3, Roma',
+                                      controller: passRUI,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Perfavore inserisci l\'indirizzo della sede';
+                                          return 'Perfavore inserisci la password per il codice RUI';
+                                        } else {
+                                          return null;
                                         }
-                                        return null;
                                       },
                                       cursorColor: Colors.black,
                                       style: TextStyle(
@@ -206,66 +259,48 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         fontSize: 15,
                                       ),
                                       decoration: InputDecoration(
+                                        errorMaxLines: 4,
                                         focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Colors.black)),
-                                        labelText: 'Indirizzo Sede',
+                                        labelText: 'Password codice RUI',
                                         labelStyle: GoogleFonts.ptSans(
                                           fontSize: 15.0,
                                           color: Color(0xff707070),
                                         ),
                                       ),
                                     ),
-                                  if (CurrentUser.role != 'admin')
-                                    SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.02),
-                                  TextFormField(
-                                    initialValue: 'mario.rossi@pagopolizza.com',
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Perfavore inserisci l\'email';
-                                      }
-                                      return null;
-                                    },
-                                    cursorColor: Colors.black,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                    ),
-                                    decoration: InputDecoration(
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black)),
-                                      suffixIcon: Icon(Ionicons.mail_outline,
-                                          color: Color(0xff9e9e9e), size: 25),
-                                      labelText: "Email",
-                                      labelStyle: GoogleFonts.ptSans(
-                                        fontSize: 15.0,
-                                        color: Color(0xff707070),
-                                      ),
-                                    ),
-                                  ),
                                   SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.02),
                                   TextFormField(
-                                    initialValue: 'password',
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Perfavore inserisci la vecchia password';
-                                      }
-                                      return null;
+                                    controller: oldPass,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        oldPassError = false;
+                                        _formkey.currentState!.validate();
+                                      });
                                     },
                                     obscureText: !_passwordVisible,
+                                    validator: (value) {
+                                      if (oldPassError) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Perfavore inserisci la vecchia password';
+                                        } else {
+                                          return 'La password inserita è errata';
+                                        }
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                     cursorColor: Colors.black,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 15,
                                     ),
                                     decoration: InputDecoration(
+                                      errorMaxLines: 4,
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black)),
@@ -295,20 +330,34 @@ class UpdateProfileState extends State<UpdateProfile> {
                                           MediaQuery.of(context).size.height *
                                               0.02),
                                   TextFormField(
-                                    controller: password,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Perfavore inserisci la nuova password';
-                                      }
-                                      return null;
+                                    onChanged: (value) {
+                                      setState(() {
+                                        passwordError = false;
+                                        _formkey.currentState!.validate();
+                                      });
                                     },
+                                    controller: password,
                                     obscureText: !_passwordVisible1,
+                                    validator: (value) {
+                                      if (passwordError) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Perfavore inserisci la nuova password';
+                                        } else if (!RegExp(
+                                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
+                                            .hasMatch(value)) {
+                                          return 'La password deve contenere almeno 8 caratteri, una lettera maiuscola, una lettera minuscola e un numero';
+                                        }
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                     cursorColor: Colors.black,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 15,
                                     ),
                                     decoration: InputDecoration(
+                                      errorMaxLines: 4,
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black)),
@@ -338,14 +387,23 @@ class UpdateProfileState extends State<UpdateProfile> {
                                           MediaQuery.of(context).size.height *
                                               0.02),
                                   TextFormField(
-                                    initialValue: 'nuovapassword',
+                                    onChanged: (value) {
+                                      setState(() {
+                                        confPassError = false;
+                                        _formkey.currentState!.validate();
+                                      });
+                                    },
+                                    controller: confPass,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Perfavore reinserisci la nuova password';
-                                      } else if (password.text != value) {
-                                        return 'La password inserita non corrisponde';
+                                      if (confPassError) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Perfavore reinserisci la password';
+                                        } else if (password.text != value) {
+                                          return 'La password inserita non corrisponde';
+                                        }
+                                      } else {
+                                        return null;
                                       }
-                                      return null;
                                     },
                                     obscureText: !_passwordVisible2,
                                     cursorColor: Colors.black,
@@ -354,6 +412,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                       fontSize: 15,
                                     ),
                                     decoration: InputDecoration(
+                                      errorMaxLines: 4,
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black)),
@@ -432,8 +491,10 @@ class UpdateProfileState extends State<UpdateProfile> {
                                         flex: 0,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            //update profile
-                                            Navigator.pop(context);
+                                            if (_formkey.currentState!
+                                                .validate()) {
+                                              updateProfile(context);
+                                            }
                                           },
                                           child: Text(
                                             'Salva',
@@ -478,5 +539,139 @@ class UpdateProfileState extends State<UpdateProfile> {
         ),
       ),
     );
+  }
+
+  void updateProfile(context) async {
+    bool something = false;
+    //change password think done
+    if (oldPass.text.isNotEmpty &&
+        password.text.isNotEmpty &&
+        confPass.text.isNotEmpty) {
+      if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
+          .hasMatch(password.text)) {
+        setState(() {
+          passwordError = true;
+          _formkey.currentState!.validate();
+        });
+        return;
+      } else {
+        if (confPass.text != password.text) {
+          setState(() {
+            confPassError = true;
+            _formkey.currentState!.validate();
+          });
+          return;
+        } else {
+          int result =
+              await Database.changePassword(oldPass.text, password.text);
+          if (result == 0) {
+            something = true;
+          } else if (result == 1) {
+            setState(() {
+              oldPassError = true;
+              _formkey.currentState!.validate();
+            });
+            return;
+          } else {
+            ArtSweetAlert.show(
+                context: context,
+                artDialogArgs: ArtDialogArgs(
+                  type: ArtSweetAlertType.danger,
+                  title: "Troppe richieste",
+                  text: 'Riprova più tardi',
+                  confirmButtonColor: Color(0xffDF752C),
+                ));
+            return;
+          }
+        }
+      }
+    } else if (oldPass.text.isNotEmpty ||
+        password.text.isNotEmpty ||
+        confPass.text.isNotEmpty) {
+      if (oldPass.text.isEmpty) {
+        setState(() {
+          oldPassError = true;
+          _formkey.currentState!.validate();
+        });
+      }
+      if (password.text.isEmpty) {
+        setState(() {
+          passwordError = true;
+          _formkey.currentState!.validate();
+        });
+      }
+      if (confPass.text.isEmpty) {
+        setState(() {
+          confPassError = true;
+          _formkey.currentState!.validate();
+        });
+      }
+      return;
+    } else {
+      setState(() {
+        oldPassError = false;
+        passwordError = false;
+        confPassError = false;
+        _formkey.currentState!.validate();
+      });
+    }
+
+    if (CurrentUser.role == 'client') {
+      Map<String, String> update = {};
+      if (name.text != CurrentUser.name) {
+        update['Nome'] = name.text;
+      }
+      if (surname.text != CurrentUser.surname) {
+        update['Cognome'] = surname.text;
+      }
+      if (update.isNotEmpty) {
+        something = true;
+        String uid = FirebaseAuth.instance.currentUser!.uid;
+        await Database.updateUser(uid, update);
+      }
+    } else if (CurrentUser.role == 'agency') {
+      Map<String, String> updateUser = {};
+      Map<String, String> updateAgency = {};
+      if (name.text != widget.agenzia.name) {
+        updateAgency['Nome'] = name.text;
+      }
+      if (address.text != widget.agenzia.address) {
+        updateAgency['Indirizzo'] = address.text;
+      }
+      if (passRUI.text != widget.agenzia.passRUI) {
+        updateAgency['PasswordRUI'] = passRUI.text;
+      }
+      if (updateUser.isNotEmpty) {
+        something = true;
+        String uid = FirebaseAuth.instance.currentUser!.uid;
+        await Database.updateUser(uid, updateUser);
+      }
+      if (updateAgency.isNotEmpty) {
+        something = true;
+        String rui = CurrentUser.codRui[0];
+        await Database.updateAgency(rui, updateAgency);
+      }
+    }
+
+    if (something) {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Profilo modificato",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+
+      Navigator.pop(context);
+    } else {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.info,
+            title: "Nessuna modifica richiesta",
+            text: 'Premi annulla per tornare indietro',
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    }
   }
 }

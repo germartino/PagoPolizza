@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:PagoPolizza/model/current_user.dart';
+import 'package:PagoPolizza/model/database.dart';
+import 'package:PagoPolizza/pages/agency_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -15,82 +18,7 @@ import 'package:PagoPolizza/main.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:PagoPolizza/model/transaction.dart';
-
-List<Transaction> getList() {
-  List<Transaction> temp = [];
-  if (CurrentUser.role == 'client') {
-    temp.add(Transaction(
-      true,
-      '07/12/2021',
-      '150.50',
-      '23987598',
-      'Allianz Bank Financial Advisors S.p.A.',
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-    ));
-    temp.add(
-      Transaction(
-        false,
-        '05/12/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-      ),
-    );
-    temp.add(
-      Transaction(
-        false,
-        '30/11/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-      ),
-    );
-    temp.add(Transaction(
-      true,
-      '15/09/2021',
-      '750',
-      '23987598',
-      'Allianz Bank Financial Advisors S.p.A.',
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-    ));
-  } else {
-    temp.add(Transaction.agencyConstructor(
-        true,
-        '07/12/2021',
-        '150.50',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Alessio Ambruoso'));
-    temp.add(Transaction.agencyConstructor(
-        false,
-        '05/12/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Marco Borrelli'));
-    temp.add(Transaction.agencyConstructor(
-        false,
-        '30/11/2021',
-        '70.35',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Roberto Veneruso'));
-    temp.add(Transaction.agencyConstructor(
-        true,
-        '15/09/2021',
-        '750',
-        '23987598',
-        'Allianz Bank Financial Advisors S.p.A.',
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no.',
-        'Gerardo Martino'));
-  }
-  return temp;
-}
+import 'package:anim_search_bar/anim_search_bar.dart';
 
 class Storico extends StatefulWidget {
   const Storico({Key? key}) : super(key: key);
@@ -100,7 +28,31 @@ class Storico extends StatefulWidget {
 }
 
 class StoricoState extends State<Storico> {
-  List<Transaction> transactions = getList();
+  TextEditingController search = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    search.addListener(() {
+      setState(() {});
+    });
+  }
+
+  Future<List<Transaction>> getTransactions() async {
+    List<Transaction> temp = [];
+    if (CurrentUser.role == 'client') {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      temp = await Database.getTransactionsClient(uid);
+    } else if (CurrentUser.role == 'agency') {
+      String rui = CurrentUser.codRui[0];
+      temp = await Database.getTransactionsAgency(rui);
+    } else if (CurrentUser.role == 'admin') {
+      temp =
+          await Database.getTransactionsAgency(ListaAgenzieState.ruiForAdmin);
+    }
+    return temp;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,35 +61,70 @@ class StoricoState extends State<Storico> {
         body: SafeArea(
             child: Column(children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.08,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(26.0),
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(26.0),
+                ),
+                color: Color(0xffdf752c),
               ),
-              color: Color(0xffdf752c),
-            ),
-            child: (CurrentUser.role == 'admin')
-                ? Row(
-                    children: [
-                      Expanded(
-                        flex: 0,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.002,
-                            left: MediaQuery.of(context).size.width * 0.05,
-                            right: MediaQuery.of(context).size.width * 0.07,
+              child: (CurrentUser.role == 'admin')
+                  ? Stack(children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 0,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.002,
+                                left: MediaQuery.of(context).size.width * 0.05,
+                                right: MediaQuery.of(context).size.width * 0.07,
+                              ),
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Icon(Ionicons.chevron_back_outline,
+                                      color: Color(0xffffffff), size: 25)),
+                            ),
                           ),
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Icon(Ionicons.chevron_back_outline,
-                                  color: Color(0xffffffff), size: 25)),
-                        ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  scale: 5,
+                                  alignment: Alignment.centerLeft,
+                                  image: AssetImage(
+                                      'assets/pagopolizza_bianco.png'),
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      Expanded(
-                        flex: 1,
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.07),
+                        child: AnimSearchBar(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          textController: search,
+                          onSuffixTap: () {
+                            setState(() {
+                              search.clear();
+                            });
+                          },
+                          closeSearchOnSuffixTap: true,
+                          rtl: true,
+                        ),
+                      )
+                    ])
+                  : Stack(children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.07),
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -149,24 +136,23 @@ class StoricoState extends State<Storico> {
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  )
-                : Padding(
-                    padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width * 0.07),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          scale: 5,
-                          alignment: Alignment.centerLeft,
-                          image: AssetImage('assets/pagopolizza_bianco.png'),
-                          fit: BoxFit.scaleDown,
-                        ),
                       ),
-                    ),
-                  ),
-          ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.07),
+                        child: AnimSearchBar(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          textController: search,
+                          onSuffixTap: () {
+                            setState(() {
+                              search.clear();
+                            });
+                          },
+                          closeSearchOnSuffixTap: true,
+                          rtl: true,
+                        ),
+                      )
+                    ])),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -206,8 +192,27 @@ class StoricoState extends State<Storico> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.03,
                     ),
-                    Column(
-                      children: _getPanel(context),
+                    FutureBuilder(
+                      future: getTransactions(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: Color(0xffDF752C),
+                            strokeWidth: 5,
+                          );
+                        } else {
+                          if (snapshot.hasData) {
+                            return Column(
+                                children: _getPanel(context, snapshot.data));
+                          } else {
+                            return CircularProgressIndicator(
+                              color: Color(0xffDF752C),
+                              strokeWidth: 5,
+                            );
+                          }
+                        }
+                      },
                     )
                   ]),
                 ),
@@ -217,13 +222,36 @@ class StoricoState extends State<Storico> {
         ])));
   }
 
-  List<Widget> _getPanel(BuildContext context) {
+  List<Widget> _getPanel(BuildContext context, data) {
     List<Widget> panels = [];
-    for (var i = 0; i < transactions.length; i++) {
-      panels.add(transactions[i].getElement(context));
-      panels.add(SizedBox(
-        height: 10,
-      ));
+    for (var i = 0; i < data.length; i++) {
+      if (search.text.isNotEmpty || search.text != '') {
+        if (data[i].isSearched(search.text)) {
+          panels.add(data[i].getElement(context));
+          panels.add(SizedBox(
+            height: 10,
+          ));
+        }
+      } else {
+        panels.add(data[i].getElement(context));
+        panels.add(SizedBox(
+          height: 10,
+        ));
+      }
+    }
+    if (panels.isEmpty) {
+      panels.add(Padding(
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.2,
+              left: MediaQuery.of(context).size.width * 0.1,
+              right: MediaQuery.of(context).size.width * 0.1),
+          child: Text(
+            'Nessun elemento trovato',
+            style: GoogleFonts.ptSans(
+              fontSize: 20.0,
+              color: Colors.black,
+            ),
+          )));
     }
     return panels;
   }
