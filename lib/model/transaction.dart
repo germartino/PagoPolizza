@@ -245,4 +245,14 @@ class Transaction {
           children: [getElementExpanded(context)],
         ));
   }
+
+  bool isSearched(search) {
+    bool searched = false;
+    if (data.contains(search) ||
+        importo.contains(search) ||
+        nPolizza.contains(search) ||
+        compagnia.contains(search) ||
+        note.contains(search)) searched = true;
+    return searched;
+  }
 }
