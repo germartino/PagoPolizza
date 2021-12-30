@@ -373,8 +373,7 @@ class Database {
       for (var element in value.docs) {
         temp.add(transazione.Transaction(
             element.get('successo'),
-            DateFormat('dd/MM/yyyy')
-                .format(element.get('data').toDate().add(Duration(days: 1))),
+            DateFormat('dd/MM/yyyy').format(element.get('data').toDate()),
             element.get('importo').toString(),
             element.get('nPolizza'),
             element.get('compagnia'),
@@ -405,8 +404,7 @@ class Database {
             .then((us) {
           temp.add(transazione.Transaction(
               element.get('successo'),
-              DateFormat('dd/MM/yyyy')
-                  .format(element.get('data').toDate().add(Duration(days: 1))),
+              DateFormat('dd/MM/yyyy').format(element.get('data').toDate()),
               element.get('importo').toString(),
               element.get('nPolizza'),
               element.get('compagnia'),
