@@ -417,4 +417,20 @@ class Database {
     });
     return temp;
   }
+
+  static Future<List<Agency>> getAllAgencies() async {
+    List<Agency> temp = [];
+    await FirebaseFirestore.instance.collection('agenzie').get().then((value) {
+      for (var element in value.docs) {
+        temp.add(Agency(
+            element.get('Nome'),
+            element.id,
+            element.get('Indirizzo'),
+            element.get('Logo'),
+            element.get('Banner'),
+            element.get('PasswordRUI')));
+      }
+    });
+    return temp;
+  }
 }

@@ -85,7 +85,7 @@ class HomeState extends State<Home> {
               backgroundColor: Colors.black,
             ),
           ));
-    else
+    else if (CurrentUser.role != 'admin')
       return Scaffold(
           drawer: null,
           appBar: null,
@@ -108,12 +108,17 @@ class HomeState extends State<Home> {
                   }
                 }
               }));
+    else
+      return Scaffold(
+          drawer: null, appBar: null, body: buildWidget(context, []));
   }
 
   Widget buildWidget(context, agenzie) {
     final SimpleDialog dialog = SimpleDialog(
         title: Text('Scegli l\'agenzia'), children: getAgenciesItem(agenzie));
-    Agency agenzia = agenzie[selectedAgency];
+    Agency agenzia = CurrentUser.role == 'admin'
+        ? Agency('', '', '', '', '', '')
+        : agenzie[selectedAgency];
     return SafeArea(
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -126,11 +131,17 @@ class HomeState extends State<Home> {
               width: MediaQuery.of(context).size.width,
               constraints: BoxConstraints(maxHeight: 200),
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  alignment: Alignment.topCenter,
-                  image: NetworkImage(agenzia.banner),
-                  fit: BoxFit.fitWidth,
-                ),
+                image: (CurrentUser.role == 'admin')
+                    ? DecorationImage(
+                        alignment: Alignment.center,
+                        image: AssetImage('assets/pagopolizza_arancio.png'),
+                        fit: BoxFit.fitWidth,
+                      )
+                    : DecorationImage(
+                        alignment: Alignment.topCenter,
+                        image: NetworkImage(agenzia.banner),
+                        fit: BoxFit.fitWidth,
+                      ),
               ),
               child: Container(
                 decoration: BoxDecoration(
@@ -256,197 +267,226 @@ class HomeState extends State<Home> {
                     : null,
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.02,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.1,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  alignment: Alignment.topCenter,
-                  image: NetworkImage(agenzia.logo),
-                  fit: BoxFit.scaleDown,
+            if (CurrentUser.role != 'admin')
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
+              ),
+            if (CurrentUser.role != 'admin')
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.1,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.topCenter,
+                    image: NetworkImage(agenzia.logo),
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
               ),
-            ),
-            Padding(
+            if (CurrentUser.role != 'admin')
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.1),
+                  child: Column(children: [
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'NOME AGENZIA',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 13.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        agenzia.name,
+                        style: GoogleFonts.lato(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'CODICE RUI',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 13.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        agenzia.ruiCode,
+                        style: GoogleFonts.lato(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'INDIRIZZO SEDE',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 13.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        agenzia.address,
+                        style: GoogleFonts.lato(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    if (CurrentUser.role == 'client')
+                      ElevatedButton(
+                        onPressed: () {
+                          if (FirebaseAuth.instance.currentUser != null) {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                  curve: Curves.easeInOut,
+                                  type: PageTransitionType.rightToLeftWithFade,
+                                  child: Pagamento(),
+                                ));
+                          } else {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                  curve: Curves.easeInOut,
+                                  type: PageTransitionType.rightToLeftWithFade,
+                                  child: Register(),
+                                ));
+                          }
+                        },
+                        child: Text(
+                          FirebaseAuth.instance.currentUser != null
+                              ? 'Paga ora'
+                              : 'Registrati',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15.0,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.45,
+                                MediaQuery.of(context).size.height * 0.06),
+                            alignment: Alignment.center,
+                            primary: Color(0xffdf752c),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(23))),
+                      ),
+                    if (CurrentUser.role == 'agency')
+                      ElevatedButton(
+                        onPressed: () {
+                          saveQRCode(agenzia);
+                        },
+                        child: Text(
+                          'Scarica il QR Code',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15.0,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.45,
+                                MediaQuery.of(context).size.height * 0.06),
+                            alignment: Alignment.center,
+                            primary: Color(0xffdf752c),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(23))),
+                      ),
+                    if (CurrentUser.role == 'client' &&
+                        FirebaseAuth.instance.currentUser != null)
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.03,
+                      ),
+                    if (CurrentUser.role == 'client' &&
+                        FirebaseAuth.instance.currentUser != null &&
+                        agenzie.length > 1)
+                      ElevatedButton(
+                        onPressed: () {
+                          removeAgency(agenzie, agenzia.ruiCode);
+                        },
+                        child: Text(
+                          'Rimuovi Agenzia',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15.0,
+                            color: Color(0xffdf752c),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.45,
+                                MediaQuery.of(context).size.height * 0.06),
+                            alignment: Alignment.center,
+                            primary: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 2, color: Color(0xffdf752c)),
+                                borderRadius: BorderRadius.circular(23))),
+                      )
+                  ])),
+            if (CurrentUser.role == 'admin')
+              Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.1),
-                child: Column(children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'NOME AGENZIA',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 13.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                child: Column(
+                  children: [
+                    Container(
+                      child: Image(
+                        width: 200,
+                        fit: BoxFit.scaleDown,
+                        image: AssetImage('assets/logo.png'),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      agenzia.name,
-                      style: GoogleFonts.lato(
-                        fontSize: 14.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'CODICE RUI',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 13.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      agenzia.ruiCode,
-                      style: GoogleFonts.lato(
-                        fontSize: 14.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'INDIRIZZO SEDE',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 13.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      agenzia.address,
-                      style: GoogleFonts.lato(
-                        fontSize: 14.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  if (CurrentUser.role == 'client')
-                    ElevatedButton(
-                      onPressed: () {
-                        if (FirebaseAuth.instance.currentUser != null) {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                curve: Curves.easeInOut,
-                                type: PageTransitionType.rightToLeftWithFade,
-                                child: Pagamento(),
-                              ));
-                        } else {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                curve: Curves.easeInOut,
-                                type: PageTransitionType.rightToLeftWithFade,
-                                child: Register(),
-                              ));
-                        }
-                      },
-                      child: Text(
-                        FirebaseAuth.instance.currentUser != null
-                            ? 'Paga ora'
-                            : 'Registrati',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 15.0,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(
-                              MediaQuery.of(context).size.width * 0.45,
-                              MediaQuery.of(context).size.height * 0.06),
-                          alignment: Alignment.center,
-                          primary: Color(0xffdf752c),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(23))),
-                    ),
-                  if (CurrentUser.role == 'agency')
-                    ElevatedButton(
-                      onPressed: () {
-                        saveQRCode(agenzia);
-                      },
-                      child: Text(
-                        'Scarica il QR Code',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 15.0,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(
-                              MediaQuery.of(context).size.width * 0.45,
-                              MediaQuery.of(context).size.height * 0.06),
-                          alignment: Alignment.center,
-                          primary: Color(0xffdf752c),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(23))),
-                    ),
-                  if (CurrentUser.role == 'client' &&
-                      FirebaseAuth.instance.currentUser != null)
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.03,
+                      height: MediaQuery.of(context).size.height * 0.1,
                     ),
-                  if (CurrentUser.role == 'client' &&
-                      FirebaseAuth.instance.currentUser != null &&
-                      agenzie.length > 1)
-                    ElevatedButton(
-                      onPressed: () {
-                        removeAgency(agenzie, agenzia.ruiCode);
-                      },
-                      child: Text(
-                        'Rimuovi Agenzia',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 15.0,
-                          color: Color(0xffdf752c),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(
-                              MediaQuery.of(context).size.width * 0.45,
-                              MediaQuery.of(context).size.height * 0.06),
-                          alignment: Alignment.center,
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  width: 2, color: Color(0xffdf752c)),
-                              borderRadius: BorderRadius.circular(23))),
-                    )
-                ])),
+                    Text(
+                      'Benvenuto amministratore',
+                      style: GoogleFonts.lato(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
           ]),
         ),
       ),
@@ -506,24 +546,26 @@ class HomeState extends State<Home> {
         ));
   }
 
-  List<SimpleDialogItem> getAgenciesItem(List<Agency> agenzie) {
+  List<SimpleDialogItem> getAgenciesItem(agenzie) {
     List<SimpleDialogItem> items = [];
-    for (Agency item in agenzie) {
-      items.add(SimpleDialogItem(
-        icon: Image(
-          image: NetworkImage(item.logo),
-          fit: BoxFit.scaleDown,
-          width: 36,
-          height: 36,
-        ),
-        text: item.name,
-        onPressed: () {
-          Navigator.pop(context);
-          setState(() {
-            selectedAgency = agenzie.indexOf(item);
-          });
-        },
-      ));
+    if (CurrentUser.role != 'admin') {
+      for (Agency item in agenzie) {
+        items.add(SimpleDialogItem(
+          icon: Image(
+            image: NetworkImage(item.logo),
+            fit: BoxFit.scaleDown,
+            width: 36,
+            height: 36,
+          ),
+          text: item.name,
+          onPressed: () {
+            Navigator.pop(context);
+            setState(() {
+              selectedAgency = agenzie.indexOf(item);
+            });
+          },
+        ));
+      }
     }
     items.add(SimpleDialogItem(
       icon: Icon(

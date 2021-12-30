@@ -20,6 +20,10 @@ class Agency {
   Agency(this.name, this.ruiCode, this.address, this.logo, this.banner,
       this.passRUI);
 
+  String getRUI() {
+    return ruiCode;
+  }
+
   Widget getElementCollapsed(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -17,21 +18,6 @@ import 'package:PagoPolizza/model/transaction.dart';
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/pages/storico.dart';
 
-List<Agency> getList() {
-  List<Agency> temp = [];
-  temp.add(Agency('Allianz Bank Financial Advisors S.p.A.', 'A000076887',
-      'Via delle vie, 3, Roma', '', '', ''));
-  temp.add(Agency('Alleanza Assicurazioni', 'A000075857',
-      'Via Verdi, 30, Milano', '', '', ''));
-  temp.add(Agency('Unipol Gruppo S.p.A', 'A000072336',
-      'Via Stalingrado, 45, Bologna', '', '', ''));
-  temp.add(
-      Agency('AXA S.p.A.', 'A000072984', 'Corso Como, 17, Milano', '', '', ''));
-  return temp;
-}
-
-List<Agency> agencies = getList();
-
 class ListaAgenzie extends StatefulWidget {
   const ListaAgenzie({Key? key}) : super(key: key);
 
@@ -40,6 +26,14 @@ class ListaAgenzie extends StatefulWidget {
 }
 
 class ListaAgenzieState extends State<ListaAgenzie> {
+  static String ruiForAdmin = '';
+
+  Future<List<Agency>> getAgencies() async {
+    List<Agency> temp = [];
+    temp = await Database.getAllAgencies();
+    return temp;
+  }
+
   static bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -111,8 +105,27 @@ class ListaAgenzieState extends State<ListaAgenzie> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.03,
                     ),
-                    Column(
-                      children: _getPanel(context),
+                    FutureBuilder(
+                      future: getAgencies(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: Color(0xffDF752C),
+                            strokeWidth: 5,
+                          );
+                        } else {
+                          if (snapshot.hasData) {
+                            return Column(
+                                children: _getPanel(context, snapshot.data));
+                          } else {
+                            return CircularProgressIndicator(
+                              color: Color(0xffDF752C),
+                              strokeWidth: 5,
+                            );
+                          }
+                        }
+                      },
                     )
                   ]),
                 ),
@@ -122,9 +135,9 @@ class ListaAgenzieState extends State<ListaAgenzie> {
         ])));
   }
 
-  List<Widget> _getPanel(BuildContext context) {
+  List<Widget> _getPanel(BuildContext context, data) {
     List<Widget> panels = [];
-    for (var i = 0; i < agencies.length; i++) {
+    for (var i = 0; i < data.length; i++) {
       Widget elem = Container(
           width: MediaQuery.of(context).size.width * 0.8,
           alignment: Alignment.center,
@@ -143,6 +156,7 @@ class ListaAgenzieState extends State<ListaAgenzie> {
           ),
           child: InkWell(
             onTap: () {
+              ruiForAdmin = data[i].getRUI();
               Navigator.push(
                   context,
                   PageTransition(
@@ -151,7 +165,7 @@ class ListaAgenzieState extends State<ListaAgenzie> {
                     child: Storico(),
                   ));
             },
-            child: agencies[i].getElementCollapsed(context),
+            child: data[i].getElementCollapsed(context),
           ));
       panels.add(elem);
       panels.add(SizedBox(

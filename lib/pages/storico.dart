@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/database.dart';
+import 'package:PagoPolizza/pages/agency_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,8 @@ class StoricoState extends State<Storico> {
       String rui = CurrentUser.codRui[0];
       temp = await Database.getTransactionsAgency(rui);
     } else if (CurrentUser.role == 'admin') {
-      //by selected rui
+      temp =
+          await Database.getTransactionsAgency(ListaAgenzieState.ruiForAdmin);
     }
     return temp;
   }
