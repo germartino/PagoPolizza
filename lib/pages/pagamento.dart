@@ -1,5 +1,8 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:PagoPolizza/model/database.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -15,7 +18,8 @@ import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Pagamento extends StatefulWidget {
-  const Pagamento({Key? key}) : super(key: key);
+  final String rui;
+  const Pagamento({Key? key, required this.rui}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => PagamentoState();
@@ -23,6 +27,11 @@ class Pagamento extends StatefulWidget {
 
 class PagamentoState extends State<Pagamento> {
   final _formkey = GlobalKey<FormState>();
+  late final String rui = widget.rui;
+  TextEditingController nPolizza = TextEditingController();
+  TextEditingController compagnia = TextEditingController();
+  TextEditingController importo = TextEditingController();
+  TextEditingController note = TextEditingController();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,6 +126,7 @@ class PagamentoState extends State<Pagamento> {
                       child: Column(
                         children: [
                           TextFormField(
+                            controller: nPolizza,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Perfavore inserisci il numero della polizza';
@@ -142,6 +152,7 @@ class PagamentoState extends State<Pagamento> {
                               height:
                                   MediaQuery.of(context).size.height * 0.03),
                           TextFormField(
+                            controller: compagnia,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Perfavore inserisci il nome della compagnia';
@@ -167,6 +178,7 @@ class PagamentoState extends State<Pagamento> {
                               height:
                                   MediaQuery.of(context).size.height * 0.03),
                           TextFormField(
+                            controller: importo,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Perfavore inserisci l\'importo';
@@ -202,6 +214,7 @@ class PagamentoState extends State<Pagamento> {
                               height:
                                   MediaQuery.of(context).size.height * 0.05),
                           TextFormField(
+                            controller: note,
                             validator: (value) {
                               return null;
                             },
@@ -235,11 +248,7 @@ class PagamentoState extends State<Pagamento> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NavDrawer()),
-                                    (route) => false);
+                                insertTransaction();
                               }
                             },
                             child: Text(
@@ -268,5 +277,39 @@ class PagamentoState extends State<Pagamento> {
             ),
           )
         ])));
+  }
+
+  Future<void> insertTransaction() async {
+    bool successo = false;
+    if (int.parse(importo.text) > 70) successo = true;
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    int r = await Database.insertTransaction(rui, compagnia.text,
+        int.parse(importo.text), nPolizza.text, note.text, successo, uid);
+    if (r == 0) {
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.success,
+            title: "Transazione eseguita con successo",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => NavDrawer()),
+          (route) => false);
+    } else if (r == 1) {
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.info,
+            title: "Errore nella transazione",
+            text: "Transazione annullata",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => NavDrawer()),
+          (route) => false);
+    }
   }
 }

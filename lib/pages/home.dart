@@ -377,7 +377,7 @@ class HomeState extends State<Home> {
                                 PageTransition(
                                   curve: Curves.easeInOut,
                                   type: PageTransitionType.rightToLeftWithFade,
-                                  child: Pagamento(),
+                                  child: Pagamento(rui: agenzia.ruiCode),
                                 ));
                           } else {
                             Navigator.push(

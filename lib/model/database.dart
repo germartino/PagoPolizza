@@ -431,4 +431,28 @@ class Database {
     });
     return temp;
   }
+
+  static Future<int> insertTransaction(
+      rui, compagnia, importo, nPolizza, note, success, uid) async {
+    int r = -1;
+    await FirebaseFirestore.instance.collection('transazioni').add({
+      'codRUI': rui,
+      'compagnia': compagnia,
+      'importo': importo,
+      'nPolizza': nPolizza,
+      'note': note,
+      'successo': success,
+      'uidUtente': uid,
+      'data': FieldValue.serverTimestamp()
+    }).then((value) {
+      if (success)
+        r = 0;
+      else
+        r = 1;
+    }).catchError((error) {
+      log(error.toString());
+      r = -1;
+    });
+    return r;
+  }
 }
