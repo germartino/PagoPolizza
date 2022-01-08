@@ -58,6 +58,7 @@ dependencies:
   gallery_saver: ^2.3.2
   firebase_storage: ^10.2.4
   anim_search_bar: ^2.0.2
+  random_password_generator: ^0.2.1
 
 dev_dependencies:
   flutter_test:

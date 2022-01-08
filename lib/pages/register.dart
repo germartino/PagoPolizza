@@ -489,8 +489,6 @@ class RegisterState extends State<Register> {
     } else if (result == -1) {
       valid = false;
       _formkey.currentState!.validate();
-    } else {
-      log(result.toString() + " register error");
     }
   }
 }

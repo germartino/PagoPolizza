@@ -17,21 +17,22 @@ import 'package:PagoPolizza/main.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
 
-class Pagamento extends StatefulWidget {
-  final String rui;
-  const Pagamento({Key? key, required this.rui}) : super(key: key);
+class InsertAgency extends StatefulWidget {
+  const InsertAgency({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => PagamentoState();
+  State<StatefulWidget> createState() => InsertAgencyState();
 }
 
-class PagamentoState extends State<Pagamento> {
+class InsertAgencyState extends State<InsertAgency> {
+  bool valid = true;
+  bool _passwordVisible = false;
   final _formkey = GlobalKey<FormState>();
-  late final String rui = widget.rui;
-  TextEditingController nPolizza = TextEditingController();
-  TextEditingController compagnia = TextEditingController();
-  TextEditingController importo = TextEditingController();
-  TextEditingController note = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController ruiCode = TextEditingController();
+  TextEditingController address = TextEditingController();
+  TextEditingController passRUI = TextEditingController();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +99,7 @@ class PagamentoState extends State<Pagamento> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Pagamento',
+                        'Inserisci agenzia',
                         style: GoogleFonts.montserrat(
                             fontSize: 23.0,
                             color: Colors.black,
@@ -111,7 +112,7 @@ class PagamentoState extends State<Pagamento> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Compila il form per effettuare il pagamento',
+                        'Compila il form per inserire una nuova agenzia',
                         style: GoogleFonts.ptSans(
                           fontSize: 15.0,
                           color: Colors.black,
@@ -126,10 +127,10 @@ class PagamentoState extends State<Pagamento> {
                       child: Column(
                         children: [
                           TextFormField(
-                            controller: nPolizza,
+                            controller: name,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci il numero della polizza';
+                                return 'Perfavore inserisci il nome dell\'agenzia';
                               }
                               return null;
                             },
@@ -141,7 +142,7 @@ class PagamentoState extends State<Pagamento> {
                             decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black)),
-                              labelText: "Numero polizza",
+                              labelText: "Nome agenzia",
                               labelStyle: GoogleFonts.ptSans(
                                 fontSize: 15.0,
                                 color: Color(0xff707070),
@@ -152,10 +153,17 @@ class PagamentoState extends State<Pagamento> {
                               height:
                                   MediaQuery.of(context).size.height * 0.03),
                           TextFormField(
-                            controller: compagnia,
+                            controller: email,
+                            onChanged: (value) => valid = true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci il nome della compagnia';
+                                return 'Perfavore inserisci l\'email';
+                              } else if (!RegExp(
+                                      '[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#\$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?')
+                                  .hasMatch(value)) {
+                                return 'Perfavore inserisci una mail valida';
+                              } else if (!valid) {
+                                return 'Un account con questa email esiste già';
                               }
                               return null;
                             },
@@ -165,45 +173,11 @@ class PagamentoState extends State<Pagamento> {
                               fontSize: 15,
                             ),
                             decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelText: "Compagnia",
-                              labelStyle: GoogleFonts.ptSans(
-                                fontSize: 15.0,
-                                color: Color(0xff707070),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.03),
-                          TextFormField(
-                            controller: importo,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Perfavore inserisci l\'importo';
-                              } else if (!RegExp('^([0-9]+[.]?[0-9]+)\$')
-                                  .hasMatch(value.toString())) {
-                                return 'L\'importo inserito non è corretto';
-                              }
-                              return null;
-                            },
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp('[.0-9]'))
-                            ],
-                            keyboardType: TextInputType.number,
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              suffixIcon: Icon(Ionicons.logo_euro,
+                              suffixIcon: Icon(Ionicons.mail_outline,
                                   color: Color(0xff9e9e9e), size: 25),
-                              labelText: "Importo",
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              labelText: "Email",
                               labelStyle: GoogleFonts.ptSans(
                                 fontSize: 15.0,
                                 color: Color(0xff707070),
@@ -212,30 +186,95 @@ class PagamentoState extends State<Pagamento> {
                           ),
                           SizedBox(
                               height:
-                                  MediaQuery.of(context).size.height * 0.05),
+                                  MediaQuery.of(context).size.height * 0.03),
                           TextFormField(
-                            controller: note,
+                            controller: ruiCode,
                             validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci il codice RUI';
+                              }
                               return null;
                             },
-                            minLines: 3,
-                            maxLines: 5,
                             cursorColor: Colors.black,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 15,
                             ),
                             decoration: InputDecoration(
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                              border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xff707070)),
-                                  borderRadius: BorderRadius.circular(15)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(15)),
-                              labelText: "Note",
+                              suffixIcon: Icon(Ionicons.key_outline,
+                                  color: Color(0xff9e9e9e), size: 25),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              labelText: "Codice RUI",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.03),
+                          TextFormField(
+                            controller: address,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci l\'indirizzo dell\'agenzia';
+                              }
+                              return null;
+                            },
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              suffixIcon: Icon(Ionicons.map_outline,
+                                  color: Color(0xff9e9e9e), size: 25),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              labelText: "Indirizzo agenzia",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.03),
+                          TextFormField(
+                            controller: passRUI,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci la password';
+                              }
+                              return null;
+                            },
+                            obscureText: !_passwordVisible,
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              errorMaxLines: 4,
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                    _passwordVisible
+                                        ? Ionicons.eye_outline
+                                        : Ionicons.eye_off_outline,
+                                    color: Color(0xff9e9e9e),
+                                    size: 25),
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                              ),
+                              labelText: "Password RUI",
                               labelStyle: GoogleFonts.ptSans(
                                 fontSize: 15.0,
                                 color: Color(0xff707070),
@@ -248,11 +287,11 @@ class PagamentoState extends State<Pagamento> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
-                                insertTransaction();
+                                InsertAgency();
                               }
                             },
                             child: Text(
-                              'Paga ora',
+                              'Inserisci',
                               style: GoogleFonts.montserrat(
                                 fontSize: 15.0,
                                 color: Colors.white,
@@ -279,39 +318,25 @@ class PagamentoState extends State<Pagamento> {
         ])));
   }
 
-  Future<void> insertTransaction() async {
-    bool successo = false;
-    if (int.parse(importo.text) > 70) {
-      successo = true;
-    }
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    int r = await Database.insertTransaction(rui, compagnia.text,
-        int.parse(importo.text), nPolizza.text, note.text, successo, uid);
-    if (r == 0) {
+  Future<void> InsertAgency() async {
+    int result = await Database.createAgency(name.text, email.text,
+        ruiCode.text, address.text, passRUI.text, context);
+
+    if (result == 0) {
       await ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
             type: ArtSweetAlertType.success,
-            title: "Transazione eseguita con successo",
+            title: "Agenzia creata",
             confirmButtonColor: Color(0xffDF752C),
           ));
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => NavDrawer()),
           (route) => false);
-    } else if (r == 1) {
-      await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.info,
-            title: "Errore nella transazione",
-            text: "Transazione annullata",
-            confirmButtonColor: Color(0xffDF752C),
-          ));
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-          (route) => false);
+    } else if (result == -1) {
+      valid = false;
+      _formkey.currentState!.validate();
     }
   }
 }

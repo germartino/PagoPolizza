@@ -8,9 +8,11 @@ import 'package:PagoPolizza/pages/home.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:random_password_generator/random_password_generator.dart';
 
 class Database {
   //sign in User
@@ -445,14 +447,70 @@ class Database {
       'uidUtente': uid,
       'data': FieldValue.serverTimestamp()
     }).then((value) {
-      if (success)
+      if (success) {
         r = 0;
-      else
+      } else {
         r = 1;
+      }
     }).catchError((error) {
       log(error.toString());
       r = -1;
     });
+    return r;
+  }
+
+  static Future<int> createAgency(
+      name, email, rui, address, passRUI, context) async {
+    int r = -1;
+    String password = RandomPasswordGenerator().randomPassword(
+        letters: true,
+        numbers: true,
+        passwordLength: 10,
+        specialChar: false,
+        uppercase: true);
+    try {
+      FirebaseApp app = await Firebase.initializeApp(
+          name: 'Secondary', options: Firebase.app().options);
+      UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      await FirebaseFirestore.instance.collection('agenzie').doc(rui).set({
+        "Nome": name,
+        "Banner": '',
+        "Logo": '',
+        "Indirizzo": address,
+        "PasswordRUI": passRUI
+      }).then((value) async {
+        await FirebaseFirestore.instance
+            .collection('utenti')
+            .doc(userCredential.user!.uid)
+            .set({
+          "Nome": '',
+          "Cognome": '',
+          "Ruolo": 'agency',
+          "CodiceRUI": [rui]
+        }).catchError((error) {
+          log(error.toString());
+        });
+      }).catchError((err) {
+        log(err.toString());
+      });
+      await userCredential.user!.sendEmailVerification();
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.info,
+            title: "La password dell\'agenzia inserita è la seguente",
+            text: password,
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+      r = 0;
+      await app.delete();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        r = -1;
+      }
+    }
     return r;
   }
 }

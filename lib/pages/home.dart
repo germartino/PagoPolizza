@@ -7,6 +7,7 @@ import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:PagoPolizza/pages/agency_list.dart';
+import 'package:PagoPolizza/pages/insert_agency.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -470,13 +471,13 @@ class HomeState extends State<Home> {
                   children: [
                     Container(
                       child: Image(
-                        width: 200,
+                        width: 170,
                         fit: BoxFit.scaleDown,
                         image: AssetImage('assets/logo.png'),
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.1,
+                      height: MediaQuery.of(context).size.height * 0.08,
                     ),
                     Text(
                       'Benvenuto amministratore',
@@ -484,6 +485,36 @@ class HomeState extends State<Home> {
                           fontSize: 20.0,
                           color: Colors.black,
                           fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                              curve: Curves.easeInOut,
+                              type: PageTransitionType.rightToLeftWithFade,
+                              child: InsertAgency(),
+                            ));
+                      },
+                      child: Text(
+                        'Inserisci agenzia',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 15.0,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(
+                              MediaQuery.of(context).size.width * 0.45,
+                              MediaQuery.of(context).size.height * 0.06),
+                          alignment: Alignment.center,
+                          primary: Color(0xffdf752c),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(23))),
                     ),
                   ],
                 ),
