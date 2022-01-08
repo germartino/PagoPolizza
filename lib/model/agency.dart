@@ -16,12 +16,17 @@ class Agency {
   final String logo;
   final String banner;
   final String passRUI;
+  final bool enabled;
 
   Agency(this.name, this.ruiCode, this.address, this.logo, this.banner,
-      this.passRUI);
+      this.passRUI, this.enabled);
 
   String getRUI() {
     return ruiCode;
+  }
+
+  bool getEnabled() {
+    return enabled;
   }
 
   Widget getElementCollapsed(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:PagoPolizza/model/database.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/login.dart';
@@ -164,6 +165,63 @@ class ListaAgenzieState extends State<ListaAgenzie> {
                     type: PageTransitionType.rightToLeftWithFade,
                     child: Storico(),
                   ));
+            },
+            onLongPress: () async {
+              ArtDialogResponse response = await ArtSweetAlert.show(
+                  context: context,
+                  barrierDismissible: false,
+                  artDialogArgs: ArtDialogArgs(
+                    type: ArtSweetAlertType.question,
+                    title: (data[i].getEnabled())
+                        ? "Vuoi disattivare l\'agenzia?"
+                        : "Vuoi attivare l\'agenzia?",
+                    confirmButtonText:
+                        (data[i].getEnabled()) ? "Disattiva" : "Attiva",
+                    denyButtonText: "Annulla",
+                    denyButtonColor: Colors.grey,
+                    confirmButtonColor: Color(0xffDF752C),
+                  ));
+
+              if (response.isTapConfirmButton) {
+                ArtDialogResponse delete = await ArtSweetAlert.show(
+                    barrierDismissible: false,
+                    context: context,
+                    artDialogArgs: ArtDialogArgs(
+                      type: ArtSweetAlertType.question,
+                      title: "Sei sicuro?",
+                      confirmButtonColor: Color(0xffDF752C),
+                      confirmButtonText:
+                          (data[i].getEnabled()) ? "Disattiva" : "Attiva",
+                      denyButtonColor: Colors.grey,
+                      denyButtonText: "Annulla",
+                    ));
+                if (delete.isTapConfirmButton) {
+                  bool attivazione = (data[i].getEnabled()) ? false : true;
+                  await Database.disableAgency(data[i].getRUI(), attivazione);
+                  setState(() {
+                    ArtSweetAlert.show(
+                        context: context,
+                        artDialogArgs: ArtDialogArgs(
+                          type: ArtSweetAlertType.success,
+                          title: (attivazione)
+                              ? "Agenzia attivata"
+                              : "Agenzia disattivata",
+                          confirmButtonColor: Color(0xffDF752C),
+                        ));
+                  });
+                }
+                if (delete.isTapDenyButton) {
+                  await ArtSweetAlert.show(
+                      context: context,
+                      artDialogArgs: ArtDialogArgs(
+                        type: ArtSweetAlertType.info,
+                        title: (data[i].getEnabled())
+                            ? "Agenzia non disattivata"
+                            : "Agenzia non attivata",
+                        confirmButtonColor: Color(0xffDF752C),
+                      ));
+                }
+              }
             },
             child: data[i].getElementCollapsed(context),
           ));

@@ -40,6 +40,7 @@ class HomeState extends State<Home> {
   final GlobalKey _menuKey = GlobalKey();
   int selectedAgency = 0;
   List<Agency> agenzie = [];
+  static late BuildContext dialogContext;
 
   Future<List<Agency>> getAgencies() async {
     List<Agency> agenzieTemp = [];
@@ -115,10 +116,8 @@ class HomeState extends State<Home> {
   }
 
   Widget buildWidget(context, agenzie) {
-    final SimpleDialog dialog = SimpleDialog(
-        title: Text('Scegli l\'agenzia'), children: getAgenciesItem(agenzie));
     Agency agenzia = CurrentUser.role == 'admin'
-        ? Agency('', '', '', '', '', '')
+        ? Agency('', '', '', '', '', '', true)
         : agenzie[selectedAgency];
     return SafeArea(
       child: SingleChildScrollView(
@@ -170,7 +169,10 @@ class HomeState extends State<Home> {
                                 onPressed: () {
                                   showDialog<void>(
                                       context: context,
-                                      builder: (context) => dialog);
+                                      builder: (dialogContext) => SimpleDialog(
+                                          title: Text('Scegli l\'agenzia'),
+                                          children: getAgenciesItem(
+                                              agenzie, dialogContext)));
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.white,
@@ -578,7 +580,7 @@ class HomeState extends State<Home> {
         ));
   }
 
-  List<SimpleDialogItem> getAgenciesItem(agenzie) {
+  List<SimpleDialogItem> getAgenciesItem(agenzie, context) {
     List<SimpleDialogItem> items = [];
     if (CurrentUser.role != 'admin') {
       for (Agency item in agenzie) {
@@ -609,7 +611,7 @@ class HomeState extends State<Home> {
       onPressed: () {
         Navigator.pop(context);
         Navigator.push(
-            context,
+            super.context,
             PageTransition(
               curve: Curves.easeInOut,
               type: PageTransitionType.rightToLeftWithFade,

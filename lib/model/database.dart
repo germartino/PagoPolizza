@@ -81,16 +81,42 @@ class Database {
       CollectionReference users =
           FirebaseFirestore.instance.collection('utenti');
       DocumentSnapshot snap = await users.doc(user.uid).get();
-      CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
-          snap["CodiceRUI"], user.email);
-      await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.success,
-            title: "Benvenuto",
-            confirmButtonColor: Color(0xffDF752C),
-          ));
-      r = 0;
+      if (snap["Ruolo"] == 'agency') {
+        bool res = await checkIfEnabled(snap["CodiceRUI"][0]);
+        if (res) {
+          CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
+              snap["CodiceRUI"], user.email);
+          await ArtSweetAlert.show(
+              context: context,
+              artDialogArgs: ArtDialogArgs(
+                type: ArtSweetAlertType.success,
+                title: "Benvenuto",
+                confirmButtonColor: Color(0xffDF752C),
+              ));
+          r = 0;
+        } else {
+          await FirebaseAuth.instance.signOut();
+          await ArtSweetAlert.show(
+              context: context,
+              artDialogArgs: ArtDialogArgs(
+                type: ArtSweetAlertType.warning,
+                title: "Questa agenzia è disattivata",
+                confirmButtonColor: Color(0xffDF752C),
+              ));
+          r = -1;
+        }
+      } else {
+        CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
+            snap["CodiceRUI"], user.email);
+        await ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.success,
+              title: "Benvenuto",
+              confirmButtonColor: Color(0xffDF752C),
+            ));
+        r = 0;
+      }
     } else {
       try {
         await FirebaseAuth.instance
@@ -104,7 +130,7 @@ class Database {
               context: context,
               artDialogArgs: ArtDialogArgs(
                 type: ArtSweetAlertType.danger,
-                title: "Email o Password errato",
+                title: "Email o Password errate",
                 confirmButtonColor: Color(0xffDF752C),
               ));
         } else if (e.code == 'wrong-password') {
@@ -112,7 +138,7 @@ class Database {
               context: context,
               artDialogArgs: ArtDialogArgs(
                 type: ArtSweetAlertType.danger,
-                title: "Email o Password errato",
+                title: "Email o Password errate",
                 confirmButtonColor: Color(0xffDF752C),
               ));
         } else if (e.code == 'too-many-requests') {
@@ -201,14 +227,20 @@ class Database {
   }
 
   static Future<Agency> getAgency(rui) async {
-    Agency agenzia = Agency('', '', '', '', '', '');
+    Agency agenzia = Agency('', '', '', '', '', '', true);
     await FirebaseFirestore.instance
         .collection('agenzie')
         .doc(rui)
         .get()
         .then((value) {
-      agenzia = Agency(value.get('Nome'), rui, value.get('Indirizzo'),
-          value.get('Logo'), value.get('Banner'), value.get('PasswordRUI'));
+      agenzia = Agency(
+          value.get('Nome'),
+          rui,
+          value.get('Indirizzo'),
+          value.get('Logo'),
+          value.get('Banner'),
+          value.get('PasswordRUI'),
+          value.get('Attiva'));
     });
     return agenzia;
   }
@@ -430,7 +462,8 @@ class Database {
             element.get('Indirizzo'),
             element.get('Logo'),
             element.get('Banner'),
-            element.get('PasswordRUI')));
+            element.get('PasswordRUI'),
+            element.get('Attiva')));
       }
     });
     return temp;
@@ -522,5 +555,24 @@ class Database {
       }
     }
     return r;
+  }
+
+  static Future<void> disableAgency(rui, active) async {
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .update({"Attiva": active});
+  }
+
+  static Future<bool> checkIfEnabled(rui) async {
+    bool active = false;
+    await FirebaseFirestore.instance
+        .collection('agenzie')
+        .doc(rui)
+        .get()
+        .then((value) {
+      active = value["Attiva"];
+    });
+    return active;
   }
 }

@@ -22,7 +22,7 @@ class NavDrawer extends StatefulWidget {
 List<Widget> getPagesList() {
   List<Widget> temp = [];
   if (CurrentUser.role == 'admin') {
-    temp.add(UpdateProfile(agenzia: Agency('', '', '', '', '', '')));
+    temp.add(UpdateProfile(agenzia: Agency('', '', '', '', '', '', true)));
   } else {
     temp.add(Profile());
   }

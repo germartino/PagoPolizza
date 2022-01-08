@@ -176,7 +176,7 @@ class ProfileState extends State<Profile> {
   }
 
   Future<Agency> getAgency() async {
-    Agency a = Agency('', '', '', '', '', '');
+    Agency a = Agency('', '', '', '', '', '', true);
     if (CurrentUser.role == 'agency') {
       a = await Database.getAgency(CurrentUser.codRui[0]);
     }
