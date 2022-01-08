@@ -11,6 +11,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:random_password_generator/random_password_generator.dart';
 
@@ -81,7 +83,7 @@ class Database {
       DocumentSnapshot snap = await users.doc(user.uid).get();
       CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
           snap["CodiceRUI"], user.email);
-      ArtSweetAlert.show(
+      await ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
             type: ArtSweetAlertType.success,
@@ -93,7 +95,7 @@ class Database {
       try {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: pass);
-        print('logged');
+
         r = await login(email, pass, context);
       } on FirebaseAuthException catch (e) {
         print(e.toString());
@@ -496,14 +498,22 @@ class Database {
         log(err.toString());
       });
       await userCredential.user!.sendEmailVerification();
-      await ArtSweetAlert.show(
+      ArtDialogResponse response = await ArtSweetAlert.show(
           context: context,
+          barrierDismissible: false,
           artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.info,
-            title: "La password dell\'agenzia inserita è la seguente",
-            text: password,
-            confirmButtonColor: Color(0xffDF752C),
-          ));
+              type: ArtSweetAlertType.success,
+              title: "Agenzia creata",
+              text: "Copia la password",
+              confirmButtonColor: Color(0xffDF752C),
+              confirmButtonText: "Copia"));
+      if (response.isTapConfirmButton) {
+        Clipboard.setData(ClipboardData(text: password)).then((value) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Password copiata"),
+              backgroundColor: Colors.black));
+        });
+      }
       r = 0;
       await app.delete();
     } on FirebaseAuthException catch (e) {

@@ -323,13 +323,6 @@ class InsertAgencyState extends State<InsertAgency> {
         ruiCode.text, address.text, passRUI.text, context);
 
     if (result == 0) {
-      await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.success,
-            title: "Agenzia creata",
-            confirmButtonColor: Color(0xffDF752C),
-          ));
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => NavDrawer()),
