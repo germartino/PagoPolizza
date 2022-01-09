@@ -195,21 +195,24 @@ class Database {
     return r;
   }
 
-  //check if agency with rui and pass exist
-  static Future<bool> existAgency(rui, pass) async {
-    bool r = false;
+  static Future<int> existAgency(rui, pass) async {
+    int r = -1;
     await FirebaseFirestore.instance
         .collection('agenzie')
         .doc(rui)
         .get()
         .then((value) {
       if (pass == value.get('PasswordRUI')) {
-        r = true;
+        if (!value.get('Attiva')) {
+          r = 1;
+        } else {
+          r = 0;
+        }
       } else {
-        r = false;
+        r = -1;
       }
     }).catchError((e) {
-      r = false;
+      r = -1;
     });
     return r;
   }

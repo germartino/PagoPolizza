@@ -177,16 +177,24 @@ class ScanQRCodeState extends State<ScanQRCode> {
   }
 
   Future<void> setAgency(rui, pass) async {
-    bool result = await Database.existAgency(rui, pass);
+    int result = await Database.existAgency(rui, pass);
 
-    if (result) {
+    if (result == 0) {
       ChoiceAgencyState.rui = rui;
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(child: Home(), type: PageTransitionType.fade),
           (route) => false);
+    } else if (result == 1) {
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Questa agenzia è stata disattivata",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
     } else {
-      ArtSweetAlert.show(
+      await ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
             type: ArtSweetAlertType.danger,
@@ -197,16 +205,24 @@ class ScanQRCodeState extends State<ScanQRCode> {
   }
 
   Future<void> addAgency(rui, pass) async {
-    bool result = await Database.existAgency(rui, pass);
+    int result = await Database.existAgency(rui, pass);
 
-    if (result) {
+    if (result == 0) {
       await Database.addAgency(rui);
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
           (route) => false);
+    } else if (result == 1) {
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Questa agenzia è stata disattivata",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
     } else {
-      ArtSweetAlert.show(
+      await ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
             type: ArtSweetAlertType.danger,

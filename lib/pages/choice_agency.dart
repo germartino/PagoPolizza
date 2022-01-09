@@ -283,18 +283,26 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
   }
 
   void setAgency() async {
-    bool result = await Database.existAgency(codRui.text, pass.text);
+    int result = await Database.existAgency(codRui.text, pass.text);
 
-    if (result) {
+    if (result == 0) {
       rui = codRui.text;
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(child: Home(), type: PageTransitionType.fade),
           (route) => false);
+    } else if (result == 1) {
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.danger,
+            title: "Questa agenzia è stata disattivata",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
     } else {
       pass.clear();
       FocusScope.of(context).unfocus();
-      ArtSweetAlert.show(
+      await ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
             type: ArtSweetAlertType.danger,
@@ -305,18 +313,26 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
   }
 
   void addAgency() async {
-    bool result = await Database.existAgency(codRui.text, pass.text);
+    int result = await Database.existAgency(codRui.text, pass.text);
 
-    if (result) {
+    if (result == 0) {
       await Database.addAgency(codRui.text);
       Navigator.pushAndRemoveUntil(
           context,
           PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
           (route) => false);
+    } else if (result == 1) {
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.warning,
+            title: "Questa agenzia è stata disattivata",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
     } else {
       pass.clear();
       FocusScope.of(context).unfocus();
-      ArtSweetAlert.show(
+      await ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
             type: ArtSweetAlertType.danger,
