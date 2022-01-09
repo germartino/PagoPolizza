@@ -143,8 +143,13 @@ class ListaAgenzieState extends State<ListaAgenzie> {
           width: MediaQuery.of(context).size.width * 0.8,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-                stops: [0.03, 0.03], colors: [Color(0xffdf752c), Colors.white]),
+            gradient: LinearGradient(stops: [
+              0.03,
+              0.03
+            ], colors: [
+              (data[i].getEnabled()) ? Color(0xff00701A) : Color(0xffA30000),
+              Colors.white
+            ]),
             borderRadius: BorderRadius.circular(10.0),
             color: Colors.white,
             boxShadow: [
