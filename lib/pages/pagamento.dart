@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:PagoPolizza/model/database.dart';
+import 'package:PagoPolizza/pages/camera_screen.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -253,6 +254,47 @@ class PagamentoState extends State<Pagamento> {
                             },
                             child: Text(
                               'Paga ora',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15.0,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.45,
+                                    MediaQuery.of(context).size.height * 0.06),
+                                alignment: Alignment.center,
+                                primary: Color(0xffdf752c),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(23))),
+                          ),
+                          // OCR Text Recognition
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'oppure',
+                              style: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const CameraScreen()),
+                              );
+                            },
+                            child: Text(
+                              'OCR',
                               style: GoogleFonts.montserrat(
                                 fontSize: 15.0,
                                 color: Colors.white,
