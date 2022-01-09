@@ -34,6 +34,16 @@ class InsertAgencyState extends State<InsertAgency> {
   TextEditingController address = TextEditingController();
   TextEditingController passRUI = TextEditingController();
 
+  @override
+  void dispose() {
+    name.dispose();
+    email.dispose();
+    ruiCode.dispose();
+    address.dispose();
+    passRUI.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,

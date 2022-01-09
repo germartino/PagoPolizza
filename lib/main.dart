@@ -22,13 +22,12 @@ import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/camera_screen.dart';
 
 // Global variable for storing the list of cameras available
-List<CameraDescription> cameras = [];
+//List<CameraDescription> cameras = [];
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  cameras = await availableCameras();
+  //cameras = await availableCameras();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

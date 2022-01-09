@@ -13,9 +13,11 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   late final CameraController _controller;
+  List<CameraDescription> cameras = [];
 
   // Initializes camera controller to preview on screen
   void _initializeCamera() async {
+    cameras = await availableCameras();
     final CameraController cameraController = CameraController(
       cameras[0],
       ResolutionPreset.high,

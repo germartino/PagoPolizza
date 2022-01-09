@@ -290,11 +290,12 @@ class PagamentoState extends State<Pagamento> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const CameraScreen()),
+                                MaterialPageRoute(
+                                    builder: (context) => const CameraScreen()),
                               );
                             },
                             child: Text(
-                              'OCR',
+                              'Scannerizza il bollettino',
                               style: GoogleFonts.montserrat(
                                 fontSize: 15.0,
                                 color: Colors.white,
