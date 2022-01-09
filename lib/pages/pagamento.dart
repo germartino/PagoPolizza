@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'dart:io';
 import 'package:PagoPolizza/model/database.dart';
-import 'package:PagoPolizza/pages/camera_screen.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -13,6 +13,8 @@ import 'package:PagoPolizza/pages/register.dart';
 import 'package:PagoPolizza/pages/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:PagoPolizza/main.dart';
 import 'package:PagoPolizza/pages/home.dart';
@@ -269,7 +271,6 @@ class PagamentoState extends State<Pagamento> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(23))),
                           ),
-                          // OCR Text Recognition
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.01,
                           ),
@@ -288,11 +289,7 @@ class PagamentoState extends State<Pagamento> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const CameraScreen()),
-                              );
+                              getImage(context);
                             },
                             child: Text(
                               'Scannerizza il bollettino',
@@ -320,6 +317,51 @@ class PagamentoState extends State<Pagamento> {
             ),
           )
         ])));
+  }
+
+  void getImage(context) async {
+    ArtDialogResponse response = await ArtSweetAlert.show(
+        context: context,
+        barrierDismissible: false,
+        artDialogArgs: ArtDialogArgs(
+          showCancelBtn: true,
+          type: ArtSweetAlertType.question,
+          title: "Dalla galleria o dalla fotocamera?",
+          confirmButtonColor: Color(0xffDF752C),
+          confirmButtonText: "Galleria",
+          denyButtonColor: Color(0xffDF752C),
+          denyButtonText: "Camera",
+        ));
+    if (response.isTapConfirmButton) {
+      XFile? pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        File file = File(pickedFile.path);
+        await textDetection(file);
+      }
+    } else if (response.isTapDenyButton) {
+      XFile? pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+      if (pickedFile != null) {
+        File file = File(pickedFile.path);
+        await textDetection(file);
+      }
+    }
+  }
+
+  Future<void> textDetection(file) async {
+    TextDetector textDetector = GoogleMlKit.vision.textDetector();
+    InputImage inputImage = InputImage.fromFile(file);
+    RecognisedText text = await textDetector.processImage(inputImage);
+    for (TextBlock block in text.blocks) {
+      for (TextLine line in block.lines) {
+        print('text: ${line.text}');
+        for (TextElement element in line.elements) {}
+      }
+    }
+    setState(() {
+      //modifichiamo controller schermata di pagamento e chiudiamo picker
+    });
   }
 
   Future<void> insertTransaction() async {
