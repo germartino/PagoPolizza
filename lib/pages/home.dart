@@ -375,13 +375,7 @@ class HomeState extends State<Home> {
                       ElevatedButton(
                         onPressed: () {
                           if (FirebaseAuth.instance.currentUser != null) {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                  curve: Curves.easeInOut,
-                                  type: PageTransitionType.rightToLeftWithFade,
-                                  child: Pagamento(rui: agenzia.ruiCode),
-                                ));
+                            goToPayment(agenzia, context);
                           } else {
                             Navigator.push(
                                 context,
@@ -525,6 +519,27 @@ class HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void goToPayment(Agency agenzia, context) async {
+    if (agenzia.enabled) {
+      Navigator.push(
+          context,
+          PageTransition(
+            curve: Curves.easeInOut,
+            type: PageTransitionType.rightToLeftWithFade,
+            child: Pagamento(rui: agenzia.ruiCode),
+          ));
+    } else {
+      await ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+            type: ArtSweetAlertType.warning,
+            title: "Questa agenzia è stata disattivata",
+            text: "Non è possibile effettuare il pagamento",
+            confirmButtonColor: Color(0xffDF752C),
+          ));
+    }
   }
 
   void saveQRCode(agenzia) async {
