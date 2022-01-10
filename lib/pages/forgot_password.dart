@@ -29,6 +29,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController email = new TextEditingController();
 
+  @override
   void dispose() {
     email.dispose();
     super.dispose();

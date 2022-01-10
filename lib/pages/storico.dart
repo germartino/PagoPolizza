@@ -38,6 +38,12 @@ class StoricoState extends State<Storico> {
     });
   }
 
+  @override
+  void dispose() {
+    search.dispose();
+    super.dispose();
+  }
+
   Future<List<Transaction>> getTransactions() async {
     List<Transaction> temp = [];
     if (CurrentUser.role == 'client') {

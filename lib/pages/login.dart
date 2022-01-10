@@ -32,6 +32,7 @@ class LoginState extends State<Login> {
   TextEditingController email = new TextEditingController();
   TextEditingController pass = new TextEditingController();
 
+  @override
   void dispose() {
     email.dispose();
     pass.dispose();

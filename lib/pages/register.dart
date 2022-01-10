@@ -39,6 +39,7 @@ class RegisterState extends State<Register> {
   TextEditingController pass = new TextEditingController();
   TextEditingController confPass = new TextEditingController();
 
+  @override
   void dispose() {
     nome.dispose();
     cognome.dispose();

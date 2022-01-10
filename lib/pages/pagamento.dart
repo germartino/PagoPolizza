@@ -36,6 +36,15 @@ class PagamentoState extends State<Pagamento> {
   TextEditingController importo = TextEditingController();
   TextEditingController note = TextEditingController();
 
+  @override
+  void dispose() {
+    nPolizza.dispose();
+    compagnia.dispose();
+    importo.dispose();
+    note.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,

@@ -30,6 +30,8 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
   final pass = TextEditingController();
   bool _passwordVisible = false;
   static String rui = '';
+
+  @override
   void dispose() {
     pass.dispose();
     codRui.dispose();
