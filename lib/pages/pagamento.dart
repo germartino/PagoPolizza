@@ -36,6 +36,7 @@ class PagamentoState extends State<Pagamento> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: null,
@@ -277,7 +278,7 @@ class PagamentoState extends State<Pagamento> {
                           Container(
                             alignment: Alignment.center,
                             child: Text(
-                              'oppure',
+                              'oppure se disponi di un bollettino MAV',
                               style: GoogleFonts.ptSans(
                                 fontSize: 15.0,
                                 color: Color(0xff707070),
@@ -292,7 +293,7 @@ class PagamentoState extends State<Pagamento> {
                               getImage(context);
                             },
                             child: Text(
-                              'Scannerizza il bollettino',
+                              'Carica foto del bollettino',
                               style: GoogleFonts.montserrat(
                                 fontSize: 15.0,
                                 color: Colors.white,
