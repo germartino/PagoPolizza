@@ -514,8 +514,10 @@ class Database {
 
       await FirebaseFirestore.instance.collection('agenzie').doc(rui).set({
         "Nome": name,
-        "Banner": '',
-        "Logo": '',
+        "Banner":
+            'https://firebasestorage.googleapis.com/v0/b/pagopolizza.appspot.com/o/Banner%2Fbanner_placeholder.jpg?alt=media&token=02a70600-5dfe-4ba4-97f7-aecb269e3d69',
+        "Logo":
+            'https://firebasestorage.googleapis.com/v0/b/pagopolizza.appspot.com/o/Loghi%2Flogo_placeholder.png?alt=media&token=9712fe34-0f1d-4ced-a3da-1e30232ab312',
         "Indirizzo": address,
         "PasswordRUI": passRUI
       }).then((value) async {

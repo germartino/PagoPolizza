@@ -191,7 +191,8 @@ class ProfileState extends State<Profile> {
       String logoUrl = await Database.uploadLogo(file);
       log(logoUrl.toString());
       String exLogo = await Database.getLogo(rui);
-      if (exLogo != null || exLogo.isNotEmpty) {
+      if (exLogo !=
+          'https://firebasestorage.googleapis.com/v0/b/pagopolizza.appspot.com/o/Loghi%2Flogo_placeholder.png?alt=media&token=9712fe34-0f1d-4ced-a3da-1e30232ab312') {
         await Database.deleteFromStorage(exLogo);
       }
       await Database.updateAgencyLogo(logoUrl, rui, context);
@@ -205,7 +206,8 @@ class ProfileState extends State<Profile> {
       File file = File(pickedFile.path);
       String bannerUrl = await Database.uploadBanner(file);
       String exBanner = await Database.getBanner(rui);
-      if (exBanner != null || exBanner.isNotEmpty) {
+      if (exBanner !=
+          'https://firebasestorage.googleapis.com/v0/b/pagopolizza.appspot.com/o/Banner%2Fbanner_placeholder.jpg?alt=media&token=02a70600-5dfe-4ba4-97f7-aecb269e3d69') {
         await Database.deleteFromStorage(exBanner);
       }
       await Database.updateAgencyBanner(bannerUrl, rui, context);
