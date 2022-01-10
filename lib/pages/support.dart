@@ -13,6 +13,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:PagoPolizza/main.dart';
 import 'package:PagoPolizza/pages/home.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class Support extends StatefulWidget {
   const Support({Key? key}) : super(key: key);
@@ -23,6 +24,13 @@ class Support extends StatefulWidget {
 
 class SupportState extends State<Support> {
   final _formkey = GlobalKey<FormState>();
+  TextEditingController message = TextEditingController();
+
+  @override
+  void dispose() {
+    message.dispose();
+    super.dispose();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,6 +126,7 @@ class SupportState extends State<Support> {
                             height: MediaQuery.of(context).size.height * 0.05,
                           ),
                           TextFormField(
+                            controller: message,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Perfavore inserisci il messaggio';
@@ -154,11 +163,7 @@ class SupportState extends State<Support> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NavDrawer()),
-                                    (route) => false);
+                                sendMessage();
                               }
                             },
                             child: Text(
@@ -187,5 +192,18 @@ class SupportState extends State<Support> {
             ),
           )
         ])));
+  }
+
+  void sendMessage() async {
+    final Email email = Email(
+      body: message.text,
+      subject: 'Supporto',
+      recipients: ['pagopolizza@gmail.com'],
+      isHTML: false,
+    );
+
+    await FlutterEmailSender.send(email);
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => NavDrawer()), (route) => false);
   }
 }
