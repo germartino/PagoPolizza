@@ -191,7 +191,9 @@ class ProfileState extends State<Profile> {
       String logoUrl = await Database.uploadLogo(file);
       log(logoUrl.toString());
       String exLogo = await Database.getLogo(rui);
-      await Database.deleteFromStorage(exLogo);
+      if (exLogo != null || exLogo.isNotEmpty) {
+        await Database.deleteFromStorage(exLogo);
+      }
       await Database.updateAgencyLogo(logoUrl, rui, context);
     }
   }
@@ -203,7 +205,9 @@ class ProfileState extends State<Profile> {
       File file = File(pickedFile.path);
       String bannerUrl = await Database.uploadBanner(file);
       String exBanner = await Database.getBanner(rui);
-      await Database.deleteFromStorage(exBanner);
+      if (exBanner != null || exBanner.isNotEmpty) {
+        await Database.deleteFromStorage(exBanner);
+      }
       await Database.updateAgencyBanner(bannerUrl, rui, context);
     }
   }
