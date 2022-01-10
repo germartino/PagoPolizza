@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:PagoPolizza/pages/profile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

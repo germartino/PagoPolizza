@@ -4,7 +4,6 @@ import 'dart:math' as math;
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/transaction.dart' as transazione;
-import 'package:PagoPolizza/pages/home.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,9 +16,6 @@ import 'package:intl/intl.dart';
 import 'package:random_password_generator/random_password_generator.dart';
 
 class Database {
-  //sign in User
-  //return 0 if registered
-  //return -1 if error
   static Future<int> signUser(email, pass, nome, cognome, rui) async {
     int r = 0;
     try {
@@ -44,9 +40,6 @@ class Database {
     return r;
   }
 
-  //login
-  //return -1 if not logged
-  //return 0 if logged
   static Future<int> login(email, pass, context) async {
     int r = -1;
     User? user = FirebaseAuth.instance.currentUser;
@@ -124,7 +117,7 @@ class Database {
 
         r = await login(email, pass, context);
       } on FirebaseAuthException catch (e) {
-        print(e.toString());
+        log(e.toString());
         if (e.code == 'user-not-found') {
           ArtSweetAlert.show(
               context: context,
@@ -156,15 +149,11 @@ class Database {
     return r;
   }
 
-  //logout
   static Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
     CurrentUser('', '', 'client', [], '');
   }
 
-  //reset password
-  //return -1 wrong email
-  //return 0 email sent
   static Future<int> resetPassword(email, context) async {
     int r = 0;
     try {

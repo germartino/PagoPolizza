@@ -1,14 +1,8 @@
-// ignore_for_file: file_names
-
-import 'dart:developer';
 import 'dart:ui';
-
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:PagoPolizza/pages/home.dart';
-import 'package:PagoPolizza/pages/storico.dart';
 import 'package:PagoPolizza/model/custom_expansion_tile.dart';
 
 class Transaction {

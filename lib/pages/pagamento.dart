@@ -1,24 +1,15 @@
-import 'dart:developer';
 import 'dart:ui';
 import 'dart:io';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:PagoPolizza/pages/login.dart';
 import 'package:flutter/services.dart';
-import 'package:PagoPolizza/pages/pagamento.dart';
-import 'package:PagoPolizza/pages/register.dart';
 import 'package:PagoPolizza/pages/navdrawer.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:PagoPolizza/main.dart';
-import 'package:PagoPolizza/pages/home.dart';
-import 'package:page_transition/page_transition.dart';
 
 class Pagamento extends StatefulWidget {
   final String rui;

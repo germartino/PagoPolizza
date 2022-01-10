@@ -1,24 +1,16 @@
-import 'dart:developer';
 import 'package:PagoPolizza/model/current_user.dart';
-import 'package:PagoPolizza/pages/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PagoPolizza/pages/choice_agency.dart';
 import 'package:PagoPolizza/pages/login.dart';
 import 'package:flutter/services.dart';
-import 'package:PagoPolizza/pages/pagamento.dart';
-import 'package:PagoPolizza/pages/register.dart';
 import 'package:PagoPolizza/pages/navdrawer.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:PagoPolizza/pages/scan_qr_code.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
