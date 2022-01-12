@@ -272,43 +272,6 @@ class PagamentoState extends State<Pagamento> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(23))),
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'oppure se disponi di un bollettino MAV',
-                              style: GoogleFonts.ptSans(
-                                fontSize: 15.0,
-                                color: Color(0xff707070),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              getImage(context);
-                            },
-                            child: Text(
-                              'Carica foto del bollettino',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 15.0,
-                                color: Colors.white,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.45,
-                                    MediaQuery.of(context).size.height * 0.06),
-                                alignment: Alignment.center,
-                                primary: Color(0xffdf752c),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(23))),
-                          ),
                         ],
                       ),
                     ),
@@ -318,36 +281,6 @@ class PagamentoState extends State<Pagamento> {
             ),
           )
         ])));
-  }
-
-  void getImage(context) async {
-    ArtDialogResponse response = await ArtSweetAlert.show(
-        context: context,
-        barrierDismissible: false,
-        artDialogArgs: ArtDialogArgs(
-          showCancelBtn: true,
-          type: ArtSweetAlertType.question,
-          title: "Dalla galleria o dalla fotocamera?",
-          confirmButtonColor: Color(0xffDF752C),
-          confirmButtonText: "Galleria",
-          denyButtonColor: Color(0xffDF752C),
-          denyButtonText: "Camera",
-        ));
-    if (response.isTapConfirmButton) {
-      XFile? pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        File file = File(pickedFile.path);
-        await textDetection(file);
-      }
-    } else if (response.isTapDenyButton) {
-      XFile? pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.camera);
-      if (pickedFile != null) {
-        File file = File(pickedFile.path);
-        await textDetection(file);
-      }
-    }
   }
 
   Future<void> textDetection(file) async {
