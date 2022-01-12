@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'dart:io';
 import 'package:PagoPolizza/model/database.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:PagoPolizza/pages/navdrawer.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 
 class Pagamento extends StatefulWidget {
@@ -281,21 +278,6 @@ class PagamentoState extends State<Pagamento> {
             ),
           )
         ])));
-  }
-
-  Future<void> textDetection(file) async {
-    TextDetector textDetector = GoogleMlKit.vision.textDetector();
-    InputImage inputImage = InputImage.fromFile(file);
-    RecognisedText text = await textDetector.processImage(inputImage);
-    for (TextBlock block in text.blocks) {
-      for (TextLine line in block.lines) {
-        print('text: ${line.text}');
-        for (TextElement element in line.elements) {}
-      }
-    }
-    setState(() {
-      //modifichiamo controller schermata di pagamento e chiudiamo picker
-    });
   }
 
   Future<void> insertTransaction() async {
