@@ -310,11 +310,21 @@ class ChoiceAgencyState extends State<ChoiceAgency> {
     int result = await Database.existAgency(codRui.text, pass.text);
 
     if (result == 0) {
-      await Database.addAgency(codRui.text);
-      Navigator.pushAndRemoveUntil(
-          context,
-          PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
-          (route) => false);
+      int r = await Database.addAgency(codRui.text);
+      if (r == -1) {
+        await ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.warning,
+              title: "Hai già scelto quest\'agenzia",
+              confirmButtonColor: Color(0xffDF752C),
+            ));
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
+            (route) => false);
+      }
     } else if (result == 1) {
       await ArtSweetAlert.show(
           context: context,

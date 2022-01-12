@@ -201,11 +201,21 @@ class ScanQRCodeState extends State<ScanQRCode> {
     int result = await Database.existAgency(rui, pass);
 
     if (result == 0) {
-      await Database.addAgency(rui);
-      Navigator.pushAndRemoveUntil(
-          context,
-          PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
-          (route) => false);
+      int r = await Database.addAgency(rui);
+      if (r == -1) {
+        await ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.warning,
+              title: "Hai già scelto quest\'agenzia",
+              confirmButtonColor: Color(0xffDF752C),
+            ));
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            PageTransition(child: NavDrawer(), type: PageTransitionType.fade),
+            (route) => false);
+      }
     } else if (result == 1) {
       await ArtSweetAlert.show(
           context: context,

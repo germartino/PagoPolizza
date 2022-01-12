@@ -206,16 +206,22 @@ class Database {
     return r;
   }
 
-  static Future<void> addAgency(rui) async {
+  static Future<int> addAgency(rui) async {
+    int r = 0;
     List<String> list = CurrentUser.codRui;
-    list.add(rui);
-    CurrentUser.codRui = list;
-    await FirebaseFirestore.instance
-        .collection('utenti')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .update({'CodiceRUI': list})
-        .then((value) {})
-        .catchError((error) {});
+    if (list.contains(rui)) {
+      r = -1;
+    } else {
+      list.add(rui);
+      CurrentUser.codRui = list;
+      await FirebaseFirestore.instance
+          .collection('utenti')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({'CodiceRUI': list}).then((value) {
+        r = 0;
+      }).catchError((error) {});
+    }
+    return r;
   }
 
   static Future<Agency> getAgency(rui) async {
