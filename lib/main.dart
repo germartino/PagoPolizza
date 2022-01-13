@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:simple_connection_checker/simple_connection_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +39,66 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         home: MainPage(title: title),
+        builder: (context, child) {
+          return StreamBuilder(
+            stream: SimpleConnectionChecker()
+                .onConnectionChange
+                .asBroadcastStream(),
+            builder: (context, snapshot) {
+              if (snapshot.data == true) {
+                return child!;
+              } else {
+                return Scaffold(
+                  appBar: null,
+                  drawer: null,
+                  body: SafeArea(
+                    child: DoubleBackToCloseApp(
+                      child: Stack(children: [
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xffDF752C),
+                            strokeWidth: 5,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Color(0xffDF752C),
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            child: RichText(
+                              text: TextSpan(children: [
+                                WidgetSpan(
+                                    alignment: PlaceholderAlignment.middle,
+                                    child: Icon(
+                                        Ionicons.information_circle_outline,
+                                        color: Colors.black,
+                                        size: 30)),
+                                TextSpan(
+                                  text: "Nessuna connessione internet presente",
+                                  style: GoogleFonts.lato(
+                                    fontSize: 18.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )
+                              ]),
+                            ),
+                          ),
+                        ),
+                      ]),
+                      snackBar: const SnackBar(
+                        content: Text('Premi di nuovo per uscire'),
+                        backgroundColor: Colors.black,
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        },
       );
 }
 

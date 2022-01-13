@@ -60,6 +60,7 @@ dependencies:
   anim_search_bar: ^2.0.2
   random_password_generator: ^0.2.1
   flutter_email_sender: ^5.0.2
+  simple_connection_checker: ^0.2.1
 
 dev_dependencies:
   flutter_test:
