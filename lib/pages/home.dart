@@ -587,7 +587,7 @@ class HomeState extends State<Home> {
         PageTransition(
           curve: Curves.easeInOut,
           type: PageTransitionType.fade,
-          child: MyApp(),
+          child: MainPage(title: 'PagoPolizza'),
         ));
   }
 
