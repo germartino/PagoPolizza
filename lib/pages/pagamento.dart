@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:PagoPolizza/model/database.dart';
+import 'package:PagoPolizza/pages/billing_information.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:PagoPolizza/pages/navdrawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Pagamento extends StatefulWidget {
   final String rui;
@@ -249,7 +251,19 @@ class PagamentoState extends State<Pagamento> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formkey.currentState!.validate()) {
-                                insertTransaction();
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      curve: Curves.easeInOut,
+                                      type: PageTransitionType
+                                          .rightToLeftWithFade,
+                                      child: BillingInformation(
+                                          rui: rui,
+                                          compagnia: compagnia.text,
+                                          importo: importo.text,
+                                          nPolizza: nPolizza.text,
+                                          note: note.text),
+                                    ));
                               }
                             },
                             child: Text(
@@ -278,41 +292,5 @@ class PagamentoState extends State<Pagamento> {
             ),
           )
         ])));
-  }
-
-  Future<void> insertTransaction() async {
-    bool successo = false;
-    if (int.parse(importo.text) > 70) {
-      successo = true;
-    }
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    int r = await Database.insertTransaction(rui, compagnia.text,
-        int.parse(importo.text), nPolizza.text, note.text, successo, uid);
-    if (r == 0) {
-      await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.success,
-            title: "Transazione eseguita con successo",
-            confirmButtonColor: Color(0xffDF752C),
-          ));
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-          (route) => false);
-    } else if (r == 1) {
-      await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.info,
-            title: "Errore nella transazione",
-            text: "Transazione annullata",
-            confirmButtonColor: Color(0xffDF752C),
-          ));
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-          (route) => false);
-    }
   }
 }

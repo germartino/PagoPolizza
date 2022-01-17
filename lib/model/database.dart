@@ -28,7 +28,8 @@ class Database {
         "Nome": nome,
         "Cognome": cognome,
         "Ruolo": "client",
-        "CodiceRUI": [rui]
+        "CodiceRUI": [rui],
+        "Informazioni": {}
       });
       await userCredential.user!.sendEmailVerification();
       r = 0;
@@ -78,7 +79,7 @@ class Database {
         bool res = await checkIfEnabled(snap["CodiceRUI"][0]);
         if (res) {
           CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
-              snap["CodiceRUI"], user.email);
+              snap["CodiceRUI"], user.email, snap["Informazioni"]);
           await ArtSweetAlert.show(
               context: context,
               artDialogArgs: ArtDialogArgs(
@@ -100,7 +101,7 @@ class Database {
         }
       } else {
         CurrentUser(snap["Nome"], snap["Cognome"], snap["Ruolo"],
-            snap["CodiceRUI"], user.email);
+            snap["CodiceRUI"], user.email, snap["Informazioni"]);
         await ArtSweetAlert.show(
             context: context,
             artDialogArgs: ArtDialogArgs(
@@ -151,7 +152,7 @@ class Database {
 
   static Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
-    CurrentUser('', '', 'client', [], '');
+    CurrentUser('', '', 'client', [], '', {});
   }
 
   static Future<int> resetPassword(email, context) async {
@@ -523,7 +524,8 @@ class Database {
           "Nome": '',
           "Cognome": '',
           "Ruolo": 'agency',
-          "CodiceRUI": [rui]
+          "CodiceRUI": [rui],
+          "Informazioni": {}
         }).catchError((error) {
           log(error.toString());
         });
@@ -574,5 +576,12 @@ class Database {
       active = value["Attiva"];
     });
     return active;
+  }
+
+  static Future<void> updateAddress(uid, toChange) async {
+    await FirebaseFirestore.instance
+        .collection('utenti')
+        .doc(uid)
+        .update({"Informazioni": toChange});
   }
 }

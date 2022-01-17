@@ -61,6 +61,8 @@ dependencies:
   random_password_generator: ^0.2.1
   flutter_email_sender: ^5.0.2
   simple_connection_checker: ^0.2.1
+  csc_picker: ^0.2.6
+  regexed_validator: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:

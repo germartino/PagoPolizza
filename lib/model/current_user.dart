@@ -11,13 +11,15 @@ class CurrentUser {
   static String role = 'client';
   static String email = '';
   static List<String> codRui = [];
+  static Map<String, String> informazioni = {};
 
-  CurrentUser(name, surname, role, codRui, email) {
+  CurrentUser(name, surname, role, codRui, email, informazioni) {
     CurrentUser.name = name.toString();
     CurrentUser.surname = surname.toString();
     CurrentUser.role = role.toString();
     CurrentUser.codRui = codRui.cast<String>();
     CurrentUser.email = email.toString();
+    CurrentUser.informazioni = Map.from(informazioni);
   }
 
   static Future<Widget> getProfile(context) async {
