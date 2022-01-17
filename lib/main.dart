@@ -45,7 +45,18 @@ class MyApp extends StatelessWidget {
                 .onConnectionChange
                 .asBroadcastStream(),
             builder: (context, snapshot) {
-              if (snapshot.data == true) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Scaffold(
+                  appBar: null,
+                  drawer: null,
+                  body: SafeArea(
+                    child: CircularProgressIndicator(
+                      color: Color(0xffDF752C),
+                      strokeWidth: 5,
+                    ),
+                  ),
+                );
+              } else if (snapshot.data == true) {
                 return child!;
               } else {
                 return Scaffold(
