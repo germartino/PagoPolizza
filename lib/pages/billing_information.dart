@@ -142,7 +142,7 @@ class BillingInformationState extends State<BillingInformation> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Compila il form per effettuare il pagamento',
+                        'Inserisci l\'indirizzo di fatturazione',
                         style: GoogleFonts.ptSans(
                           fontSize: 15.0,
                           color: Colors.black,
