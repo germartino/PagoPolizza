@@ -115,8 +115,19 @@ class Agency {
                       child: Text(
                         (enabled) ? 'disattiva' : 'attiva',
                         style: GoogleFonts.montserrat(
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 2,
+                          decorationColor:
+                              (enabled) ? Color(0xffA30000) : Color(0xff00701A),
                           fontSize: 12.0,
-                          color: Color(0xffdf752c),
+                          color: Colors.transparent,
+                          shadows: [
+                            Shadow(
+                                color: (enabled)
+                                    ? Color(0xffA30000)
+                                    : Color(0xff00701A),
+                                offset: Offset(0, -2))
+                          ],
                           fontWeight: FontWeight.bold,
                         ),
                       ),
