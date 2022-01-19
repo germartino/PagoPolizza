@@ -143,10 +143,15 @@ class HomeState extends State<Home> {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: FirebaseAuth.instance.currentUser != null
-                      ? LinearGradient(
-                          begin: FractionalOffset.topCenter,
-                          end: FractionalOffset.bottomCenter,
-                          colors: [Color(0xffdf752c), Colors.transparent])
+                      ? (CurrentUser.role != 'admin')
+                          ? LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end: FractionalOffset.bottomCenter,
+                              colors: [Color(0xffdf752c), Colors.transparent])
+                          : LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end: FractionalOffset.center,
+                              colors: [Color(0xffdf752c), Colors.transparent])
                       : null,
                 ),
                 child: FirebaseAuth.instance.currentUser != null

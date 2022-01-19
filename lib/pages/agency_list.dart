@@ -129,27 +129,27 @@ class ListaAgenzieState extends State<ListaAgenzie> {
     List<Widget> panels = [];
     for (var i = 0; i < data.length; i++) {
       Widget elem = Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(stops: [
-              0.03,
-              0.03
-            ], colors: [
-              (data[i].getEnabled()) ? Color(0xff00701A) : Color(0xffA30000),
-              Colors.white
-            ]),
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.16),
-                offset: Offset(0, 3.0),
-                blurRadius: 6.0,
-              ),
-            ],
-          ),
-          child: InkWell(
+        width: MediaQuery.of(context).size.width * 0.8,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(stops: [
+            0.03,
+            0.03
+          ], colors: [
+            (data[i].getEnabled()) ? Color(0xff00701A) : Color(0xffA30000),
+            Colors.white
+          ]),
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.16),
+              offset: Offset(0, 3.0),
+              blurRadius: 6.0,
+            ),
+          ],
+        ),
+        child: InkWell(
             onTap: () {
               ruiForAdmin = data[i].getRUI();
               Navigator.push(
@@ -160,65 +160,8 @@ class ListaAgenzieState extends State<ListaAgenzie> {
                     child: Storico(),
                   ));
             },
-            onLongPress: () async {
-              ArtDialogResponse response = await ArtSweetAlert.show(
-                  context: context,
-                  barrierDismissible: false,
-                  artDialogArgs: ArtDialogArgs(
-                    type: ArtSweetAlertType.question,
-                    title: (data[i].getEnabled())
-                        ? "Vuoi disattivare l\'agenzia?"
-                        : "Vuoi attivare l\'agenzia?",
-                    confirmButtonText:
-                        (data[i].getEnabled()) ? "Disattiva" : "Attiva",
-                    denyButtonText: "Annulla",
-                    denyButtonColor: Colors.grey,
-                    confirmButtonColor: Color(0xffDF752C),
-                  ));
-
-              if (response.isTapConfirmButton) {
-                ArtDialogResponse delete = await ArtSweetAlert.show(
-                    barrierDismissible: false,
-                    context: context,
-                    artDialogArgs: ArtDialogArgs(
-                      type: ArtSweetAlertType.question,
-                      title: "Sei sicuro?",
-                      confirmButtonColor: Color(0xffDF752C),
-                      confirmButtonText:
-                          (data[i].getEnabled()) ? "Disattiva" : "Attiva",
-                      denyButtonColor: Colors.grey,
-                      denyButtonText: "Annulla",
-                    ));
-                if (delete.isTapConfirmButton) {
-                  bool attivazione = (data[i].getEnabled()) ? false : true;
-                  await Database.disableAgency(data[i].getRUI(), attivazione);
-                  setState(() {
-                    ArtSweetAlert.show(
-                        context: context,
-                        artDialogArgs: ArtDialogArgs(
-                          type: ArtSweetAlertType.success,
-                          title: (attivazione)
-                              ? "Agenzia attivata"
-                              : "Agenzia disattivata",
-                          confirmButtonColor: Color(0xffDF752C),
-                        ));
-                  });
-                }
-                if (delete.isTapDenyButton) {
-                  await ArtSweetAlert.show(
-                      context: context,
-                      artDialogArgs: ArtDialogArgs(
-                        type: ArtSweetAlertType.info,
-                        title: (data[i].getEnabled())
-                            ? "Agenzia non disattivata"
-                            : "Agenzia non attivata",
-                        confirmButtonColor: Color(0xffDF752C),
-                      ));
-                }
-              }
-            },
-            child: data[i].getElementCollapsed(context),
-          ));
+            child: data[i].getElementCollapsed(context, setState)),
+      );
       panels.add(elem);
       panels.add(SizedBox(
         height: 10,
