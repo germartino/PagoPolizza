@@ -65,6 +65,7 @@ dependencies:
   regexed_validator: ^2.0.0+1
   cloud_functions: ^3.2.5
   url_launcher: ^6.0.18
+  flutter_overlay_loader: ^1.0.3
 
 dev_dependencies:
   flutter_test:

@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:random_password_generator/random_password_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 
 class Database {
   static Future<int> signUser(email, pass, nome, cognome, rui) async {
@@ -567,6 +568,16 @@ class Database {
 
   static Future<void> callPayment(rui, compagnia, importo, note, nPolizza, uid,
       indirizzo, cap, regione, citta, nazione, context) async {
+    Loader.show(context,
+        isSafeAreaOverlay: false,
+        isAppbarOverlay: true,
+        isBottomBarOverlay: true,
+        progressIndicator: const CircularProgressIndicator(
+          color: Color(0xffDF752C),
+          strokeWidth: 5,
+        ),
+        overlayColor: Colors.black.withOpacity(0.7));
+
     Map<String, String> dati = {
       "rui": rui,
       "compagnia": compagnia,
@@ -592,6 +603,7 @@ class Database {
         WidgetsBinding.instance?.lifecycleState != AppLifecycleState.resumed) {
       await Future.delayed(Duration(milliseconds: 100));
     }
+    Loader.hide();
     await ArtSweetAlert.show(
         context: context,
         artDialogArgs: ArtDialogArgs(

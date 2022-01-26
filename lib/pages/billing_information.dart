@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/database.dart';
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:PagoPolizza/pages/navdrawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:csc_picker/csc_picker.dart';
@@ -387,8 +383,8 @@ class BillingInformationState extends State<BillingInformation> {
         nazione.substring(nazione.lastIndexOf(" "), nazione.length);
 
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    /*
+
     await Database.callPayment(rui, compagnia, importo, note, nPolizza, uid,
-        indirizzo.text, cap.text, regione, citta, country, context);*/
+        indirizzo.text, cap.text, regione, citta, country, context);
   }
 }
