@@ -63,6 +63,8 @@ dependencies:
   simple_connection_checker: ^0.2.1
   csc_picker: ^0.2.6
   regexed_validator: ^2.0.0+1
+  cloud_functions: ^3.2.5
+  url_launcher: ^6.0.18
 
 dev_dependencies:
   flutter_test:

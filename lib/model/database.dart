@@ -4,16 +4,18 @@ import 'dart:math' as math;
 import 'package:PagoPolizza/model/agency.dart';
 import 'package:PagoPolizza/model/current_user.dart';
 import 'package:PagoPolizza/model/transaction.dart' as transazione;
+import 'package:PagoPolizza/pages/navdrawer.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:random_password_generator/random_password_generator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Database {
   static Future<int> signUser(email, pass, nome, cognome, rui) async {
@@ -62,7 +64,7 @@ class Database {
 
       if (response.isTapDenyButton) {
         await user.sendEmailVerification();
-        ArtSweetAlert.show(
+        await ArtSweetAlert.show(
             context: context,
             artDialogArgs: ArtDialogArgs(
               type: ArtSweetAlertType.success,
@@ -402,6 +404,7 @@ class Database {
     await FirebaseFirestore.instance
         .collection('transazioni')
         .where('uidUtente', isEqualTo: uid)
+        .where('completata', isEqualTo: true)
         .orderBy('data', descending: true)
         .get()
         .then((value) {
@@ -427,6 +430,7 @@ class Database {
     await FirebaseFirestore.instance
         .collection('transazioni')
         .where('codRUI', isEqualTo: rui)
+        .where('completata', isEqualTo: true)
         .orderBy('data', descending: true)
         .get()
         .then((value) async {
@@ -468,33 +472,8 @@ class Database {
     return temp;
   }
 
-  static Future<int> insertTransaction(
-      rui, compagnia, importo, nPolizza, note, success, uid) async {
-    int r = -1;
-    await FirebaseFirestore.instance.collection('transazioni').add({
-      'codRUI': rui,
-      'compagnia': compagnia,
-      'importo': importo,
-      'nPolizza': nPolizza,
-      'note': note,
-      'successo': success,
-      'uidUtente': uid,
-      'data': FieldValue.serverTimestamp()
-    }).then((value) {
-      if (success) {
-        r = 0;
-      } else {
-        r = 1;
-      }
-    }).catchError((error) {
-      log(error.toString());
-      r = -1;
-    });
-    return r;
-  }
-
   static Future<int> createAgency(
-      name, email, rui, address, passRUI, context) async {
+      name, email, rui, address, passRUI, apikey, context) async {
     int r = -1;
     String password = RandomPasswordGenerator().randomPassword(
         letters: true,
@@ -515,7 +494,8 @@ class Database {
         "Logo":
             'https://firebasestorage.googleapis.com/v0/b/pagopolizza.appspot.com/o/Loghi%2Flogo_placeholder.png?alt=media&token=9712fe34-0f1d-4ced-a3da-1e30232ab312',
         "Indirizzo": address,
-        "PasswordRUI": passRUI
+        "PasswordRUI": passRUI,
+        "ApiKey": apikey
       }).then((value) async {
         await FirebaseFirestore.instance
             .collection('utenti')
@@ -582,6 +562,44 @@ class Database {
     await FirebaseFirestore.instance
         .collection('utenti')
         .doc(uid)
-        .update({"Informazioni": toChange});
+        .update(toChange);
+  }
+
+  static Future<void> callPayment(rui, compagnia, importo, note, nPolizza, uid,
+      indirizzo, cap, regione, citta, nazione, context) async {
+    Map<String, String> dati = {
+      "rui": rui,
+      "compagnia": compagnia,
+      "importo": importo,
+      "note": note,
+      "nPolizza": nPolizza,
+      "uid": uid,
+      "indirizzo": indirizzo,
+      "cap": cap,
+      "regione": regione,
+      "citta": citta,
+      "nazione": nazione,
+      "nomecognome": CurrentUser.name + " " + CurrentUser.surname,
+      "email": CurrentUser.email
+    };
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable("pay");
+    HttpsCallableResult resp = await callable.call(dati);
+    String link = resp.data["link"];
+    String transactionId = resp.data["id"];
+    await launch(link, forceSafariVC: false, forceWebView: false);
+    await Future.delayed(Duration(milliseconds: 100));
+    while (
+        WidgetsBinding.instance?.lifecycleState != AppLifecycleState.resumed) {
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+    await ArtSweetAlert.show(
+        context: context,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.info,
+          title: "Transazione completata",
+          confirmButtonColor: Color(0xffDF752C),
+        ));
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => NavDrawer()), (route) => false);
   }
 }

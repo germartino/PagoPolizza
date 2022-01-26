@@ -21,6 +21,7 @@ class InsertAgencyState extends State<InsertAgency> {
   TextEditingController ruiCode = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController passRUI = TextEditingController();
+  TextEditingController apiKey = TextEditingController();
 
   @override
   void dispose() {
@@ -29,6 +30,7 @@ class InsertAgencyState extends State<InsertAgency> {
     ruiCode.dispose();
     address.dispose();
     passRUI.dispose();
+    apiKey.dispose();
     super.dispose();
   }
 
@@ -281,6 +283,32 @@ class InsertAgencyState extends State<InsertAgency> {
                           ),
                           SizedBox(
                               height:
+                                  MediaQuery.of(context).size.height * 0.03),
+                          TextFormField(
+                            controller: apiKey,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Perfavore inserisci l\'Api Key';
+                              }
+                              return null;
+                            },
+                            cursorColor: Colors.black,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black)),
+                              labelText: "Api Key",
+                              labelStyle: GoogleFonts.ptSans(
+                                fontSize: 15.0,
+                                color: Color(0xff707070),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height:
                                   MediaQuery.of(context).size.height * 0.05),
                           ElevatedButton(
                             onPressed: () {
@@ -318,7 +346,7 @@ class InsertAgencyState extends State<InsertAgency> {
 
   Future<void> InsertAgency() async {
     int result = await Database.createAgency(name.text, email.text,
-        ruiCode.text, address.text, passRUI.text, context);
+        ruiCode.text, address.text, passRUI.text, apiKey.text, context);
 
     if (result == 0) {
       Navigator.pushAndRemoveUntil(

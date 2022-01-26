@@ -29,6 +29,8 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   static final String title = 'PagoPolizza';
+  var broadStream =
+      SimpleConnectionChecker().onConnectionChange.asBroadcastStream();
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -41,53 +43,18 @@ class MyApp extends StatelessWidget {
         home: MainPage(title: title),
         builder: (context, child) {
           return StreamBuilder(
-            stream: SimpleConnectionChecker()
-                .onConnectionChange
-                .asBroadcastStream(),
+            stream: broadStream,
             builder: (context, snapshot) {
-              if (snapshot.data == true) {
-                return child!;
-              } else {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return Scaffold(
                   appBar: null,
                   drawer: null,
                   body: SafeArea(
                     child: DoubleBackToCloseApp(
-                      child: Stack(children: [
-                        Center(
-                          child: CircularProgressIndicator(
-                            color: Color(0xffDF752C),
-                            strokeWidth: 5,
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            alignment: Alignment.center,
-                            color: Color(0xffDF752C),
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            child: RichText(
-                              text: TextSpan(children: [
-                                WidgetSpan(
-                                    alignment: PlaceholderAlignment.middle,
-                                    child: Icon(
-                                        Ionicons.information_circle_outline,
-                                        color: Colors.black,
-                                        size: 30)),
-                                TextSpan(
-                                  text: "Nessuna connessione internet presente",
-                                  style: GoogleFonts.lato(
-                                    fontSize: 18.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )
-                              ]),
-                            ),
-                          ),
-                        ),
-                      ]),
+                      child: CircularProgressIndicator(
+                        color: Color(0xffDF752C),
+                        strokeWidth: 5,
+                      ),
                       snackBar: const SnackBar(
                         content: Text('Premi di nuovo per uscire'),
                         backgroundColor: Colors.black,
@@ -95,6 +62,59 @@ class MyApp extends StatelessWidget {
                     ),
                   ),
                 );
+              } else {
+                if (snapshot.data == true) {
+                  return child!;
+                } else {
+                  return Scaffold(
+                    appBar: null,
+                    drawer: null,
+                    body: SafeArea(
+                      child: DoubleBackToCloseApp(
+                        child: Stack(children: [
+                          Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xffDF752C),
+                              strokeWidth: 5,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              alignment: Alignment.center,
+                              color: Color(0xffDF752C),
+                              height: 50,
+                              width: MediaQuery.of(context).size.width,
+                              child: RichText(
+                                text: TextSpan(children: [
+                                  WidgetSpan(
+                                      alignment: PlaceholderAlignment.middle,
+                                      child: Icon(
+                                          Ionicons.information_circle_outline,
+                                          color: Colors.black,
+                                          size: 30)),
+                                  TextSpan(
+                                    text:
+                                        "Nessuna connessione internet presente",
+                                    style: GoogleFonts.lato(
+                                      fontSize: 18.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                ]),
+                              ),
+                            ),
+                          ),
+                        ]),
+                        snackBar: const SnackBar(
+                          content: Text('Premi di nuovo per uscire'),
+                          backgroundColor: Colors.black,
+                        ),
+                      ),
+                    ),
+                  );
+                }
               }
             },
           );

@@ -205,9 +205,11 @@ class BillingInformationState extends State<BillingInformation> {
                               });
                             },
                             onCityChanged: (value) {
-                              setState(() {
-                                citta = (value != null) ? value : '';
-                              });
+                              if (value != null && value != "Città") {
+                                setState(() {
+                                  citta = value;
+                                });
+                              }
                             },
                           ),
                           if (cityError)
@@ -284,7 +286,7 @@ class BillingInformationState extends State<BillingInformation> {
                           ElevatedButton(
                             onPressed: () {
                               if (nazione.isNotEmpty &&
-                                  citta.isNotEmpty &&
+                                  citta != "Città" &&
                                   regione.isNotEmpty) {
                                 setState(() {
                                   cityError = false;
@@ -332,47 +334,47 @@ class BillingInformationState extends State<BillingInformation> {
     Map<String, String> toChange = {};
     if (CurrentUser.informazioni.containsKey("Nazione")) {
       if (CurrentUser.informazioni["Nazione"] != nazione) {
-        toChange["Nazione"] = nazione;
+        toChange["Informazioni.Nazione"] = nazione;
         CurrentUser.informazioni["Nazione"] = nazione;
       }
     } else {
-      toChange["Nazione"] = nazione;
+      toChange["Informazioni.Nazione"] = nazione;
       CurrentUser.informazioni["Nazione"] = nazione;
     }
     if (CurrentUser.informazioni.containsKey("Regione")) {
       if (CurrentUser.informazioni["Regione"] != regione) {
-        toChange["Regione"] = regione;
+        toChange["Informazioni.Regione"] = regione;
         CurrentUser.informazioni["Regione"] = regione;
       }
     } else {
-      toChange["Regione"] = regione;
+      toChange["Informazioni.Regione"] = regione;
       CurrentUser.informazioni["Regione"] = regione;
     }
     if (CurrentUser.informazioni.containsKey("Citta")) {
       if (CurrentUser.informazioni["Citta"] != citta) {
-        toChange["Citta"] = citta;
+        toChange["Informazioni.Citta"] = citta;
         CurrentUser.informazioni["Citta"] = citta;
       }
     } else {
-      toChange["Citta"] = citta;
+      toChange["Informazioni.Citta"] = citta;
       CurrentUser.informazioni["Citta"] = citta;
     }
     if (CurrentUser.informazioni.containsKey("Indirizzo")) {
       if (CurrentUser.informazioni["Indirizzo"] != indirizzo.text) {
-        toChange["Indirizzo"] = indirizzo.text;
+        toChange["Informazioni.Indirizzo"] = indirizzo.text;
         CurrentUser.informazioni["Indirizzo"] = indirizzo.text;
       }
     } else {
-      toChange["Indirizzo"] = indirizzo.text;
+      toChange["Informazioni.Indirizzo"] = indirizzo.text;
       CurrentUser.informazioni["Indirizzo"] = indirizzo.text;
     }
     if (CurrentUser.informazioni.containsKey("CAP")) {
       if (CurrentUser.informazioni["CAP"] != cap.text) {
-        toChange["CAP"] = cap.text;
+        toChange["Informazioni.CAP"] = cap.text;
         CurrentUser.informazioni["CAP"] = cap.text;
       }
     } else {
-      toChange["CAP"] = cap.text;
+      toChange["Informazioni.CAP"] = cap.text;
       CurrentUser.informazioni["CAP"] = cap.text;
     }
 
@@ -381,38 +383,12 @@ class BillingInformationState extends State<BillingInformation> {
       await Database.updateAddress(uid, toChange);
     }
 
-    bool successo = false;
-    if (int.parse(importo) > 70) {
-      successo = true;
-    }
+    String country =
+        nazione.substring(nazione.lastIndexOf(" "), nazione.length);
+
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    int r = await Database.insertTransaction(
-        rui, compagnia, int.parse(importo), nPolizza, note, successo, uid);
-    if (r == 0) {
-      await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.success,
-            title: "Transazione eseguita con successo",
-            confirmButtonColor: Color(0xffDF752C),
-          ));
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-          (route) => false);
-    } else if (r == 1) {
-      await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.info,
-            title: "Errore nella transazione",
-            text: "Transazione annullata",
-            confirmButtonColor: Color(0xffDF752C),
-          ));
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-          (route) => false);
-    }
+    /*
+    await Database.callPayment(rui, compagnia, importo, note, nPolizza, uid,
+        indirizzo.text, cap.text, regione, citta, country, context);*/
   }
 }
