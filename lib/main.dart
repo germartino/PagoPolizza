@@ -12,6 +12,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:simple_connection_checker/simple_connection_checker.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,9 +37,8 @@ class MyApp extends StatelessWidget {
         title: title,
         theme: ThemeData(
           primaryColor: Color(0xffDF752C),
-          scaffoldBackgroundColor: Colors.white,
         ),
-        home: MainPage(title: title),
+        home: SplashScreen(),
         builder: (context, child) {
           return StreamBuilder(
             stream: broadStream,
@@ -161,149 +161,135 @@ class _MainPageState extends State<MainPage> {
           child: DoubleBackToCloseApp(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                gradient: LinearGradient(
+                  colors: [Color(0xffDF752C), Color(0xffFFFFFF)],
+                  begin: FractionalOffset(0, 0.3),
+                  end: const FractionalOffset(0, 4),
+                ),
+                image: DecorationImage(
+                    image: AssetImage('assets/watermark.png'),
+                    opacity: 0.2,
+                    scale: 2,
+                    fit: BoxFit.fitHeight,
+                    alignment: Alignment.centerLeft),
               ),
-              child: Stack(children: [
-                Padding(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.03,
-                        left: MediaQuery.of(context).size.width * 0.1),
-                    child: Column(
-                      children: [
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Image(
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                image: AssetImage(
-                                    'assets/pagopolizza_arancio.png'))),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.01,
-                              left: MediaQuery.of(context).size.width * 0.01),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Assicurati la semplicità.',
-                              style: GoogleFonts.lato(
-                                fontSize: 16.0,
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Image(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        image: AssetImage('assets/pagopolizza_bianco.png'),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        'Assicurati la semplicità.',
+                        style: GoogleFonts.lato(
+                          fontSize: 17.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image(
+                      image: AssetImage('assets/logo_bianco.png'),
+                      width: MediaQuery.of(context).size.width * 0.7,
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                  ),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton.icon(
+                              icon: Icon(
+                                Ionicons.log_in_outline,
                                 color: Colors.black,
-                                fontWeight: FontWeight.w300,
+                                size: 20,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.8,
+                                    MediaQuery.of(context).size.height * 0.06),
+                                alignment: Alignment.center,
+                                primary: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      curve: Curves.easeInOut,
+                                      type: PageTransitionType.bottomToTop,
+                                      child: Login(),
+                                    ));
+                              },
+                              label: Text(
+                                'Accedi',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 15.0,
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    )),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.50,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20.0),
-                      ),
-                      color: Color(0xffDF752C),
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.2),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton.icon(
-                                    icon: Icon(
-                                      Ionicons.log_in_outline,
-                                      color: Colors.black,
-                                      size: 20,
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(
-                                          MediaQuery.of(context).size.width *
-                                              0.8,
-                                          MediaQuery.of(context).size.height *
-                                              0.06),
-                                      alignment: Alignment.center,
-                                      primary: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                            curve: Curves.easeInOut,
-                                            type:
-                                                PageTransitionType.bottomToTop,
-                                            child: Login(),
-                                          ));
-                                    },
-                                    label: Text(
-                                      'Accedi',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 15.0,
-                                        color: Colors.black,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.03),
-                                  ElevatedButton.icon(
-                                    icon: Icon(
-                                      Icons.work,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(
-                                          MediaQuery.of(context).size.width *
-                                              0.8,
-                                          MediaQuery.of(context).size.height *
-                                              0.06),
-                                      alignment: Alignment.center,
-                                      primary: Color(0xff000000),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                            curve: Curves.easeInOut,
-                                            type:
-                                                PageTransitionType.bottomToTop,
-                                            child: ChoiceAgency(),
-                                          ));
-                                    },
-                                    label: Text(
-                                      'Scegli agenzia',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 15.0,
-                                        color: Colors.white,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ])),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 300,
-                    height: 300,
-                    color: const Color(0xFFFFFFFF),
-                    child: Image(
-                      image: AssetImage('assets/logo.png'),
-                    ),
-                  ),
-                ),
-              ]),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.03),
+                            ElevatedButton.icon(
+                              icon: Icon(
+                                Icons.work,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.8,
+                                    MediaQuery.of(context).size.height * 0.06),
+                                alignment: Alignment.center,
+                                primary: Color(0xff000000),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      curve: Curves.easeInOut,
+                                      type: PageTransitionType.bottomToTop,
+                                      child: ChoiceAgency(),
+                                    ));
+                              },
+                              label: Text(
+                                'Scegli agenzia',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 15.0,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ])),
+                ],
+              ),
             ),
             snackBar: const SnackBar(
               content: Text('Premi di nuovo per uscire'),
@@ -327,5 +313,113 @@ class _MainPageState extends State<MainPage> {
         MaterialPageRoute(builder: (context) => NavDrawer()),
       );
     }
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  SplashScreenState createState() => SplashScreenState();
+}
+
+class SplashScreenState extends State<SplashScreen> {
+  late Image logo = Image.asset('assets/logo_completo_bianco.png');
+  late Image watermark = Image.asset('assets/watermark.png');
+
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 2), () async {
+      Navigator.pushReplacement(
+          context,
+          PageTransition(
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: 700),
+            type: PageTransitionType.fade,
+            child: MainPage(title: "PagoPolizza"),
+          ));
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+          future: Future.wait([
+            precacheImage(logo.image, context),
+            precacheImage(watermark.image, context)
+          ]),
+          builder: (BuildContext context, AsyncSnapshot snap) {
+            if (snap.connectionState != ConnectionState.waiting) {
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xffDF752C), Color(0xffFFFFFF)],
+                    begin: FractionalOffset(0, 0.3),
+                    end: const FractionalOffset(0, 4),
+                  ),
+                  image: DecorationImage(
+                      image: watermark.image,
+                      opacity: 0.2,
+                      scale: 2,
+                      fit: BoxFit.fitHeight,
+                      alignment: Alignment.centerLeft),
+                ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.1),
+                          child: Image(
+                            image: logo.image,
+                            fit: BoxFit.scaleDown,
+                            width: MediaQuery.of(context).size.width * 0.70,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      Text(
+                        'Assicurati la semplicità.',
+                        style: GoogleFonts.lato(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ]),
+              );
+            } else {
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xffDF752C), Color(0xffFFFFFF)],
+                    begin: FractionalOffset(0, 0.3),
+                    end: const FractionalOffset(0, 4),
+                  ),
+                ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.1),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                    ]),
+              );
+            }
+          }),
+    );
   }
 }
