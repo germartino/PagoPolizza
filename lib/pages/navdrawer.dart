@@ -34,15 +34,32 @@ List<Widget> getPagesList() {
 
 class NavDrawerState extends State<NavDrawer> {
   int _selectedIndex = 1;
+  late PageController _pageController;
 
   List<Widget> _pages = getPagesList();
+
+  @override
+  void initState() {
+    _pageController = PageController(initialPage: _selectedIndex);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: DoubleBackToCloseApp(
-          child: _pages.elementAt(_selectedIndex),
+          child: PageView(
+            children: _pages,
+            onPageChanged: changeIndex,
+            controller: _pageController,
+          ),
           snackBar: const SnackBar(
             content: Text('Premi di nuovo per uscire'),
             backgroundColor: Colors.black,
@@ -102,9 +119,8 @@ class NavDrawerState extends State<NavDrawer> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    _pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   void changeIndex(int index) {

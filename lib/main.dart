@@ -12,7 +12,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:simple_connection_checker/simple_connection_checker.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +36,7 @@ class MyApp extends StatelessWidget {
         title: title,
         theme: ThemeData(
           primaryColor: Color(0xffDF752C),
+          scaffoldBackgroundColor: Colors.white,
         ),
         home: SplashScreen(),
         builder: (context, child) {
