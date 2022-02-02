@@ -168,7 +168,7 @@ class _MainPageState extends State<MainPage> {
                 ),
                 image: DecorationImage(
                     image: AssetImage('assets/watermark.png'),
-                    opacity: 0.2,
+                    opacity: 0.1,
                     scale: 2,
                     fit: BoxFit.fitHeight,
                     alignment: Alignment.centerLeft),
@@ -361,7 +361,7 @@ class SplashScreenState extends State<SplashScreen> {
                   ),
                   image: DecorationImage(
                       image: watermark.image,
-                      opacity: 0.2,
+                      opacity: 0.1,
                       scale: 2,
                       fit: BoxFit.fitHeight,
                       alignment: Alignment.centerLeft),
